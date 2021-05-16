@@ -1,0 +1,26 @@
+::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+    -webkit-border-radius: 0;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    /* height: 10px; */
+}
+
+::-webkit-scrollbar-thumb {
+    height: 50px;
+    background-color: rgb(153, 153, 153, .6);
+    -webkit-border-radius: 4px;
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+    border: 2px solid #fff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    height: 50px;
+    background-color: rgb(153, 153, 153, .1);
+    transition: all 1s;
+    -webkit-transition: all 1s;
+    -webkit-border-radius: 4px;
+}

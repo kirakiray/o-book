@@ -1,0 +1,129 @@
+:host {
+    display: block;
+    color: #333;
+    user-select: none;
+    height: 100%;
+}
+
+.con {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.list {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.ba_item {
+    position: relative;
+    margin: 5px 0 0 5px;
+    font-size: 13px;
+    opacity: .7;
+    cursor: not-allowed;
+
+    &[path]:not([path=""]) {
+        opacity: 1;
+        cursor: pointer;
+    }
+
+    >.name {
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 1.2em;
+        height: 2.5em;
+        flex: 1;
+        /* cursor: pointer; */
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        /* overflow: hidden; */
+        transition: all ease .15s;
+
+        .left_sq {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            height: 0;
+            width: 2px;
+            background-color: var(--primary-color);
+            transition: all ease .2s;
+        }
+    }
+
+    .name:hover {
+        background-color: rgba(0, 0, 0, .06);
+    }
+
+    .childs {
+        position: relative;
+        padding-left: 0.85em;
+        /* border-left: transparent solid 1px;
+        transition: border ease .2s; */
+    }
+
+    .childs:before {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 0%;
+        background-color: rgb(209, 209, 209);
+        content: "";
+        transition: all ease .3s;
+    }
+
+    &:hover .childs::before {
+        height: 100%;
+    }
+
+    &[active] {
+        >.name {
+            .left_sq {
+                top: 0.41em;
+                height: 1.6em;
+                /* top: 5px;
+                height: 20px; */
+            }
+        }
+
+        >.name:hover .left_sq {
+            top: 0;
+            left: 0;
+            width: 2px;
+            height: 2.5em;
+        }
+    }
+
+    &[active="1"] {
+        >.name {
+            color: var(--primary-color);
+            font-weight: bold;
+
+            .left_sq {
+                left: -1px;
+                top: 1.17em;
+                /* top: 14px; */
+                height: 4px;
+                width: 4px;
+                border-radius: 4px;
+                background-color: rgb(209, 209, 209);
+            }
+        }
+
+    }
+
+    &[active="2"] {
+        >.name {
+            cursor: default;
+            color: var(--primary-color);
+        }
+    }
+}
