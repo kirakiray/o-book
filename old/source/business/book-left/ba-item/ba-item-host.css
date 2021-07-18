@@ -1,0 +1,9 @@
+ba-item {
+    opacity: .7;
+    cursor: not-allowed;
+}
+
+ba-item[path] {
+    opacity: 1;
+    cursor: pointer;
+}

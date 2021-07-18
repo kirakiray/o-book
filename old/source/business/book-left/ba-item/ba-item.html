@@ -1,0 +1,105 @@
+<style>
+    :host {
+        display: block;
+        margin: 5px 0 0 5px;
+        font-size: 13px;
+    }
+
+    .con {
+        position: relative;
+    }
+
+    .name {
+        position: relative;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 1.2em;
+        height: 2.5em;
+        flex: 1;
+        /* cursor: pointer; */
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        /* overflow: hidden; */
+        transition: all ease .15s;
+    }
+
+    .name:hover {
+        background-color: rgba(0, 0, 0, .06);
+    }
+
+    .childs {
+        position: relative;
+        padding-left: 0.85em;
+        /* border-left: transparent solid 1px;
+        transition: border ease .2s; */
+    }
+
+    .childs:before {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1px;
+        height: 0%;
+        background-color: rgb(209, 209, 209);
+        content: "";
+        transition: all ease .3s;
+    }
+
+    .con:hover .childs::before {
+        height: 100%;
+    }
+
+    .left_sq {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        height: 0;
+        width: 2px;
+        background-color: var(--primary-color);
+        transition: all ease .2s;
+    }
+
+    .con[active="1"] .name {
+        color: var(--primary-color);
+        font-weight: bold;
+    }
+
+    .con[active="2"] .name {
+        cursor: default;
+        color: var(--primary-color);
+    }
+
+    .con[active] .left_sq {
+        top: 0.41em;
+        height: 1.6em;
+        /* top: 5px;
+        height: 20px; */
+    }
+
+    .con[active] .name:hover .left_sq {
+        top: 0;
+        left: 0;
+        width: 2px;
+        height: 2.5em;
+    }
+
+    .con[active="1"] .left_sq {
+        left: -1px;
+        top: 1.17em;
+        /* top: 14px; */
+        height: 4px;
+        width: 4px;
+        border-radius: 4px;
+        background-color: rgb(209, 209, 209);
+    }
+</style>
+<div class="con" :active="active">
+    <div class="name" @click="clickItem">{{name}}
+        <div class="left_sq"></div>
+    </div>
+    <div class="childs">
+        <slot></slot>
+    </div>
+</div>

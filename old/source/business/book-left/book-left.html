@@ -2,13 +2,16 @@
 <div class="con">
     <div class="top">我是顶部</div>
     <div style="position:relative;flex:1;">
-        <div class="list" x-fill="items use baitem"></div>
+        <div class="list">
+            <div $="list"></div>
+            <div x-fill="items use baitem"></div>
+        </div>
     </div>
 </div>
 
 <template name="baitem">
     <div class="ba_item" :active="$data.active" :path="$data.path" x-show="$data.type == 'item'">
-        <div class="name" @click="$host.clickItem($data)">{{$data.name}}
+        <div class="name" @click="$host.clickItem($data,$parent)">{{$data.name}}
             <div class="left_sq"></div>
         </div>
         <div class="childs" x-if="$data.childs && $data.childs.length" x-fill="$data.childs use baitem"></div>
