@@ -6,25 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>o-book</title>
-    <!-- <script src="ofa.js"></script> -->
-    <script src="http://127.0.0.1:5513/dist/ofa.js"></script>
+    <script src="ofa.js"></script>
+    <!-- <script src="http://127.0.0.1:5513/dist/ofa.js"></script> -->
     <script src="../o-book.js"></script>
     <style>
         html,
         body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
         }
 
         body {
-            --primary-color: #e02323;
-            /* --fnt-booktheme: #e02323; */
+            --fnt-booktheme: #e02323;
         }
     </style>
 </head>
 
 <body>
-    <o-book summary="docs/SUMMARY.md" home="docs/main.md">
+    <o-book summary="SUMMARY.md" home="docs/test1.md" style="height:100%;">
         <div>加载中...</div>
     </o-book>
 </body>

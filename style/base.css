@@ -1,0 +1,173 @@
+html {
+    color: #444;
+    background: #fff;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    --main-color: #6264a7;
+}
+
+body {
+    font: 400 1em/1.8 -apple-system, BlinkMacSystemFont, Segoe UI, Microsoft Yahei, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+}
+
+a {
+    color: var(--main-color);
+    border-bottom: var(--main-color) solid 1px;
+    text-decoration: none;
+}
+
+body,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+pre,
+code,
+form,
+fieldset,
+legend,
+input,
+textarea,
+p,
+blockquote,
+th,
+td,
+hr,
+button,
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+menu,
+nav,
+section {
+    margin: 0;
+    padding: 0;
+}
+
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.8em;
+}
+
+h3 {
+    font-size: 1.6em;
+}
+
+h4 {
+    font-size: 1.4em;
+}
+
+h5,
+h6 {
+    font-size: 1.2em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin-top: 1.2em;
+    margin-bottom: 0.6em;
+    line-height: 1.35;
+}
+
+ul,
+ol {
+    margin-left: 1.3em;
+}
+
+li ul,
+li ol {
+    margin-bottom: 0.8em;
+    margin-left: 2em;
+}
+
+p,
+pre,
+ul,
+ol,
+dl,
+form,
+hr,
+table,
+blockquote {
+    margin-bottom: 1.2em
+}
+
+blockquote {
+    position: relative;
+    color: #999;
+    border-left: 2px solid var(--main-color);
+    padding-left: 1em;
+    margin: 1em 3em 1em 2em;
+    /* background-color: rgba(0,0,0,.01); */
+    background-color: rgba(#6264a7, .5);
+}
+
+mark {
+    background: #fffdd1;
+    border-bottom: 1px solid #ffedce;
+    padding: 2px;
+    margin: 0 5px;
+}
+
+abbr {
+    border-bottom: 1px dotted;
+    font-variant: normal;
+    text-decoration: none;
+    cursor: help;
+}
+
+i {
+    text-transform: lowercase;
+    color: var(--main-color);
+}
+
+del {
+    text-decoration: line-through;
+}
+
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table th,
+table td,
+table caption {
+    border: 1px solid #ddd;
+    padding: 0.5em 1em;
+    color: #666;
+}
+
+table th {
+    background: #fbfbfb;
+}
+
+table thead th {
+    background: #f1f1f1;
+}
+
+table caption {
+    border-bottom: none;
+}
