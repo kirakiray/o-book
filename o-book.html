@@ -8,14 +8,13 @@
         </div>
     </div>
     <div class="right_con">
-        <!-- <o-app class="article_con" home="@obook/pages/reader/reader.js"></o-app> -->
         <o-app class="article_con"></o-app>
     </div>
 </div>
 
 <!-- 左侧目录导航单个item -->
 <div temp:leftItem class="left_nav_item" attr:type="$data.type" attr:data-path="$data.path"
-    class:active="$host.activePath && $host.activePath == $data.path">
+    class:active="$host.currentPath && $host.currentPath == $data.path">
     <div class="name" @click="$host.clickItem($data)">
         <div class="name_mark"></div>
         {{$data.name ||  $data.text}}

@@ -21,13 +21,11 @@ Component(async ({ load, FILE }) => {
             title: "",
             // 目录相关数据
             summaryItems: {},
-            // 激活中的地址
-            activePath: ""
         },
         watch: {
             home(url) {
                 if (url && !this._is_inited_home) {
-                    this.activePath = url;
+                    this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${url}`);
                     this._is_inited_home = 1;
                     return;
                 }
@@ -52,29 +50,22 @@ Component(async ({ load, FILE }) => {
                 this.summaryItems = summaryData.items;
                 this._links = summaryData.links;
                 this.title = summaryData.title;
-            },
-            activePath(path) {
-                if (!path) {
-                    return;
-                }
-
-                // 跳转到相应地址
-                this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${path}`);
             }
         },
         proto: {
             clickItem(data) {
                 if (data.path) {
-                    this.activePath = data.path;
+                    // 跳转到相应地址
+                    this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${data.path}`);
                 }
+            },
+            // 当前页的path
+            get currentPath() {
+                const app = this.shadow.$(".article_con");
+                let current = app.router.slice(-1)[0];
+                return current && current._page.query.path;
             }
         },
-        ready() {
-            // this.shadow.$(".leftNavCon").on("click", ".name", e => {
-            //     let targetNav = $(e.selector);
-            //     // debugger
-            //     // console.log(e);
-            // });
-        }
+        ready() { }
     };
 });

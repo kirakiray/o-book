@@ -23,6 +23,7 @@
         top: 0;
         width: 100%;
         height: 100%;
+        overflow-x: hidden;
         overflow-y: auto;
     }
 
@@ -48,6 +49,8 @@
 
     .bottom_btn {
         cursor: pointer;
+        color: var(--default-primary-color);
+        font-weight: bold;
     }
 </style>
 <div class="con">
@@ -55,9 +58,9 @@
         <div class="article">
             <div :html="mdhtml"></div>
             <div class="article_bottom" :show="prevPageName || nextPageName">
-                <div class="bottom_btn" @click="app.router.push(prevPagePath)">{{prevPageName}}</div>
-                <div class="bottom_btn" @click="app.router.push(nextPagePath)" style="margin-left:auto;">
-                    {{nextPageName}}</div>
+                <div class="bottom_btn" @click="clickBack" :show="prevPageName">←{{prevPageName}}</div>
+                <div class="bottom_btn" @click="app.router.push(nextPagePath)" :show="nextPagePath" style="margin-left:auto;">
+                    {{nextPageName}}→</div>
             </div>
         </div>
     </div>

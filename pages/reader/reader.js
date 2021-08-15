@@ -1,6 +1,13 @@
 Page(async ({ load }) => {
-    // md解析器
-    await load("./libs/marked.min.js", "./libs/highlight.min.js");
+    if (!window.marked) {
+        // md解析器
+        await load("./libs/marked.min.js");
+    }
+
+    if (!window.hljs) {
+        // 代码高亮
+        await load("./libs/highlight.min.js");
+    }
 
     return {
         data: {
@@ -13,6 +20,16 @@ Page(async ({ load }) => {
             initMd: 0,
             // 正文内容
             mdhtml: ""
+        },
+        proto: {
+            clickBack() {
+                let prevPage = this.app.router.slice(-2)[0];
+                if (prevPage.path == this.prevPagePath) {
+                    this.app.router.splice(-1, 1);
+                } else {
+                    this.app.router.push(this.prevPagePath);
+                }
+            }
         },
         async ready() {
             let { path } = this.query;
@@ -65,7 +82,7 @@ Page(async ({ load }) => {
 
                 if (prevItem && prevItem.path) {
                     this.prevPageName = prevItem.name
-                    this.nextPagePath = `@obook/pages/reader/reader.js?path=${prevItem.path}`;
+                    this.prevPagePath = `@obook/pages/reader/reader.js?path=${prevItem.path}`;
                 }
             }
 
