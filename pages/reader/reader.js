@@ -9,6 +9,9 @@ Page(async ({ load }) => {
         await load("./libs/highlight.min.js");
     }
 
+    // // 加载代码预览组件
+    // await load("@obook/comps/code-view -p");
+
     return {
         data: {
             val: "i am reader",
@@ -91,7 +94,7 @@ Page(async ({ load }) => {
                 this.shadow.$(".article").all('code').forEach(e => {
                     let block = e.ele;
                     if (block.getAttribute("class")) {
-                        hljs.highlightBlock(block);
+                        hljs.highlightElement(block);
                     } else {
                         Object.assign(block.style, {
                             color: "#24292e",

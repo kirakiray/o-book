@@ -18,8 +18,8 @@ code.hljs {
 }
 
 .hljs {
-  background: #1e1e1e;
-  color: #fff
+  background: #f0f0f0;
+  color: #444
 }
 
 .hljs-comment {
@@ -28,38 +28,32 @@ code.hljs {
 
 .hljs-punctuation,
 .hljs-tag {
-  color: #888
+  color: #444a
 }
 
-.hljs-attr {
-  color: #9cdcfe;
-}
-
+.hljs-tag .hljs-attr,
 .hljs-tag .hljs-name {
-  color: #569bd5;
+  color: #444
 }
 
 .hljs-attribute,
 .hljs-doctag,
 .hljs-keyword,
 .hljs-meta .hljs-keyword,
+.hljs-name,
 .hljs-selector-tag {
-  color: #569bd5;
   font-weight: 700
-}
-
-.hljs-selector-class{
-  color: #d7ba7d;
 }
 
 .hljs-deletion,
 .hljs-number,
 .hljs-quote,
+.hljs-selector-class,
 .hljs-selector-id,
 .hljs-string,
 .hljs-template-tag,
 .hljs-type {
-  color: #bf8771
+  color: #800
 }
 
 .hljs-section,
@@ -76,7 +70,7 @@ code.hljs {
 .hljs-symbol,
 .hljs-template-variable,
 .hljs-variable {
-  color: #d4b87c;
+  color: #bc6060
 }
 
 .hljs-literal {

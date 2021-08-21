@@ -1,0 +1,135 @@
+.outer_frame {
+  display: flex;
+  height: 100%;
+}
+.outer_frame .viewer {
+  position: relative;
+  box-sizing: border-box;
+  flex: 4;
+  height: 100%;
+  border: #525252 solid 2px;
+}
+.outer_frame .viewer iframe {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+.container {
+  display: flex;
+  flex-direction: column;
+  flex: 6;
+  height: 100%;
+  background-color: #1e1e1e;
+  font: 400 1em/1.8 -apple-system, BlinkMacSystemFont, Segoe UI, Microsoft Yahei, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+}
+.container > .top {
+  position: relative;
+  height: 34px;
+  background-color: #252525;
+  overflow-y: auto;
+  white-space: nowrap;
+}
+.container > .top .file_block {
+  box-sizing: border-box;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 15px;
+  background-color: #2d2d2d;
+  border-right: #252525 solid 1px;
+  color: #a3a3a3;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.container > .top .file_block.active {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+.container > .main {
+  position: relative;
+  flex: 1;
+}
+.container > .main .content {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+.top_scroller {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+.top_scroller::-webkit-scrollbar {
+  height: 2px;
+}
+.block_icon {
+  margin-right: 4px;
+  font-family: iconfont-codeview;
+  color: #fff;
+}
+.block_icon:before {
+  content: "\e748";
+}
+.block_icon[ftype="html"] {
+  color: #cb6f32;
+}
+.block_icon[ftype="html"]:before {
+  content: "\e6a0";
+}
+.block_icon[ftype="js"] {
+  color: #baba3f;
+}
+.block_icon[ftype="js"]:before {
+  content: "\e63b";
+}
+.block_icon[ftype="css"] {
+  color: #5098b7;
+}
+.block_icon[ftype="css"]:before {
+  content: "\e71a";
+  font-weight: bold;
+}
+.block_icon[ftype="less"] {
+  color: #5098b7;
+}
+.block_icon[ftype="less"]:before {
+  content: "\e662";
+  font-weight: bold;
+}
+.block_icon[ftype="json"] {
+  color: #baba3f;
+}
+.block_icon[ftype="json"]:before {
+  content: "\e66c";
+  font-weight: bold;
+}
+::-webkit-scrollbar-track-piece {
+  background-color: #1e1e1e;
+  -webkit-border-radius: 0;
+}
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  height: 50px;
+  background-color: #999999;
+  -webkit-border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  height: 50px;
+  background-color: #999999;
+  transition: all 1s;
+  -webkit-transition: all 1s;
+  -webkit-border-radius: 4px;
+}

@@ -4,7 +4,6 @@ html {
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    --main-color: #6264a7;
 }
 
 body {
@@ -12,8 +11,8 @@ body {
 }
 
 a {
-    color: var(--main-color);
-    border-bottom: var(--main-color) solid 1px;
+    color: var(--default-primary-color);
+    border-bottom: var(--default-primary-color) solid 1px;
     text-decoration: none;
 }
 
@@ -116,7 +115,7 @@ blockquote {
 blockquote {
     position: relative;
     color: #999;
-    border-left: 2px solid var(--main-color);
+    border-left: 2px solid var(--default-primary-color);
     padding-left: 1em;
     margin: 1em 3em 1em 2em;
     /* background-color: rgba(0,0,0,.01); */
@@ -139,7 +138,7 @@ abbr {
 
 i {
     text-transform: lowercase;
-    color: var(--main-color);
+    color: var(--default-primary-color);
 }
 
 del {

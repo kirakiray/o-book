@@ -1,7 +1,7 @@
 @import url("slim_scroll.css");
 :host {
   display: block;
-  --default-primary-color: var(--fnt-booktheme, #2394e0);
+  --default-primary-color: var(--booktheme, #6264a7);
 }
 .container {
   display: flex;
@@ -24,9 +24,36 @@
   overflow-y: auto;
 }
 .book_title {
+  position: relative;
   margin: 16px 14px;
   padding: 0;
   font-size: 18px;
+  transition: all ease 0.3s;
+}
+.book_title:hover .back_tips {
+  height: 21px;
+  opacity: 1;
+}
+.book_title .back_tips {
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0 5px;
+  height: 0;
+  line-height: 21px;
+  color: #fff;
+  font-size: 12px;
+  background-color: var(--default-primary-color);
+  opacity: 0;
+  transition: all ease 0.3s;
+}
+.book_title.active_title {
+  color: var(--default-primary-color);
+  font-size: 19px;
+}
+.book_title.active_title .back_tips {
+  display: none;
 }
 .right_con {
   position: relative;
@@ -47,7 +74,7 @@
 }
 .left_nav_item[type="item"] .name {
   position: relative;
-  padding: 6px 0 6px 16px;
+  padding: 3px 0 3px 16px;
   margin: 5px;
   border-radius: 3px;
   font-size: 13px;

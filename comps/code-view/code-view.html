@@ -1,0 +1,46 @@
+<style>
+    :host {
+        display: block;
+        visibility: hidden;
+    }
+
+    :host([x-render="1"]) {
+        visibility: visible;
+    }
+
+    pre {
+        margin: 0;
+    }
+</style>
+<link rel="stylesheet" href="./code-view.css">
+<!-- <link rel="stylesheet" href="./hljs/default.min.css"> -->
+<link rel="stylesheet" href="./hljs/dark.css">
+<div class="outer_frame">
+    <div class="container">
+        <div class="top">
+            <div fill:fileblock="sources" class="top_scroller"></div>
+        </div>
+        <div class="main">
+            <div class="content">
+                <pre>
+                    <code id="content" style="background-color: transparent;overflow: visible;"></code>
+                </pre>
+            </div>
+        </div>
+    </div>
+    <div class="viewer" #if="hasPreview">
+        <iframe #if="canPreview" attr:src="frameView" frameborder="0"></iframe>
+        <div #else>
+            <button style="margin:20px;padding:10px;" @click="canPreview = true"><span style="font-family: iconfont-codeview;">&#xe642;</span>点击查看预览效果</button>
+        </div>
+    </div>
+</div>
+
+// 顶部栏标签block
+<div temp:fileblock class="file_block" class:active="$host.activePath == $data.path"
+    @click="$host.activePath = $data.path">
+    <div class="block_icon" attr:ftype="$data.type"></div>
+    {{$data.name}}
+    <span #if="$data.path == $host.frameView"
+        style="font-family: iconfont-codeview;margin-left:4px;font-size:16px;">&#xe642;</span>
+</div>

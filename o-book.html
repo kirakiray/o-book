@@ -3,7 +3,11 @@
 <div class="container">
     <div class="left_nav">
         <div class="leftNavCon">
-            <h2 class="book_title" @click="shadow.$('o-app').router.splice(1)" style="cursor: pointer;">{{title}}</h2>
+            <h2 class="book_title" class:active_title="shadow.$('o-app').router.length == 1"
+                @click="shadow.$('o-app').router.splice(1)" style="cursor: pointer;">
+                {{title}}
+                <span class="back_tips">返回到首页</span>
+            </h2>
             <div fill:leftItem="summaryItems"></div>
         </div>
     </div>
