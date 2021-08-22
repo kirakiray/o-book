@@ -7,7 +7,7 @@ Component(async ({ load, FILE }) => {
 
     const { summaryToData } = await load("./util/summaryToData.js");
 
-    await load("style/base.css");
+    await load("style/base.css", "@obook/comps/view-loading -p");
 
     return {
         tag: "o-book",
@@ -64,8 +64,102 @@ Component(async ({ load, FILE }) => {
                 const app = this.shadow.$(".article_con");
                 let current = app.router.slice(-1)[0];
                 return current && current._page.query.path;
+            },
+            toggleLeftNav() {
+                if (this.shadow.$("#leftNav").width > 0) {
+                    this.shadow.$("#leftNav").style.width = "0px";
+                    sessionStorage.setItem("hide_left", 1);
+                } else {
+                    this.shadow.$("#leftNav").style.width = this.cacheLeftWidth;
+                    sessionStorage.setItem("hide_left", 0);
+                }
+            },
+            _initLeftResize() {
+                // 左侧重置尺寸的逻辑-----
+                const rBar = this.shadow.$(".resize_bar");
+
+                const leftNav = this.shadow.$("#leftNav");
+                const leftNavCon = this.shadow.$("#leftNavCon");
+
+
+                let moveId, upId;
+                rBar.on("mousedown", e => {
+                    let startX = e.screenX;
+                    let startWidth = leftNav.width;
+
+
+                    let body = $("body");
+                    body.style.userSelect = "none";
+                    leftNav.style.transition = "none";
+
+                    let maxWidth = 500;
+
+                    if (!moveId) {
+                        moveId = body.on("mousemove", e => {
+                            let x = e.screenX;
+
+                            let diffX = x - startX;
+
+                            let width = startWidth + diffX;
+
+                            if (width > maxWidth) {
+                                width = maxWidth;
+                            }
+
+                            leftNav.style.width = `${width}px`;
+                            leftNavCon.style.width = `${width}px`;
+                        });
+                    }
+
+                    if (!upId) {
+                        upId = body.on("mouseup", e => {
+                            body.off(moveId);
+                            body.off(upId);
+                            upId = moveId = null;
+                            body.style.userSelect = "";
+                            leftNav.style.transition = "";
+                            this.cacheLeftWidth = leftNav.width + "px";
+                        });
+                    }
+                });
+            },
+            get cacheLeftWidth() {
+                let val = this._cacheLeftWidth;
+
+                if (!val) {
+                    let cache_val = localStorage.getItem("left_nav_width");
+                    if (cache_val) {
+                        val = cache_val;
+                        this._cacheLeftWidth = val;
+                    } else {
+                        val = "300px";
+                    }
+                }
+
+                return val;
+            },
+            set cacheLeftWidth(val) {
+                localStorage.setItem("left_nav_width", val);
             }
         },
-        ready() { }
+        ready() {
+            this._initLeftResize();
+
+            // 设置页面loading
+            ofa.onState.loading = () => {
+                return `<view-loading></view-loading>`;
+            }
+
+            if (sessionStorage.getItem("hide_left") == 1) {
+                this.shadow.$("#leftNav").style.width = "0px";
+            } else {
+                this.shadow.$("#leftNav").style.width = this.cacheLeftWidth;
+            }
+            this.shadow.$("#leftNavCon").style.width = this.cacheLeftWidth;
+
+            this.watchUntil(() => this.shadow.$('o-app').router.length >= 1).then(e => {
+                this.shadow.$("#mainloading").loaded = 1;
+            });
+        }
     };
 });

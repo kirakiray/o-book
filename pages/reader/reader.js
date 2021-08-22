@@ -121,6 +121,8 @@ Page(async ({ load }) => {
                     }
                 });
 
+                // 取消loading
+                this.shadow.$("view-loading").loaded = 1;
             });
         }
     };

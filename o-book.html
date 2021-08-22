@@ -1,8 +1,16 @@
+<style>
+    :host {
+        display: block;
+
+        /* --default-primary-color: #2394e0; */
+        --default-primary-color: var(--booktheme, #6264a7);
+    }
+</style>
 <link rel="stylesheet" href="style/o-book.css">
 
 <div class="container">
-    <div class="left_nav">
-        <div class="leftNavCon">
+    <div class="left_nav" id="leftNav">
+        <div class="leftNavCon" id="leftNavCon" style="width:300px">
             <h2 class="book_title" class:active_title="shadow.$('o-app').router.length == 1"
                 @click="shadow.$('o-app').router.splice(1)" style="cursor: pointer;">
                 {{title}}
@@ -10,11 +18,24 @@
             </h2>
             <div fill:leftItem="summaryItems"></div>
         </div>
+        <div class="resize_bar"></div>
     </div>
     <div class="right_con">
+        <div class="article_top">
+            <div class="top_btn" @click="toggleLeftNav">
+                <img src="img/aside.svg" style="display:block;width:14px;height:14px;">
+            </div>
+        </div>
         <o-app class="article_con"></o-app>
+        <!-- <div class="right_quick_nav">
+            <div class="nav_block">adasdasd1</div>
+            <div class="nav_block">返回到首页返回到首页返回到首页返回到首页返回到首页</div>
+            <div class="nav_block">adasdasd3</div>
+        </div> -->
     </div>
 </div>
+
+<view-loading id="mainloading"></view-loading>
 
 <!-- 左侧目录导航单个item -->
 <div temp:leftItem class="left_nav_item" attr:type="$data.type" attr:data-path="$data.path"

@@ -1,8 +1,4 @@
 @import url("slim_scroll.css");
-:host {
-  display: block;
-  --default-primary-color: var(--booktheme, #6264a7);
-}
 .container {
   display: flex;
   width: 100%;
@@ -10,10 +6,11 @@
 }
 .left_nav {
   position: relative;
-  width: 300px;
   font-size: 14px;
   box-shadow: rgba(0, 0, 0, 0.1) 0 0 8px;
   color: #333;
+  overflow: hidden;
+  transition: all ease 0.3s;
 }
 .left_nav .leftNavCon {
   position: absolute;
@@ -22,6 +19,15 @@
   width: 100%;
   height: 100%;
   overflow-y: auto;
+}
+.left_nav .resize_bar {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  cursor: ew-resize;
+  z-index: 2;
 }
 .book_title {
   position: relative;
@@ -59,12 +65,32 @@
   position: relative;
   flex: 1;
 }
-.article_con {
+.article_top {
+  display: flex;
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
+  height: 40px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 3px 5px;
+}
+.article_top .top_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+.article_top .top_btn:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.article_con {
+  position: absolute;
+  left: 0;
+  top: 40px;
+  width: 100%;
+  height: calc(100% - 40px);
   overflow: hidden;
 }
 .left_nav_item[type="title"] {
@@ -122,4 +148,23 @@
 }
 .left_nav_item .child {
   margin-left: 20px;
+}
+.right_quick_nav {
+  position: absolute;
+  right: 100px;
+  top: 100px;
+  padding: 10px 20px;
+  max-width: 230px;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: rgba(0, 0, 0, 0.03) 0 0 5px;
+  z-index: 2;
+}
+.right_quick_nav .nav_block {
+  margin-top: 4px;
+  font-size: 12px;
+  line-height: 1.4em;
+  cursor: pointer;
+}
+.right_quick_nav .nav_block:hover {
+  text-decoration: underline;
 }

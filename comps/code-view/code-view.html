@@ -1,11 +1,12 @@
 <style>
     :host {
         display: block;
-        visibility: hidden;
+        opacity: 0;
+        transition: opacity ease .3s;
     }
 
     :host([x-render="1"]) {
-        visibility: visible;
+        opacity: 1;
     }
 
     pre {
@@ -31,7 +32,8 @@
     <div class="viewer" #if="hasPreview">
         <iframe #if="canPreview" attr:src="frameView" frameborder="0"></iframe>
         <div #else>
-            <button style="margin:20px;padding:10px;" @click="canPreview = true"><span style="font-family: iconfont-codeview;">&#xe642;</span>点击查看预览效果</button>
+            <button style="margin:20px;padding:10px;" @click="canPreview = true"><span
+                    style="font-family: iconfont-codeview;">&#xe642;</span>点击查看预览效果</button>
         </div>
     </div>
 </div>

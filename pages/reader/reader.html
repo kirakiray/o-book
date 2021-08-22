@@ -54,12 +54,14 @@
     }
 </style>
 <div class="con">
+    <view-loading></view-loading>
     <div class="md_main">
         <div class="article">
             <div :html="mdhtml"></div>
             <div class="article_bottom" :show="prevPageName || nextPageName">
                 <div class="bottom_btn" @click="clickBack" :show="prevPageName">←{{prevPageName}}</div>
-                <div class="bottom_btn" @click="app.router.push(nextPagePath)" :show="nextPagePath" style="margin-left:auto;">
+                <div class="bottom_btn" @click="app.router.push(nextPagePath)" :show="nextPagePath"
+                    style="margin-left:auto;">
                     {{nextPageName}}→</div>
             </div>
         </div>
