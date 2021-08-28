@@ -2,5 +2,5 @@
 
 ## 主要
 
-* [测试1](docs/test1.md)
+* [准备](docs/ready.md)
 * [测试2](docs/test2.md)

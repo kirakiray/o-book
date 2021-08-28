@@ -10,7 +10,7 @@ Page(async ({ load }) => {
     }
 
     // // 加载代码预览组件
-    // await load("@obook/comps/code-view -p");
+    await load("@obook/comps/code-view -p");
 
     return {
         data: {
