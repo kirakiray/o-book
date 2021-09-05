@@ -25,7 +25,7 @@ Component(async ({ load, FILE }) => {
         watch: {
             home(url) {
                 if (url && !this._is_inited_home) {
-                    this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${url}`);
+                    this.shadow.$("o-app").router.unshift(`@obook/pages/reader/reader.js?path=${url}`);
                     this._is_inited_home = 1;
                     return;
                 }
@@ -106,6 +106,10 @@ Component(async ({ load, FILE }) => {
                                 width = maxWidth;
                             }
 
+                            if (width < 200) {
+                                width = 200;
+                            }
+
                             leftNav.style.width = `${width}px`;
                             leftNavCon.style.width = `${width}px`;
                         });
@@ -159,6 +163,11 @@ Component(async ({ load, FILE }) => {
 
             this.watchUntil(() => this.shadow.$('o-app').router.length >= 1).then(e => {
                 this.shadow.$("#mainloading").loaded = 1;
+            });
+
+            window.addEventListener("mousewheel", e => {
+                // e.preventDefault();
+                console.log("safari 是否触控板 => ", e.webkitDirectionInvertedFromDevice);
             });
         }
     };
