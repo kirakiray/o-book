@@ -165,10 +165,10 @@ Component(async ({ load, FILE }) => {
                 this.shadow.$("#mainloading").loaded = 1;
             });
 
-            window.addEventListener("mousewheel", e => {
-                // e.preventDefault();
-                console.log("safari 是否触控板 => ", e.webkitDirectionInvertedFromDevice);
-            });
+            // window.addEventListener("mousewheel", e => {
+            //     // e.preventDefault();
+            //     console.log("safari 是否触控板 => ", e.webkitDirectionInvertedFromDevice);
+            // });
         }
     };
 });
