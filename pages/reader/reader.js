@@ -45,6 +45,9 @@ Page(async ({ load }) => {
             // 查找下一篇文章的地址
             let inItem = false;
             let nextItem, prevItem;
+
+            await this.host.watchUntil("!!_links");
+
             this.host._links.some(e => {
                 if (e.type == "item") {
                     if (e.path == this.query.path) {
