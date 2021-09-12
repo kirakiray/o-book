@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="./libs/hljs-dark.css">
 <link rel="stylesheet" href="../../style/slim_scroll.css">
 <link rel="stylesheet" href="../../style/base.css">
 <style>
@@ -57,7 +56,8 @@
     <view-loading></view-loading>
     <div class="md_main">
         <div class="article">
-            <div :html="mdhtml"></div>
+            <!-- <div :html="mdhtml"></div> -->
+            <o-md :src="mdSrc"></o-md>
             <div class="article_bottom" :show="prevPageName || nextPageName">
                 <div class="bottom_btn" @click="clickBack" :show="prevPageName">←{{prevPageName}}</div>
                 <div class="bottom_btn" @click="app.router.push(nextPagePath)" :show="nextPagePath"

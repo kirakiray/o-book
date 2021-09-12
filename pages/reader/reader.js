@@ -1,16 +1,6 @@
 Page(async ({ load }) => {
-    if (!window.marked) {
-        // md解析器
-        await load("./libs/marked.min.js");
-    }
 
-    if (!window.hljs) {
-        // 代码高亮
-        await load("./libs/highlight.min.js");
-    }
-
-    // // 加载代码预览组件
-    await load("@obook/comps/code-view -p");
+    await load("@obook/comps/o-md -p");
 
     return {
         data: {
@@ -21,8 +11,7 @@ Page(async ({ load }) => {
             nextPageName: "",
             nextPagePath: "",
             initMd: 0,
-            // 正文内容
-            mdhtml: ""
+            mdSrc: ""
         },
         proto: {
             clickBack() {
@@ -37,28 +26,21 @@ Page(async ({ load }) => {
         async ready() {
             let { path } = this.query;
 
-            let mdData = await load(location.href.replace(/(.*\/).+/, "$1") + path).then(e => {
-                return e.clone().text()
+            this.mdSrc = path;
+
+            this.shadow.$("o-md").on("inited", e => {
+                // 取消loading
+                this.shadow.$("view-loading").loaded = 1;
             });
-            let mdText = marked(mdData);
 
-            // 修正图片资源
-            {
-                let rootDir = path.replace(/(.+\/).+/, "$1");
-                mdText = mdText.replace(/<img.*?>/g, (imgEleStr) => {
-                    let newstr = imgEleStr.replace(/src=['"](.+?)['"]/, (srcStr, matchStr) => {
-                        if (/^.+:/.test(matchStr)) {
-                            return srcStr;
-                        } else {
-                            return srcStr.replace(matchStr, rootDir + matchStr);
-                        }
-                    });
+            this.shadow.$("o-md").on("linkto", e => {
+                const { element, href } = e.data;
 
-                    return newstr;
-                });
-            }
-
-            this.mdhtml = mdText;
+                if (/\.md$/.test(href)) {
+                    const fix_path = new URL(`${location.origin}/` + this.query.path.replace(/(.*\/).+/, "$1") + href).pathname.replace(/^\//, "");
+                    this.app.router.push(`@obook/pages/reader/reader.js?path=${fix_path}`);
+                }
+            });
 
             // 查找下一篇文章的地址
             let inItem = false;
@@ -88,42 +70,6 @@ Page(async ({ load }) => {
                     this.prevPagePath = `@obook/pages/reader/reader.js?path=${prevItem.path}`;
                 }
             }
-
-            $.nextTick(() => {
-                // 对lang内容进行高亮
-                this.shadow.$(".article").all('code').forEach(e => {
-                    let block = e.ele;
-                    if (block.getAttribute("class")) {
-                        hljs.highlightElement(block);
-                    } else {
-                        Object.assign(block.style, {
-                            color: "#24292e",
-                            backgroundColor: "#f6f8fa"
-                        });
-                    }
-                });
-
-                // 修正a标签跳转路径（md文档）
-                this.shadow.$(".article").all("a").forEach(aEle => {
-                    let href = aEle.attr("href");
-                    if (/\.md$/.test(href)) {
-                        aEle.on("click", e => {
-                            // 禁止默认跳转行为
-                            e.preventDefault();
-
-                            const fix_path = new URL(`${location.origin}/` + this.query.path.replace(/(.*\/).+/, "$1") + href).pathname.replace(/^\//, "");
-
-                            this.app.router.push(`@obook/pages/reader/reader.js?path=${fix_path}`);
-                        });
-                    } else {
-                        // 如果是链接，就新标签打开
-                        aEle.attr("target", "_blank");
-                    }
-                });
-
-                // 取消loading
-                this.shadow.$("view-loading").loaded = 1;
-            });
         }
     };
 });
