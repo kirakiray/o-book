@@ -6,7 +6,7 @@
 
 ```html
 <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
-<script src="./o-md.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/o-md/o-md.js"></script>
 ```
 
 然后直接使用 `<o-md>` 标签，设置src属性，值为文档markdown的地址；
