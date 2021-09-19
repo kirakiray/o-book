@@ -21,6 +21,11 @@ Page(async ({ load }) => {
                 } else {
                     this.app.router.push(this.prevPagePath);
                 }
+                // this.replaceTo(this.prevPagePath);
+            },
+            clickNext() {
+                this.app.router.push(this.nextPagePath);
+                // this.replaceTo(this.nextPagePath);
             }
         },
         async ready() {

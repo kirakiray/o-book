@@ -115,7 +115,7 @@ blockquote {
 blockquote {
     position: relative;
     color: #999;
-    border-left: 2px solid var(--default-primary-color);
+    border-left: 2px solid var(--default-primary-color,#6264a7);
     padding-left: 1em;
     margin: 1em 3em 1em 2em;
     /* background-color: rgba(0,0,0,.01); */

@@ -13,6 +13,9 @@ define(() => {
 
     // summary 转 data
     function summaryToData(summary) {
+        // 先去掉注释
+        summary = summary.replace(/<!--[\d\D]+?-->/g, "");
+
         // 将换行转回数组数据，后面根据数组数据进行转换
         let su_data = summary.split(/\n/g).filter(e => !!e);
 

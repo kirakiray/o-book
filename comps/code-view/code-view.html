@@ -12,12 +12,35 @@
     pre {
         margin: 0;
     }
+
+    .view_btn {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        background-color: rgb(92, 92, 92);
+        color: #fff;
+        cursor: pointer;
+    }
 </style>
 <link rel="stylesheet" href="./code-view.css">
-<!-- <link rel="stylesheet" href="./hljs/default.min.css"> -->
-<link rel="stylesheet" href="./hljs/dark.css">
+<link rel="stylesheet" href="../../libs/hljs-dark.css">
 <div class="outer_frame">
-    <div class="container">
+    <div class="left_bar">
+        <div class="left_bar_block" class:active="leftActiveId == 'split'" @click="leftActiveId = 'split'" title="分屏">
+            &#xe6a1;
+        </div>
+        <div class="left_bar_block" class:active="leftActiveId == 'file'" @click="leftActiveId = 'file'" title="文件">
+            &#xe748;</div>
+        <div class="left_bar_block" class:active="leftActiveId == 'view'" @click="leftActiveId = 'view'" title="预览">
+            &#xe642;</div>
+    </div>
+    <div class="container" :show="leftActiveId == 'split' || leftActiveId == 'file'">
         <div class="top">
             <div fill:fileblock="sources" class="top_scroller"></div>
         </div>
@@ -29,11 +52,20 @@
             </div>
         </div>
     </div>
-    <div class="viewer" #if="hasPreview">
-        <iframe #if="canPreview" attr:src="frameView" frameborder="0"></iframe>
-        <div #else>
-            <button style="margin:20px;padding:10px;" @click="canPreview = true"><span
-                    style="font-family: iconfont-codeview;">&#xe642;</span>点击查看预览效果</button>
+    <div class="viewer" #if="hasPreview" :show="leftActiveId == 'split' || leftActiveId == 'view'">
+        <div class="viewer_top">
+            <div class="viewer_btn" @click="reloadView" title="刷新" :show="canPreview">&#xe6a8;</div>
+            <div class="viewer_btn" @click="openNew" title="新标签打开">&#xe740;</div>
+            <div class="viewer_url">
+                <div class="text_con">{{frameView}}</div>
+            </div>
+        </div>
+        <div class="frame_con">
+            <iframe #if="canPreview" attr:src="frameView" frameborder="0"></iframe>
+            <div #else class="view_btn" @click="canPreview = true">
+                <div style="font-family: iconfont-codeview;font-size:30px;">&#xe642;</div>
+                点击查看预览效果
+            </div>
         </div>
     </div>
 </div>

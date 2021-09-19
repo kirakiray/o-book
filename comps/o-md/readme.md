@@ -30,3 +30,31 @@ load("https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/o-md/o-md.js");
 ```html
 <o-md src="readme.md"></o-md>
 ```
+
+（当前网页就是预览效果）
+
+## 添加自定义组件
+
+`o-md` 允许 markdown 内使用自定义组件；
+
+demo.html ↓
+
+```html
+...
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/o-md/o-md.js"></script>
+<!-- 引入自定义组件 -->
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/code-run/code-run.js"></script>
+...
+
+<o-md src="readme.md"></o-md>
+```
+
+readme.md ↓
+
+```markdown
+# XXXX
+
+<!-- 直接使用自定义组件 -->
+<code-run></code-run>
+```

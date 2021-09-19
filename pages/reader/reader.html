@@ -60,8 +60,7 @@
             <o-md :src="mdSrc"></o-md>
             <div class="article_bottom" :show="prevPageName || nextPageName">
                 <div class="bottom_btn" @click="clickBack" :show="prevPageName">←{{prevPageName}}</div>
-                <div class="bottom_btn" @click="app.router.push(nextPagePath)" :show="nextPagePath"
-                    style="margin-left:auto;">
+                <div class="bottom_btn" @click="clickNext" :show="nextPagePath" style="margin-left:auto;">
                     {{nextPageName}}→</div>
             </div>
         </div>

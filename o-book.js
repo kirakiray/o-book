@@ -55,7 +55,15 @@ Component(async ({ load, FILE }) => {
         proto: {
             clickItem(data) {
                 if (data.path) {
-                    // 跳转到相应地址
+                    // switch (this.shadow.$("o-app").router.length) {
+                    //     case 0:
+                    //     case 1:
+                    //         // 跳转到相应地址
+                    //         this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${data.path}`);
+                    //         break;
+                    //     default:
+                    //         this.shadow.$("o-app").router.splice(-1, 1, `@obook/pages/reader/reader.js?path=${data.path}`);
+                    // }
                     this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${data.path}`);
                 }
             },

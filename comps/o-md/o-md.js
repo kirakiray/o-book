@@ -2,12 +2,16 @@ Component(async ({ load }) => {
     // 提前先引用先关资源
     if (!window.marked) {
         // md解析器
-        await load("./libs/marked.min.js");
+        await load("https://cdn.jsdelivr.net/npm/marked/marked.min.js").catch(e => {
+            return load("../../libs/marked.min.js");
+        })
     }
 
     if (!window.hljs) {
         // 代码高亮
-        await load("./libs/highlight.min.js");
+        await load("https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.2.0/build/highlight.min.js").catch(e => {
+            return load("../../libs/highlight.min.js");
+        });
     }
 
     return {
