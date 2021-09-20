@@ -41,7 +41,7 @@
         <a class="viewer_btn" title="下载" attr:href="preview_url" attr:download="name + '.html'"
             style="margin-left:auto;">&#xe638;</a>
     </div>
-    <iframe attr:src="preview_url" frameborder="0"></iframe>
+    <iframe id="mainFrame" attr:src="preview_url" frameborder="0" style="width: 100%;"></iframe>
 </div>
 <div #if="showCode != 'top'" :show="viewShowCode" class="code_con">
     <code id="content" @blur="changeCode" contenteditable

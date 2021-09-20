@@ -80,7 +80,8 @@ Component(async ({ load }) => {
     return {
         attrs: {
             name: "demo",
-            showCode: null
+            showCode: null,
+            frameHeight: 150
         },
         data: {
             // head上的代码
@@ -93,6 +94,11 @@ Component(async ({ load }) => {
             firstCode: ""
         },
         watch: {
+            frameHeight(h) {
+                if (h) {
+                    this.shadow.$("#mainFrame").style.height = h + 'px';
+                }
+            },
             code(code) {
                 if (!code) {
                     return;
@@ -112,7 +118,6 @@ Component(async ({ load }) => {
                 URL.revokeObjectURL(this.preview_url);
                 this.preview_url = URL.createObjectURL(file);
 
-                // console.log(this.preview_url);
             }
         },
         proto: {
