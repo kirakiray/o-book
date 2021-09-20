@@ -81,7 +81,7 @@ Component(async ({ load }) => {
         attrs: {
             name: "demo",
             showCode: null,
-            frameHeight: 150
+            frameHeight: ""
         },
         data: {
             // head上的代码 
