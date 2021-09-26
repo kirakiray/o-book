@@ -16,6 +16,9 @@
                 {{title}}
                 <span class="back_tips">返回到首页</span>
             </h2>
+            <div class="hide_leftnav_btn" @click="toggleLeftNav">
+                <img src="img/aside.svg" style="display:block;width:14px;height:14px;">
+            </div>
             <div fill:leftItem="summaryItems"></div>
         </div>
         <div class="resize_bar"></div>
