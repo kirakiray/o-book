@@ -65,6 +65,10 @@ Component(async ({ load, FILE }) => {
                     //         this.shadow.$("o-app").router.splice(-1, 1, `@obook/pages/reader/reader.js?path=${data.path}`);
                     // }
                     this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${data.path}`);
+
+                    if (window.innerWidth <= 600) {
+                        this.toggleLeftNav();
+                    }
                 }
             },
             // 当前页的path

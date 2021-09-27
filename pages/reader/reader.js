@@ -1,5 +1,4 @@
 Page(async ({ load }) => {
-
     await load("@obook/comps/o-md -p");
 
     return {

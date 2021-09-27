@@ -28,7 +28,7 @@ Component(async ({ load }) => {
         },
         data: {
             // 左侧激活的Id
-            leftActiveId: "split",
+            leftActiveId: "split1",
             // 所有可选资源
             sources: [],
             // 当前激活中的资源地址
