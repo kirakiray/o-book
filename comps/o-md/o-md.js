@@ -33,7 +33,7 @@ Component(async ({ load }) => {
                 // 请求资源
                 // let data = await fetch(src).then(e => e.text());
                 // 使用load函数可以把数据缓存起来
-                let data = await load(location.href.replace(/#.+/,"").replace(/(.*\/).+/, "$1") + src).then(e => {
+                let data = await load(location.href.replace(/#.+/,"").replace(/(.*\/).*/, "$1") + src).then(e => {
                     return e.clone().text()
                 });
 
