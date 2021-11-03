@@ -41,7 +41,14 @@ Page(async ({ load }) => {
                 const { element, href } = e.data;
 
                 if (/\.md$/.test(href)) {
-                    const fix_path = new URL(`${location.origin}/` + this.query.path.replace(/(.*\/).+/, "$1") + href).pathname.replace(/^\//, "");
+                    let re_path = this.query.path;
+                    if (re_path.includes('/')) {
+                        re_path = re_path.replace(/(.*\/).+/, "$1");
+                    } else {
+                        re_path = "";
+                    }
+
+                    const fix_path = new URL(`${location.origin}/` + re_path + href).pathname.replace(/^\//, "");
                     this.app.router.push(`@obook/pages/reader/reader.js?path=${fix_path}`);
                 }
             });
