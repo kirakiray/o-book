@@ -64,6 +64,9 @@ Component(async ({ load, FILE }) => {
                     //     default:
                     //         this.shadow.$("o-app").router.splice(-1, 1, `@obook/pages/reader/reader.js?path=${data.path}`);
                     // }
+                    if (this.currentPath == data.path) {
+                        return;
+                    }
                     this.shadow.$("o-app").router.push(`@obook/pages/reader/reader.js?path=${data.path}`);
 
                     if (window.innerWidth <= 600) {
