@@ -13,7 +13,7 @@
 ```html
 <!--o-book.js 依赖 ofa.js-->
 <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script> 
-<script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book@1.0.2/o-book.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book@latest/o-book.js"></script>
 
 <!-- 引用组件 -->
 <o-book summary="SUMMARY.md" home="docs/readme.md" style="height:100%;">
@@ -33,7 +33,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>o-book</title>
     <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book@1.0.2/o-book.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book@latest/o-book.js"></script>
     <style>
         html,
         body {
