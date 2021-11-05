@@ -17,7 +17,7 @@ define(({ load }) => {
             }
         },
         ready() {
-            load("@lib/router/address.js").then(init => init(this));
+            load("@lib/router/auto.js").then(init => init(this));
             // load("http://127.0.0.1:5513/lib/router/address.js").then(init => init(this));
         }
     };
