@@ -159,6 +159,12 @@ Component(async ({ load }) => {
           // 修正 {{origin}}
           chHtml = chHtml.replace(/\{\{origin\}\}/g, location.origin);
 
+          // 修正 {{dir}}
+          chHtml = chHtml.replace(
+            /\{\{dir\}\}/g,
+            location.origin + location.pathname.replace(/(.+)\/.+/, "$1")
+          );
+
           this.headCode = chHtml;
         }
 

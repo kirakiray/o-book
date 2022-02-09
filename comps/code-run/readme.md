@@ -154,3 +154,7 @@ codehead 内可使用 `{{origin}}` 标识替换为运行目录的 `location.orig
   </template>
 </code-run>
 ```
+
+### {{dir}} 标识
+
+与 `{{origin}}` 类似，代表当前运行网页的目录；
