@@ -7,7 +7,7 @@
 先将 ofajs 和 o-md 组件引用到网页；（确保 o-md 在 ofajs 后载入）
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/o-md/o-md.js"></script>
 ```
 
@@ -41,7 +41,7 @@ demo.html ↓
 
 ```html
 ...
-<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/o-md/o-md.js"></script>
 <!-- 引入自定义组件 -->
 <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/code-run/code-run.js"></script>

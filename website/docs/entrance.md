@@ -12,7 +12,7 @@
 
 ```html
 <!--o-book.js 依赖 ofa.js-->
-<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script> 
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script> 
 <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book@latest/o-book.js"></script>
 
 <!-- 引用组件 -->
@@ -32,7 +32,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>o-book</title>
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book@latest/o-book.js"></script>
     <style>
         html,

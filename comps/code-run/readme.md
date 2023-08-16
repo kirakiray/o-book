@@ -13,7 +13,7 @@
 先将 ofajs 和 code-run 组件引用到网页；（确保 code-run 在 ofajs 后载入）
 
 ```html
-<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/code-run/code-run.js"></script>
 ```
 
@@ -101,7 +101,7 @@ load("https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/code-run/code-run.js");
     <codehead>
       <!-- 新建后会被放到顶部的内容 -->
       <!-- 不会被展示到代码显示上 -->
-      <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script>
     </codehead>
     <div id="consoler">I am consoler</div>
     <button id="btn">Click Me!</button>
@@ -119,7 +119,7 @@ load("https://cdn.jsdelivr.net/gh/kirakiray/o-book/comps/code-run/code-run.js");
         <codehead>
             <!-- 新建后会被放到顶部的内容 -->
             <!-- 不会被展示到代码显示上 -->
-            <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+            <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script>
         </codehead>
         <div id="consoler">I am consoler</div>
         <button id="btn">Click Me!</button>
@@ -139,7 +139,7 @@ codehead 内可使用 `{{origin}}` 标识替换为运行目录的 `location.orig
 <code-run name="clickTest" show-code>
   <template>
     <codehead>
-      <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js/dist/ofa.js"></script>
+      <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@3.0.13/dist/ofa.js"></script>
       <!-- 假如当前网页运行在 https://xxxx.com 域名上，
       {{origin}}/o-book.js 会被替换为当前域名 https://xxxx.com/o-book.js -->
       <script src="{{origin}}/o-book.js"></script>
