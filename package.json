@@ -1,0 +1,11 @@
+{
+  "name": "o-book",
+  "version": "2.0.0",
+  "description": "A document system built on ofa.js (like gitbook)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YAO",
+  "license": "MIT"
+}
