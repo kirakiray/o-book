@@ -1,0 +1,105 @@
+<template page>
+  <l-m src="../comps/article-container.html"></l-m>
+  <l-m src="../comps/doc-aside.html"></l-m>
+  <l-m src="../comps/article-nav/article-nav.html"></l-m>
+  <style>
+    :host {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .left-container {
+      box-sizing: border-box;
+      padding-left: 16px;
+      padding-right: 16px;
+      max-height: calc(100vh - 60px);
+      overflow-y: auto;
+      color: var(--aside-color);
+    }
+
+    .left-container:before {
+      content: "";
+      display: block;
+      height: 10px;
+      width: 100%;
+    }
+  </style>
+
+  <article-container attr:hide-right="hideRight ? '' : null">
+    <div slot="aside" class="left-container">
+      <doc-aside :active-href="leftActiveUrl"> </doc-aside>
+    </div>
+    <div style="padding: 0 24px 0; position: relative">
+      <slot></slot>
+    </div>
+    <article-nav slot="right-aside">
+      <ul>
+        <x-fill :value="rightNavs">
+          <li
+            class:invis="$host.visNavs.includes($data.id)"
+            class:active="$data.active"
+            attr:type="$data.type"
+          >
+            <a attr:href="$data.href">{{$data.name}}</a>
+          </li>
+        </x-fill>
+      </ul>
+    </article-nav>
+  </article-container>
+  <script>
+    import { leftNavsData, configData } from "../data.mjs";
+    import { getPath } from "../util.mjs";
+
+    export const parent = "./header-layout.html";
+
+    const getDir = (path) => path.replace(/(.+?\/).+/, "$1");
+
+    export default {
+      data: {
+        leftActiveUrl: "",
+        rightNavs: [],
+        // 正文内可视的导航标题
+        visNavs: [],
+        // 所有文章数据
+        _articlesBase: [],
+        // 当前所处的 article name
+        currentArticleIndex: "",
+        hideRight: false,
+      },
+      proto: {
+        refreshLeft() {
+          this.leftActiveUrl = `${location.origin}${location.pathname}`;
+
+          const { navs } = configData;
+
+          const currentDir = getDir(getPath(location.href));
+
+          const target = navs.find((e) => {
+            return getDir(getPath(e.href)) == currentDir;
+          });
+
+          if (!target) {
+            this._nowBase = [];
+            leftNavsData.length = 0;
+            return;
+          }
+
+          if (target !== this._nowBase) {
+            this._nowBase = target;
+
+            // 更新导航数据
+            leftNavsData.length = 0;
+            leftNavsData.push(...target.articles.toJSON());
+          }
+        },
+      },
+      attached() {
+        this.refreshLeft();
+      },
+      routerChange() {
+        this.refreshLeft();
+      },
+    };
+  </script>
+</template>

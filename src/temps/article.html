@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test</title>
+    <script
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.14/dist/ofa.min.js"
+      debug
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.14/libs/scsr/scsr.mjs"
+      type="module"
+    ></script>
+    <link rel="stylesheet" href="<%host%>/statics/css/public.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <l-m src="<%host%>/statics/comps/doc-container.html"></l-m>
+    <l-m src="<%host%>/statics/comps/doc-header/doc-header.html"></l-m>
+    <o-app src="<%host%>/statics/app-config.mjs">
+      <template page>
+        <div>asd</div>
+        <%url%>
+
+        <script>
+          export const parent = "<%host%>/statics/layouts/article-layout.html";
+        </script>
+      </template>
+    </o-app>
+    <!-- <script src="<%host%>/statics/init.js"></script> -->
+  </body>
+</html>
