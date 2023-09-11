@@ -1,9 +1,14 @@
+importScripts("https://cdn.jsdelivr.net/npm/marked/marked.min.js");
+
 const host = "http://127.0.0.1:5512";
 
 const workPath = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1") + "/$";
 
 const responseFun = async (request) => {
-  const realUrl = request.url.replace("/$/", "/").replace(/html$/, "md");
+  const realUrl = request.url
+    .replace(/(.+)#.*/, "$1")
+    .replace("/$/", "/")
+    .replace(/html$/, "md");
 
   const targetTemp = await fetch(realUrl)
     .then((e) => {
@@ -30,6 +35,7 @@ const responseFun = async (request) => {
   const data = {
     host,
     url: request.url,
+    content: marked.parse(targetTemp),
   };
 
   // 替换模板内容

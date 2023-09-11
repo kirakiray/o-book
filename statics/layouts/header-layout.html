@@ -31,6 +31,9 @@
           </li>
         </x-fill>
       </ul>
+      <div slot="mobile-aside" class="mobile-aside">
+        <doc-aside slot="aside" :active-href="leftActiveUrl"> </doc-aside>
+      </div>
       <x-if :value="github">
         <a
           class="iconfont icon-github-fill github-link"
@@ -50,6 +53,7 @@
       data: {
         navs: configData.navs,
         github: configData.github || "",
+        leftActiveUrl: "",
       },
       proto: {
         isActive(data) {
@@ -60,6 +64,14 @@
           }
           return false;
         },
+      },
+      ready() {
+        this.leftActiveUrl = `${location.origin}${location.pathname}`;
+        this.attr("id", "header-layout");
+      },
+      routerChange() {
+        this.shadow.$("doc-container").scrollTop = 0;
+        this.leftActiveUrl = `${location.origin}${location.pathname}`;
       },
     };
   </script>

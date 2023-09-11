@@ -25,11 +25,27 @@
     <l-m src="<%host%>/statics/comps/doc-header/doc-header.html"></l-m>
     <o-app src="<%host%>/statics/app-config.mjs">
       <template page>
-        <div>asd</div>
-        <%url%>
-
+        <style>
+          .markdown-body::before,
+          .markdown-body::after {
+            display: block;
+            content: "";
+            height: 24px;
+          }
+        </style>
+        <link
+          rel="stylesheet"
+          href="<%host%>/statics/css/github-markdown.css"
+        />
+        <article class="markdown-body"><%content%></article>
         <script>
           export const parent = "<%host%>/statics/layouts/article-layout.html";
+
+          import pageInit from "<%host%>/statics/page-init.mjs";
+
+          export default async (...args) => {
+            return await pageInit(PATH, args);
+          };
         </script>
       </template>
     </o-app>

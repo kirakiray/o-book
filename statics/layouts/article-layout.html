@@ -93,13 +93,146 @@
             leftNavsData.push(...target.articles.toJSON());
           }
         },
+        get article() {
+          return this.slice(-1)[0]?.shadow?.$("article");
+        },
+        refreshRightNav() {
+          const { article } = this;
+
+          if (typeof article.data.noRight === "string") {
+            this.hideRight = true;
+            return;
+          } else {
+            this.hideRight = false;
+          }
+
+          let count = 0;
+          let beforeTitle = "";
+
+          article.forEach((childEl) => {
+            if (["h1", "h2", "h3", "h4", "j5"].includes(childEl.tag)) {
+              beforeTitle = childEl.text.trim() + `-title${count}`;
+              count++;
+            }
+
+            childEl.data.sutitle = replaceSpecialCharacters(beforeTitle);
+          });
+
+          const titles = article.all("h1,h2,h3,h4,h5");
+
+          this.rightNavs = titles.map((e, index) => {
+            const id = `${replaceSpecialCharacters(
+              e.text.trim()
+            )}-title${index}`;
+
+            e.html = `<a class="anchor" href="#${id}"><span class="octicon-link"></span> </a>${e.text}`;
+
+            e.attr("id", id);
+
+            return {
+              id,
+              type: e.tag.toLowerCase(),
+              name: e.text.trim(),
+              href: "#" + id,
+            };
+          });
+
+          if (this._oldIO) {
+            this._oldIO.disconnect();
+          }
+
+          const visibles = [];
+
+          let timer;
+
+          const refreshRightActive = () => {
+            const shows = new Set();
+            visibles.forEach((e) => {
+              shows.add(e.dataset.sutitle);
+            });
+
+            this.visNavs = Array.from(shows);
+
+            let hasActive;
+            this.rightNavs.forEach((e) => {
+              e.active = null;
+              if (hasActive) {
+                return;
+              }
+
+              if (shows.has(e.id)) {
+                e.active = 1;
+                hasActive = 1;
+              }
+            });
+
+            this.shadow.$("article-nav")?.focusScroll &&
+              this.shadow.$("article-nav").focusScroll();
+          };
+
+          const observer = (this._oldIO = new IntersectionObserver(
+            (entries, observer) => {
+              for (const entry of entries) {
+                if (entry.isIntersecting) {
+                  visibles.push(entry.target);
+                } else {
+                  const id = visibles.indexOf(entry.target);
+                  if (id > -1) {
+                    visibles.splice(id, 1);
+                  }
+                }
+              }
+
+              if (timer) {
+                return;
+              }
+
+              timer = setTimeout(() => {
+                refreshRightActive();
+                timer = null;
+              }, 50);
+            }
+          ));
+
+          article.forEach((e) => {
+            observer.observe(e.ele, {});
+          });
+        },
+        hashChange() {
+          const hash = decodeURIComponent(location.hash);
+
+          if (hash) {
+            const target = this[0].shadow.$(hash);
+            if (target) {
+              target.ele.scrollIntoView();
+            }
+          } else {
+            $("#header-layout").shadow.$("doc-container").scrollTop = 0;
+          }
+        },
       },
       attached() {
         this.refreshLeft();
+        this.refreshRightNav();
+
+        window.addEventListener(
+          "hashchange",
+          (this.__hash_fun = () => this.hashChange())
+        );
+
+        setTimeout(() => this.hashChange(), 100);
+      },
+      detached() {
+        window.removeEventListener("hashchange", this.__hash_fun);
       },
       routerChange() {
         this.refreshLeft();
+        this.refreshRightNav();
       },
     };
+    function replaceSpecialCharacters(str) {
+      const specialCharacters = /[\s!@#$%^&*()\-\+=\[\]{}|\\/,.;'"<>?]/g;
+      return str.replace(specialCharacters, "-");
+    }
   </script>
 </template>
