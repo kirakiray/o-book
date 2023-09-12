@@ -23,6 +23,16 @@ export default async (PATH, [{ query, load }]) => {
       }
 
       articleWrapCode(this.shadow.$("article"));
+
+      const loading = $("#loading");
+      if (loading) {
+        setTimeout(() => {
+          loading.classList.add("fadeout");
+          setTimeout(() => {
+            loading.remove();
+          }, 400);
+        }, 200);
+      }
     },
   };
 };

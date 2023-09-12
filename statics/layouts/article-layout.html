@@ -2,6 +2,7 @@
   <l-m src="../comps/article-container.html"></l-m>
   <l-m src="../comps/doc-aside.html"></l-m>
   <l-m src="../comps/article-nav/article-nav.html"></l-m>
+  <l-m src="../comps/exm-article.html"></l-m>
   <style>
     :host {
       display: block;
@@ -99,7 +100,7 @@
         refreshRightNav() {
           const { article } = this;
 
-          if (typeof article.data.noRight === "string") {
+          if (article.$("template[is]")) {
             this.hideRight = true;
             return;
           } else {

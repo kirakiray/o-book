@@ -4,11 +4,8 @@ const host = "http://127.0.0.1:5512";
 
 const workPath = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1") + "/$";
 
-const responseFun = async (request) => {
-  const realUrl = request.url
-    .replace(/(.+)#.*/, "$1")
-    .replace("/$/", "/")
-    .replace(/html$/, "md");
+const responseFun = async (url) => {
+  const realUrl = url.replace("/$/", "/").replace(/html$/, "md");
 
   const targetTemp = await fetch(realUrl)
     .then((e) => {
@@ -32,10 +29,32 @@ const responseFun = async (request) => {
     return e.text();
   });
 
+  const lexs = marked.lexer(targetTemp);
+
+  let article = `<article class="markdown-body">${marked.parse(
+    targetTemp
+  )}</article>`;
+
+  // 看是否包裹类型
+  if (lexs[0].type === "html") {
+    const wrapCompName = lexs[0].text.replace(/.+ type\:(.+) [\s\S]+/, "$1");
+
+    const matchArr = wrapCompName.match(/<template is="(.+?)">/);
+
+    if (matchArr) {
+      const wrapComp = matchArr[1];
+
+      article = `<${wrapComp}>${article}</${wrapComp}>`;
+    }
+  }
+
+  const firstHeading = lexs.find((e) => e.type === "heading");
+
   const data = {
     host,
-    url: request.url,
-    content: marked.parse(targetTemp),
+    title: firstHeading.text,
+    url,
+    article,
   };
 
   // 替换模板内容
@@ -54,6 +73,13 @@ self.addEventListener("fetch", async (event) => {
   const { request } = event;
 
   if (request.url.includes(workPath)) {
-    event.respondWith(responseFun(request));
+    let realUrl = request.url.replace(/(.+)#.*/, "$1");
+    const darr = realUrl.split("/$/");
+    if (darr.length && /^publics/.test(darr[1])) {
+      event.respondWith(fetch(`${darr[0]}/${darr[1]}`));
+      return;
+    }
+
+    event.respondWith(responseFun(realUrl));
   }
 });

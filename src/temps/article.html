@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Test</title>
+    <title><%title%></title>
     <script
       src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.14/dist/ofa.min.js"
       debug
@@ -30,14 +30,17 @@
           .markdown-body::after {
             display: block;
             content: "";
-            height: 24px;
+            height: 1px;
+          }
+          .markdown-body::after {
+            height: 32px;
           }
         </style>
         <link
           rel="stylesheet"
           href="<%host%>/statics/css/github-markdown.css"
         />
-        <article class="markdown-body"><%content%></article>
+        <%article%>
         <script>
           export const parent = "<%host%>/statics/layouts/article-layout.html";
 
@@ -49,6 +52,7 @@
         </script>
       </template>
     </o-app>
-    <!-- <script src="<%host%>/statics/init.js"></script> -->
+    <div id="loading"></div>
+    <script src="<%host%>/statics/init.js"></script>
   </body>
 </html>

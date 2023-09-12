@@ -58,3 +58,18 @@ cdata.navs.forEach((e) => {
 });
 
 export const configData = $.stanz(cdata ? cdata : {});
+
+// 用于监听窗口大小
+export const size = $.stanz({
+  width: 0,
+  height: 0,
+});
+
+let timer;
+window.addEventListener("resize", () => {
+  clearTimeout(timer);
+  timer = setTimeout(() => {
+    size.width = window.innerWidth;
+    size.height = window.innerHeight;
+  }, 100);
+});
