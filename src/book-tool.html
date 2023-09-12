@@ -2,6 +2,7 @@
   <div>我是book生成器辅助工具</div>
   <script>
     import { getSummary } from "../statics/util.mjs";
+    import storage from "./storage/index.mjs";
 
     export default {
       attrs: {
@@ -9,45 +10,22 @@
         sw: "",
       },
       watch: {
-        async src(src) {
-          if (this.__src) {
-            throw "The src attribute is already in effect and cannot be changed.";
-          }
-          if (!src) {
-            return;
-          }
-
-          this.__src = src;
-
-          const configUrl = new URL(src, location.href).href;
-
-          const cdata = await fetch(configUrl).then((e) => e.json());
-
-          const { navs } = cdata;
-
-          await Promise.all(
-            navs.map(async (e) => {
-              const { summary } = e;
-
-              const summaryUrl = new URL(summary, configUrl).href;
-
-              const data = await getSummary(summaryUrl);
-
-              e.articles = data;
-            })
-          );
-
-          localStorage.__configData = JSON.stringify(cdata);
-
-          console.log("configData: ", cdata);
-        },
-        sw(sw) {
+        async sw(sw) {
           if (this.__sw) {
             throw "The sw attribute is already in effect and cannot be changed.";
           }
           if (!sw) {
             return;
           }
+
+          if (!this.src) {
+            return;
+          }
+
+          this.__sw = sw;
+
+          // const configUrl = new URL(this.src, location.href).href;
+          await storage.setItem("config-url", [this.src]);
 
           navigator.serviceWorker
             .register(new URL(sw, location.href).href, {

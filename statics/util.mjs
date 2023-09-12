@@ -22,7 +22,7 @@ export function wrapSubstringWithSpan(str, substr) {
 }
 
 export const getPath = (url) => {
-  const arr = url.split("/$/");
+  const arr = url.split("/@/");
   if (arr.length) {
     return "/" + arr[1];
   }

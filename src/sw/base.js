@@ -1,11 +1,13 @@
-importScripts("https://cdn.jsdelivr.net/npm/marked/marked.min.js");
-
 const host = "http://127.0.0.1:5512";
 
-const workPath = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1") + "/$";
+importScripts("https://cdn.jsdelivr.net/npm/marked/marked.min.js");
+importScripts(`${host}/src/storage/index.js`);
+importScripts(`${host}/src/sw/getSummary.js`);
 
-const responseFun = async (url) => {
-  const realUrl = url.replace("/$/", "/").replace(/html$/, "md");
+const workPath = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1") + "/@/";
+
+const responseMD = async (url) => {
+  const realUrl = url.replace("/@/", "/").replace(/html$/, "md");
 
   const targetTemp = await fetch(realUrl)
     .then((e) => {
@@ -69,17 +71,61 @@ const responseFun = async (url) => {
   });
 };
 
+const responseConfig = async (cdata) => {
+  const { navs } = cdata;
+
+  await Promise.all(
+    navs.map(async (e) => {
+      const { summary } = e;
+
+      const summaryUrl = new URL(summary, self.serviceWorker.scriptURL).href;
+
+      const data = await getSummary(summaryUrl);
+
+      e.articles = data;
+    })
+  );
+
+  return new Response(JSON.stringify(cdata), {
+    status: 200,
+  });
+};
+
 self.addEventListener("fetch", async (event) => {
   const { request } = event;
 
   if (request.url.includes(workPath)) {
-    let realUrl = request.url.replace(/(.+)#.*/, "$1");
-    const darr = realUrl.split("/$/");
-    if (darr.length && /^publics/.test(darr[1])) {
-      event.respondWith(fetch(`${darr[0]}/${darr[1]}`));
-      return;
-    }
+    event.respondWith(
+      (async () => {
+        let configs = await storage.getItem("config-url");
+        configs = configs.map((e) => new URL(e, workPath).href);
 
-    event.respondWith(responseFun(realUrl));
+        const targetConfig = configs.find((e) => e === request.url);
+
+        let realUrl = request.url.replace(/(.+)#.*/, "$1");
+        const darr = realUrl.split("/@/");
+
+        if (targetConfig) {
+          // 是config对象
+          const data = await fetch(`${darr[0]}/${darr[1]}`).then((e) =>
+            e.json()
+          );
+
+          return responseConfig(data);
+        }
+
+        if (darr.length && /^publics/.test(darr[1])) {
+          return fetch(`${darr[0]}/${darr[1]}`);
+        }
+
+        if (/\.html$/.test(realUrl)) {
+          return responseMD(realUrl);
+        }
+
+        return new Response("", {
+          status: 404,
+        });
+      })()
+    );
   }
 });

@@ -47,12 +47,14 @@
   <script>
     import { configData } from "../data.mjs";
 
-    const realRoot = location.href.split("/$/")[0] + "/$/";
+    const realRoot = location.href.split("/@/")[0] + "/@/";
 
     export default {
       data: {
-        navs: configData.navs,
-        github: configData.github || "",
+        // navs: configData.navs,
+        navs: [],
+        // github: configData.github || "",
+        github: "",
         leftActiveUrl: "",
       },
       proto: {
@@ -65,9 +67,13 @@
           return false;
         },
       },
-      ready() {
+      async ready() {
         this.leftActiveUrl = `${location.origin}${location.pathname}`;
         this.attr("id", "header-layout");
+        const data = await configData;
+
+        this.navs = data.navs;
+        this.github = data.github;
       },
       routerChange() {
         this.shadow.$("doc-container").scrollTop = 0;

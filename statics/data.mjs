@@ -23,41 +23,38 @@ switch (lang) {
 
 export { lang };
 
-// 修正 configData 的数据
-let cdata = localStorage.__configData;
+const realRoot = location.href.split("/@/")[0] + "/@/";
 
-if (cdata) {
-  cdata = JSON.parse(cdata);
-}
+export const configData = new Promise(async (resolve) => {
+  let cdata = await fetch(`${realRoot}config.json`).then((e) => e.json());
 
-const realRoot = location.href.split("/$/")[0] + "/$/";
+  cdata.navs.forEach((e) => {
+    const summaryPath = new URL(e.summary, realRoot).href;
 
-cdata.navs.forEach((e) => {
-  const summaryPath = new URL(e.summary, realRoot).href;
+    const items = e.articles.flatMap((item) => {
+      if (item.childs) {
+        item.childs.forEach((item) => {
+          item.fixedHref = new URL(item.href, summaryPath).href.replace(
+            /md$/,
+            "html"
+          );
+        });
+        return item.childs;
+      }
 
-  const items = e.articles.flatMap((item) => {
-    if (item.childs) {
-      item.childs.forEach((item) => {
-        item.fixedHref = new URL(item.href, summaryPath).href.replace(
-          /md$/,
-          "html"
-        );
-      });
-      return item.childs;
-    }
+      item.fixedHref = new URL(item.href, summaryPath).href.replace(
+        /md$/,
+        "html"
+      );
 
-    item.fixedHref = new URL(item.href, summaryPath).href.replace(
-      /md$/,
-      "html"
-    );
+      return [item];
+    });
 
-    return [item];
+    e.href = items[0].fixedHref.replace(/\.md$/, ".html");
   });
 
-  e.href = items[0].fixedHref.replace(/\.md$/, ".html");
+  resolve(cdata);
 });
-
-export const configData = $.stanz(cdata ? cdata : {});
 
 // 用于监听窗口大小
 export const size = $.stanz({

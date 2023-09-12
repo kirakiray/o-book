@@ -69,10 +69,10 @@
         hideRight: false,
       },
       proto: {
-        refreshLeft() {
+        async refreshLeft() {
           this.leftActiveUrl = `${location.origin}${location.pathname}`;
 
-          const { navs } = configData;
+          const { navs } = await configData;
 
           const currentDir = getDir(getPath(location.href));
 
@@ -91,7 +91,7 @@
 
             // 更新导航数据
             leftNavsData.length = 0;
-            leftNavsData.push(...target.articles.toJSON());
+            leftNavsData.push(...target.articles);
           }
         },
         get article() {
