@@ -5,6 +5,10 @@ import open from "open";
 import path from "path";
 import AdmZip from "adm-zip";
 import { rimraf } from "rimraf";
+import { openPage } from "./openPage.mjs";
+
+// 无头浏览器实例
+let client;
 
 let packagejson = readFileSync(`${process.env.PWD}/package.json`);
 
@@ -23,19 +27,24 @@ const app = new Koa();
 app.use(st(dir));
 
 const outputFile = async (buffer) => {
+  // 解压缩打包的文件
   const zip = new AdmZip(buffer);
 
   const targetPath = path.resolve(process.env.PWD, obook.output);
 
   await rimraf(targetPath);
 
-  zip.extractAllTo(targetPath, true);
+  await zip.extractAllTo(targetPath, true);
+
+  client.close();
+
+  if (!process.argv.includes("dev")) {
+    server.close();
+  }
 };
 
 app.use(async (ctx, next) => {
-  if (ctx.method === "POST" && ctx.path === "/asd") {
-    console.log(ctx.request.body);
-
+  if (ctx.method === "POST" && ctx.path === "/postzip") {
     await new Promise((res) => {
       let data = [];
       let size = 0;
@@ -61,7 +70,11 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-app.listen(48956);
+const server = app.listen(48956);
+
+if (process.argv.includes("build")) {
+  client = await openPage("http://localhost:48956/#upload-zip");
+}
 
 if (process.argv.includes("dev")) {
   setTimeout(() => {
