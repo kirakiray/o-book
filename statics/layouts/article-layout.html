@@ -50,11 +50,23 @@
   </article-container>
   <script>
     import { leftNavsData, configData } from "../data.mjs";
-    import { getPath } from "../util.mjs";
 
     export const parent = "./header-layout.html";
 
-    const getDir = (path) => path.replace(/(.+?\/).+/, "$1");
+    function countMatchingChars(str1, str2) {
+      let count = 0;
+      const length = Math.min(str1.length, str2.length);
+
+      for (let i = 0; i < length; i++) {
+        if (str1.charAt(i) === str2.charAt(i)) {
+          count++;
+        } else {
+          break;
+        }
+      }
+
+      return count;
+    }
 
     export default {
       data: {
@@ -74,10 +86,17 @@
 
           const { navs } = await configData;
 
-          const currentDir = getDir(getPath(location.href));
+          let target;
+          let maxCount = 0;
 
-          const target = navs.find((e) => {
-            return getDir(getPath(e.href)) == currentDir;
+          // 必须只有一个最大匹配数时，才激活显示的nav
+          navs.forEach((e) => {
+            const mathsCount = countMatchingChars(location.href, e.href);
+
+            if (mathsCount > maxCount) {
+              maxCount = mathsCount;
+              target = e;
+            }
           });
 
           if (!target) {

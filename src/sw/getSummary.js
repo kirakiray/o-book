@@ -1,14 +1,4 @@
 const getSummary = (() => {
-  function fixHref(datas, url) {
-    datas.forEach((item) => {
-      if (item.href) {
-        item.path = new URL(item.href, url).href;
-      } else if (item.childs) {
-        fixHref(item.childs, url);
-      }
-    });
-  }
-
   function markdownToJSON(markdown) {
     const lines = markdown.split("\n");
     const json = convertLinesToJSON(lines);
@@ -63,7 +53,7 @@ const getSummary = (() => {
 
     const datas = markdownToJSON(content);
 
-    fixHref(datas, url);
+    // fixHref(datas, url);
 
     return datas;
   }

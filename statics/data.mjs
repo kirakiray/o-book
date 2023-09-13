@@ -23,13 +23,12 @@ switch (lang) {
 
 export { lang };
 
-const realRoot = location.href.split("/@/")[0] + "/@/";
-
 export const configData = new Promise(async (resolve) => {
-  let cdata = await fetch(`${realRoot}config.json`).then((e) => e.json());
+  const configPath = new URL(configUrl, location.href).href;
+  let cdata = await fetch(configPath).then((e) => e.json());
 
   cdata.navs.forEach((e) => {
-    const summaryPath = new URL(e.summary, realRoot).href;
+    const summaryPath = new URL(e.summary, configPath).href;
 
     const items = e.articles.flatMap((item) => {
       if (item.childs) {

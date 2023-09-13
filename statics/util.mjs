@@ -21,14 +21,6 @@ export function wrapSubstringWithSpan(str, substr) {
   );
 }
 
-export const getPath = (url) => {
-  const arr = url.split("/@/");
-  if (arr.length) {
-    return "/" + arr[1];
-  }
-  debugger;
-};
-
 export async function getSummary(url) {
   const content = await fetch(url).then((e) => e.text());
 

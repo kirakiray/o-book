@@ -6,7 +6,7 @@ importScripts(`${host}/src/sw/getSummary.js`);
 
 const workPath = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1") + "/@/";
 
-const responseMD = async (url) => {
+const responseMD = async (url, configUrl = "") => {
   const realUrl = url.replace("/@/", "/").replace(/html$/, "md");
 
   const targetTemp = await fetch(realUrl)
@@ -57,6 +57,7 @@ const responseMD = async (url) => {
     title: firstHeading.text,
     url,
     article,
+    configUrl,
   };
 
   // 替换模板内容
@@ -71,14 +72,14 @@ const responseMD = async (url) => {
   });
 };
 
-const responseConfig = async (cdata) => {
+const responseConfig = async (cdata, relateUrl) => {
   const { navs } = cdata;
 
   await Promise.all(
     navs.map(async (e) => {
       const { summary } = e;
 
-      const summaryUrl = new URL(summary, self.serviceWorker.scriptURL).href;
+      const summaryUrl = new URL(summary, relateUrl).href;
 
       const data = await getSummary(summaryUrl);
 
@@ -100,26 +101,41 @@ self.addEventListener("fetch", async (event) => {
         let configs = await storage.getItem("config-url");
         configs = configs.map((e) => new URL(e, workPath).href);
 
-        const targetConfig = configs.find((e) => e === request.url);
+        const isConfig = configs.find((e) => e === request.url);
 
         let realUrl = request.url.replace(/(.+)#.*/, "$1");
         const darr = realUrl.split("/@/");
 
-        if (targetConfig) {
-          // 是config对象
+        if (isConfig) {
           const data = await fetch(`${darr[0]}/${darr[1]}`).then((e) =>
             e.json()
           );
 
-          return responseConfig(data);
+          return responseConfig(data, darr.join("/"));
         }
 
         if (darr.length && /^publics/.test(darr[1])) {
           return fetch(`${darr[0]}/${darr[1]}`);
         }
 
+        let targetConfig;
+        let maxCount = 0;
+
+        // 必须只有一个最大匹配数时，才激活显示的nav
+        configs.forEach((e) => {
+          const mathsCount = countMatchingChars(realUrl, e);
+
+          if (mathsCount > maxCount) {
+            maxCount = mathsCount;
+            targetConfig = e;
+          }
+        });
+
         if (/\.html$/.test(realUrl)) {
-          return responseMD(realUrl);
+          return responseMD(
+            realUrl,
+            getRelativePath(realUrl.replace(/(.+)\/.+/, "$1"), targetConfig)
+          );
         }
 
         return new Response("", {
@@ -129,3 +145,39 @@ self.addEventListener("fetch", async (event) => {
     );
   }
 });
+
+function getRelativePath(fromPath, toPath) {
+  const fromParts = fromPath.split("/");
+  const toParts = toPath.split("/");
+
+  while (
+    fromParts.length > 0 &&
+    toParts.length > 0 &&
+    fromParts[0] === toParts[0]
+  ) {
+    fromParts.shift();
+    toParts.shift();
+  }
+
+  const relativeParts = fromParts.map(() => "..");
+
+  relativeParts.push(...toParts);
+
+  const relativePath = relativeParts.join("/");
+
+  return relativePath;
+}
+function countMatchingChars(str1, str2) {
+  let count = 0;
+  const length = Math.min(str1.length, str2.length);
+
+  for (let i = 0; i < length; i++) {
+    if (str1.charAt(i) === str2.charAt(i)) {
+      count++;
+    } else {
+      break;
+    }
+  }
+
+  return count;
+}
