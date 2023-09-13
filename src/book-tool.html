@@ -1,13 +1,113 @@
 <template component>
-  <div>我是book生成器辅助工具</div>
+  <style>
+    :host {
+      display: block;
+      padding: 16px;
+    }
+
+    .nav-item {
+      margin: 8px;
+      padding: 8px;
+      border: #888888 solid 1px;
+    }
+  </style>
+  <x-if :value="loading"> 加载中。。。 </x-if>
+  <x-else>
+    <div>o-book 生成器</div>
+    <button on:click="download">下载</button>
+    <h3>预览</h3>
+    <div>
+      <x-fill :value="navs">
+        <div class="nav-item">
+          <h4>{{$data.name}}</h4>
+          <ul>
+            <x-fill :value="$data.articles" name="li"></x-fill>
+          </ul>
+        </div>
+      </x-fill>
+    </div>
+  </x-else>
+  <template name="li">
+    <li>
+      <a attr:href="$data.fixedHref || null" target="_blank">{{$data.name}}</a>
+      <ul>
+        <x-fill :value="$data.childs" name="li"></x-fill>
+      </ul>
+    </li>
+  </template>
   <script>
     import { getSummary } from "../statics/util.mjs";
     import storage from "./storage/index.mjs";
+    import "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 
     export default {
       attrs: {
         src: "",
         sw: "",
+      },
+      data: {
+        loading: true,
+        navs: [],
+      },
+      proto: {
+        async loadArticles() {
+          const jsonUrl = new URL("@/" + this.src, location.href).href;
+          const data = await fetch(jsonUrl).then((e) => e.json());
+
+          const { navs } = data;
+
+          navs.forEach((e) => {
+            const summaryUrl = new URL(e.summary, jsonUrl).href;
+
+            fixArticles(e.articles, summaryUrl);
+          });
+
+          this.navs = navs;
+
+          console.log(navs);
+        },
+        async download() {
+          const zip = new JSZip();
+
+          const jsonUrl = new URL("@/" + this.src, location.href).href;
+
+          // 先获取所有需要存储的文件数组后，再进行请求下载并打包
+          const fileUrls = [jsonUrl];
+
+          const eachChilds = (item) => {
+            const { fixedHref, childs } = item;
+
+            if (fixedHref) {
+              fileUrls.push(fixedHref);
+              return;
+            }
+
+            if (childs) {
+              childs.forEach((e) => eachChilds(e));
+            }
+          };
+
+          this.navs.forEach((e) => {
+            const { articles } = e;
+
+            articles.forEach((item) => eachChilds(item));
+          });
+
+          await Promise.all(
+            fileUrls.map(async (e) => {
+              const data = await fetch(e).then((e) => e.text());
+
+              const path = e.split("/@/")[1];
+
+              zip.file(path, data);
+            })
+          );
+
+          // 下载
+          zip.generateAsync({ type: "blob" }).then((content) => {
+            saveAs(content, "example.zip");
+          });
+        },
       },
       watch: {
         async sw(sw) {
@@ -27,7 +127,7 @@
           // const configUrl = new URL(this.src, location.href).href;
           await storage.setItem("config-url", [this.src]);
 
-          navigator.serviceWorker
+          await navigator.serviceWorker
             .register(new URL(sw, location.href).href, {
               scope: "./",
             })
@@ -39,8 +139,38 @@
             .catch((err) => {
               console.error(err);
             });
+
+          await this.loadArticles();
+
+          this.loading = false;
         },
       },
     };
+
+    function fixArticles(arr, relateUrl) {
+      arr.forEach((e) => {
+        if (e.childs) {
+          fixArticles(e.childs, relateUrl);
+          return;
+        }
+
+        e.fixedHref = new URL(e.href, relateUrl).href.replace(/\.md/, ".html");
+      });
+    }
+
+    function saveAs(file, fileName) {
+      const blobUrl = URL.createObjectURL(file);
+
+      const downloadLink = document.createElement("a");
+      downloadLink.href = blobUrl;
+      downloadLink.download = fileName || file.name;
+      downloadLink.style.display = "none";
+
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+
+      URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(downloadLink);
+    }
   </script>
 </template>
