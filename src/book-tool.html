@@ -52,7 +52,18 @@
       proto: {
         async loadArticles() {
           const jsonUrl = new URL("@/" + this.src, location.href).href;
-          const data = await fetch(jsonUrl).then((e) => e.json());
+          const data = await new Promise(async (resolve) => {
+            while (true) {
+              try {
+                const data = await fetch(jsonUrl).then((e) => e.json());
+                resolve(data);
+                break;
+              } catch (err) {
+                await new Promise((res) => setTimeout(res, 500));
+                location.reload();
+              }
+            }
+          });
 
           const { navs } = data;
 
@@ -64,9 +75,35 @@
 
           this.navs = navs;
 
-          console.log(navs);
+          if (location.hash === "#upload-zip") {
+            this._postZip();
+          }
+        },
+        async _postZip() {
+          const zip = await this.getZip();
+
+          const data = await zip.generateAsync({ type: "blob" });
+
+          console.log("pd: ", data);
+
+          let uploadFileRequest = new Request(`/asd`, {
+            method: "post",
+            body: data,
+          });
+
+          const result = await fetch(uploadFileRequest).then((e) => e.json());
+
+          console.log("result :", result);
         },
         async download() {
+          const zip = await this.getZip();
+
+          // 下载
+          zip.generateAsync({ type: "blob" }).then((content) => {
+            saveAs(content, "example.zip");
+          });
+        },
+        async getZip() {
           const zip = new JSZip();
 
           const jsonUrl = new URL("@/" + this.src, location.href).href;
@@ -103,10 +140,7 @@
             })
           );
 
-          // 下载
-          zip.generateAsync({ type: "blob" }).then((content) => {
-            saveAs(content, "example.zip");
-          });
+          return zip;
         },
       },
       watch: {
@@ -127,6 +161,8 @@
           // const configUrl = new URL(this.src, location.href).href;
           await storage.setItem("config-url", [this.src]);
 
+          await new Promise((res) => setTimeout(res), 100);
+
           await navigator.serviceWorker
             .register(new URL(sw, location.href).href, {
               scope: "./",
@@ -139,6 +175,8 @@
             .catch((err) => {
               console.error(err);
             });
+
+          await new Promise((res) => setTimeout(res), 500);
 
           await this.loadArticles();
 

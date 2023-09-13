@@ -9,13 +9,21 @@
 })(this, function () {
   class XDStorage {
     constructor(id) {
+      this._id = id;
+      this._initdb();
+    }
+    _initdb() {
       this.dbPms = new Promise((resolve) => {
         // 根据id获取数据库
-        let req = indexedDB.open(id);
+      let req = indexedDB.open(this._id);
 
         req.onsuccess = (e) => {
           //获取数据库
           let db = e.target.result;
+
+          db.onclose = () => {
+            this._initdb();
+          };
 
           resolve(db);
         };
@@ -25,6 +33,10 @@
           // 保存 IDBDataBase 接口
           let db = e.target.result;
 
+          db.onclose = () => {
+            this._initdb();
+          };
+
           // 为该数据库创建一个对象仓库
           db.createObjectStore("main", { keyPath: "key" });
         };
@@ -32,7 +44,7 @@
         req.onerror = (event) => {
           throw {
             desc: "数据创建出错",
-            evenet,
+            event,
           };
         };
       });
