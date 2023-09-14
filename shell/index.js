@@ -41,6 +41,8 @@ const outputFile = async (buffer) => {
   if (!process.argv.includes("dev")) {
     server.close();
   }
+
+  console.log(`dist to: ${targetPath}`);
 };
 
 app.use(async (ctx, next) => {
