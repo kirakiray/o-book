@@ -107,9 +107,10 @@
           const zip = new JSZip();
 
           const jsonUrl = new URL("@/" + this.src, location.href).href;
+          const libUrl = jsonUrl.replace(/(.+)\/.+/, "$1/libs.json");
 
           // 先获取所有需要存储的文件数组后，再进行请求下载并打包
-          const fileUrls = [jsonUrl];
+          const fileUrls = [jsonUrl, libUrl];
 
           const eachChilds = (item) => {
             const { fixedHref, childs } = item;
