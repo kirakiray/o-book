@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { readFileSync } from "fs";
 import Koa from "koa";
 import st from "koa-static";
@@ -72,14 +74,20 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-const server = app.listen(48956);
+const port = obook.port || 48956;
+
+const server = app.listen(port);
+
+const inputName = obook.input.split("/").slice(-1)[0];
+
+console.log(`preview: http://localhost:${port}/${inputName}`);
 
 if (process.argv.includes("build")) {
-  client = await openPage("http://localhost:48956/#upload-zip");
+  client = await openPage(`http://localhost:${port}/${inputName}#upload-zip`);
 }
 
 if (process.argv.includes("dev")) {
   setTimeout(() => {
-    open(`http://localhost:48956/`);
+    open(`http://localhost:${port}/${inputName}`);
   }, 100);
 }

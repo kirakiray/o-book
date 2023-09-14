@@ -16,5 +16,13 @@
     "open": "^9.1.0",
     "puppeteer": "^21.2.1",
     "rimraf": "^5.0.1"
-  }
+  },
+  "bin": {
+    "obook": "shell/index.js"
+  },
+  "keywords": [
+    "obook",
+    "o-book",
+    "document"
+  ]
 }
