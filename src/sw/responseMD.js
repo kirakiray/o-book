@@ -25,7 +25,9 @@ const responseMD = async (url, configUrl = "") => {
 
   let article = `<article class="markdown-body">${marked.parse(
     targetTemp
-  )}</article>`;
+  )}
+  <article-footer></article-footer>
+  </article>`;
 
   // 看是否包裹类型
   if (lexs[0].type === "html") {

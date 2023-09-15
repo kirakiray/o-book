@@ -74,10 +74,6 @@
         rightNavs: [],
         // 正文内可视的导航标题
         visNavs: [],
-        // 所有文章数据
-        _articlesBase: [],
-        // 当前所处的 article name
-        currentArticleIndex: "",
         hideRight: false,
       },
       proto: {
@@ -98,6 +94,14 @@
               target = e;
             }
           });
+
+          setTimeout(() => {
+            const afooter = this.app?.current?.shadow?.$("article-footer");
+
+            if (afooter) {
+              afooter.init(this._nowBase.articles);
+            }
+          }, 100);
 
           if (!target) {
             this._nowBase = [];
