@@ -368,10 +368,6 @@ importScripts('${selfWokerPath}');`;
         attached() {
           this.locals = locals;
 
-          getLang().then((lang) => {
-            this.lang = lang;
-          });
-
           this._f = (e) => {
             const { results, text } = e.data;
 
@@ -400,10 +396,15 @@ importScripts('${selfWokerPath}');`;
           };
           searchWorker.addEventListener("message", this._f);
 
-          try {
-            const historys = JSON.parse(localStorage[`__recent_${this.lang}`]);
-            this.recents = historys;
-          } catch (err) {}
+          getLang().then((lang) => {
+            this.lang = lang;
+            try {
+              const historys = JSON.parse(
+                localStorage[`__recent_${this.lang}`]
+              );
+              this.recents = historys;
+            } catch (err) {}
+          });
         },
         detached() {
           searchWorker.removeEventListener("message", this._f);

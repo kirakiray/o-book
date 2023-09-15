@@ -16,6 +16,14 @@
     <div>o-book 生成器</div>
     <button on:click="download">下载</button>
     <h3>预览</h3>
+
+    <select sync:value="currentLang" on:change="changeLang">
+      <template is="replace-temp">
+        <x-fill :value="langOptions">
+          <option attr:value="$data.value">{{$data.name}}</option>
+        </x-fill>
+      </template>
+    </select>
     <div>
       <x-fill :value="navs">
         <div class="nav-item">
@@ -40,6 +48,13 @@
     import storage from "./storage/index.mjs";
     import "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 
+    const langOpts = {
+      en: "English",
+      cn: "简体中文",
+      "t-cn": "繁体中文",
+      es: "española",
+    };
+
     export default {
       attrs: {
         sw: "",
@@ -47,11 +62,15 @@
       data: {
         loading: true,
         navs: [],
+        currentLang: "",
+        langOptions: [],
       },
       proto: {
-        async loadArticles() {
-          const { srcs } = this;
-          const jsonUrl = new URL("@/" + srcs[0].src, location.href).href;
+        changeLang(e) {
+          this.init(this.srcs.find((item) => item.lang === e.target.value).src);
+        },
+        async init(src) {
+          const jsonUrl = new URL("@/" + src, location.href).href;
           const data = await new Promise(async (resolve) => {
             while (true) {
               try {
@@ -75,6 +94,9 @@
           });
 
           this.navs = navs;
+        },
+        async loadArticles() {
+          await this.init(this.srcs[0].src);
 
           if (location.hash === "#upload-zip") {
             this._postZip();
@@ -107,11 +129,7 @@
         async getZip() {
           const zip = new JSZip();
 
-          const jsonUrl = new URL("@/" + this.src, location.href).href;
-          const libUrl = jsonUrl.replace(/(.+)\/.+/, "$1/libs.json");
-
-          // 先获取所有需要存储的文件数组后，再进行请求下载并打包
-          const fileUrls = [jsonUrl, libUrl];
+          const fileUrls = [];
 
           const eachChilds = (item) => {
             const { fixedHref, childs } = item;
@@ -126,11 +144,27 @@
             }
           };
 
-          this.navs.forEach((e) => {
-            const { articles } = e;
+          await Promise.all(
+            this.srcs.map(async ({ src }) => {
+              const jsonUrl = new URL("@/" + src, location.href).href;
+              const libUrl = jsonUrl.replace(/(.+)\/.+/, "$1/libs.json");
 
-            articles.forEach((item) => eachChilds(item));
-          });
+              const jdata = await fetch(jsonUrl).then((e) => e.json());
+
+              // 先获取所有需要存储的文件数组后，再进行请求下载并打包
+              fileUrls.push(jsonUrl, libUrl);
+
+              jdata.navs.forEach((e) => {
+                fixArticles(e.articles, new URL(e.summary, jsonUrl).href);
+              });
+
+              jdata.navs.forEach((e) => {
+                const { articles } = e;
+
+                articles.forEach((item) => eachChilds(item));
+              });
+            })
+          );
 
           await Promise.all(
             fileUrls.map(async (e) => {
@@ -161,6 +195,18 @@
 
           return srcs;
         },
+      },
+      ready() {
+        const { srcs } = this;
+
+        this.langOptions = srcs.map((e) => {
+          return {
+            name: langOpts[e.lang],
+            value: e.lang,
+          };
+        });
+
+        this.currentLang = srcs[0].lang;
       },
       watch: {
         async sw(sw) {
