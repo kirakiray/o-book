@@ -1,5 +1,5 @@
 {
-  "name": "obook",
+  "name": "o-book",
   "version": "2.0.0",
   "type": "module",
   "description": "A document system built on ofa.js (like gitbook)",
@@ -16,6 +16,10 @@
     "open": "^9.1.0",
     "puppeteer": "^21.2.1",
     "rimraf": "^5.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kirakiray/o-book.git"
   },
   "bin": {
     "obook": "shell/index.js"
