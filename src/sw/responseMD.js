@@ -17,9 +17,7 @@ const responseMD = async (url, configUrl = "") => {
     });
   }
 
-  let headers = {};
   let tempText = await fetch(`${host}/src/temps/article.html`).then((e) => {
-    headers = e.headers;
     return e.text();
   });
 
@@ -63,6 +61,8 @@ const responseMD = async (url, configUrl = "") => {
 
   return new Response(tempText, {
     status: 200,
-    headers,
+    headers: {
+      "Content-Type": "text/html; charset=utf-8",
+    },
   });
 };
