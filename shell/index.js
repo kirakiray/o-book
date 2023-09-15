@@ -34,7 +34,24 @@ const outputFile = async (buffer) => {
 
   const targetPath = path.resolve(process.env.PWD, obook.output);
 
-  await rimraf(targetPath);
+  const entries = zip.getEntries();
+
+  const needRemoves = entries.filter((e) => {
+    const arr = e.entryName.split("/");
+    if ((arr.length === 2) & (arr[1] === "")) {
+      return true;
+    }
+
+    return false;
+  });
+
+  await Promise.all(
+    needRemoves.map(async (entry) => {
+      const p = path.resolve(targetPath, entry.entryName);
+
+      await rimraf(p);
+    })
+  );
 
   await zip.extractAllTo(targetPath, true);
 
