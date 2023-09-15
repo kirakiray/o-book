@@ -36,8 +36,10 @@ self.addEventListener("fetch", async (event) => {
   if (request.url.includes(workPath)) {
     event.respondWith(
       (async () => {
-        let configs = await storage.getItem("config-url");
-        configs = configs.map((e) => new URL(e, workPath).href);
+        const originConfigs = await storage.getItem("config-url");
+        const configs = originConfigs.map((e) => {
+          return new URL(e.src, workPath).href;
+        });
 
         const isConfig = configs.find((e) => e === request.url);
 
@@ -49,6 +51,8 @@ self.addEventListener("fetch", async (event) => {
           const data = await fetch(`${darr[0]}/${darr[1]}`).then((e) =>
             e.json()
           );
+
+          data.urls = originConfigs;
 
           return responseConfig(data, darr.join("/"));
         }

@@ -267,15 +267,13 @@
 
   <script>
     import { wrapSubstringWithSpan } from "../../util.mjs";
-    import { lang } from "../../data.mjs";
+    import { getLang } from "../../data.mjs";
     import locals from "../../locals/main.mjs";
 
     const libUrl = new URL(configUrl, location.href).href.replace(
       /(.+)\/.+/,
       "$1/libs.json"
     );
-
-    console.log("libUrl: ", libUrl);
 
     const selfWokerPath = PATH.replace(/(.+)\/.+/, "$1") + "/search-worker.js";
     const workerText = `
@@ -297,6 +295,7 @@ importScripts('${selfWokerPath}');`;
           isNoResult: false,
           loading: false,
           locals: {},
+          lang: "",
         },
         watch: {
           showPannel(val) {
@@ -310,7 +309,7 @@ importScripts('${selfWokerPath}');`;
             if (val === null) {
               return;
             }
-            localStorage[`__recent_${lang}`] = JSON.stringify(val);
+            localStorage[`__recent_${this.lang}`] = JSON.stringify(val);
           },
         },
         proto: {
@@ -335,7 +334,7 @@ importScripts('${selfWokerPath}');`;
 
               searchWorker.postMessage({
                 searchText: this.stext,
-                lang,
+                lang: this.lang,
               });
             }, 200);
           },
@@ -369,6 +368,10 @@ importScripts('${selfWokerPath}');`;
         attached() {
           this.locals = locals;
 
+          getLang().then((lang) => {
+            this.lang = lang;
+          });
+
           this._f = (e) => {
             const { results, text } = e.data;
 
@@ -398,7 +401,7 @@ importScripts('${selfWokerPath}');`;
           searchWorker.addEventListener("message", this._f);
 
           try {
-            const historys = JSON.parse(localStorage[`__recent_${lang}`]);
+            const historys = JSON.parse(localStorage[`__recent_${this.lang}`]);
             this.recents = historys;
           } catch (err) {}
         },

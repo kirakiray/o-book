@@ -9,19 +9,33 @@ isDark.watch(() => {
   localStorage.isDark = isDark.value;
 });
 
-let lang = location.pathname.replace(/\/(.+?)\/.+/, "$1");
+export const getLang = async () => {
+  const cdata = await configData;
 
-switch (lang) {
-  case "cn":
-  case "t-cn":
-  case "en":
-  case "es":
-    break;
-  default:
-    lang = "";
-}
+  const currentConfigUrl = new URL(configUrl, location.href).href;
 
-export { lang };
+  let selectedLang = "";
+
+  cdata.urls.forEach(({ lang, src }) => {
+    currentConfigUrl;
+
+    if (currentConfigUrl.includes(src.replace(/^\.\//, ""))) {
+      selectedLang = lang;
+    }
+  });
+
+  switch (selectedLang) {
+    case "cn":
+    case "t-cn":
+    case "en":
+    case "es":
+      break;
+    default:
+      selectedLang = "";
+  }
+
+  return selectedLang;
+};
 
 export const configData = new Promise(async (resolve) => {
   const configPath = new URL(configUrl, location.href).href;

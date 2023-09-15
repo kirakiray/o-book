@@ -1,4 +1,4 @@
-import { lang } from "../data.mjs";
+import { getLang } from "../data.mjs";
 
 const en = {
   search: "Search",
@@ -65,16 +65,18 @@ locals._t = (key, data) => {
   return target;
 };
 
-switch (lang) {
-  case "cn":
-    Object.assign(locals, cn);
-    break;
-  case "t-cn":
-    Object.assign(locals, tw);
-    break;
-  case "es":
-    Object.assign(locals, es);
-    break;
-}
+getLang().then((lang) => {
+  switch (lang) {
+    case "cn":
+      Object.assign(locals, cn);
+      break;
+    case "t-cn":
+      Object.assign(locals, tw);
+      break;
+    case "es":
+      Object.assign(locals, es);
+      break;
+  }
+});
 
 export default locals;

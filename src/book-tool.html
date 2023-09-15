@@ -42,7 +42,6 @@
 
     export default {
       attrs: {
-        src: "",
         sw: "",
       },
       data: {
@@ -51,7 +50,8 @@
       },
       proto: {
         async loadArticles() {
-          const jsonUrl = new URL("@/" + this.src, location.href).href;
+          const { srcs } = this;
+          const jsonUrl = new URL("@/" + srcs[0].src, location.href).href;
           const data = await new Promise(async (resolve) => {
             while (true) {
               try {
@@ -59,6 +59,7 @@
                 resolve(data);
                 break;
               } catch (err) {
+                debugger;
                 await new Promise((res) => setTimeout(res, 500));
                 location.reload();
               }
@@ -143,6 +144,23 @@
 
           return zip;
         },
+        get srcs() {
+          const srcs = [];
+          this.forEach((e) => {
+            if (e.tag === "source") {
+              const lang = e.attr("lang") || "en";
+              const src = e.attr("src");
+              if (src) {
+                srcs.push({
+                  lang,
+                  src,
+                });
+              }
+            }
+          });
+
+          return srcs;
+        },
       },
       watch: {
         async sw(sw) {
@@ -153,13 +171,15 @@
             return;
           }
 
-          if (!this.src) {
+          const { srcs } = this;
+
+          if (!srcs.length) {
             return;
           }
 
           this.__sw = sw;
 
-          await storage.setItem("config-url", [this.src]);
+          await storage.setItem("config-url", srcs);
 
           await new Promise((res) => setTimeout(res), 100);
 

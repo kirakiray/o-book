@@ -2,6 +2,7 @@
   <l-m src="../comps/doc-container.html"></l-m>
   <l-m src="../comps/doc-header/doc-header.html"></l-m>
   <l-m src="../comps/doc-search/doc-search.html"></l-m>
+  <l-m src="../comps/lang-select.html"></l-m>
   <link rel="stylesheet" href="../font/iconfont.css" />
 
   <style>
@@ -42,6 +43,7 @@
           href="https://github.com/kirakiray/ofa.js"
         ></a
       ></x-if>
+      <lang-select slot="right"></lang-select>
       <doc-search slot="right" style="margin-right: 16px"></doc-search>
     </doc-header>
     <slot></slot>
