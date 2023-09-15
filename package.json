@@ -1,0 +1,28 @@
+{
+  "name": "obook",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "A document system built on ofa.js (like gitbook)",
+  "main": "shell/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YAO",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "koa": "^2.14.2",
+    "koa-static": "^5.0.0",
+    "open": "^9.1.0",
+    "puppeteer": "^21.2.1",
+    "rimraf": "^5.0.1"
+  },
+  "bin": {
+    "obook": "shell/index.js"
+  },
+  "keywords": [
+    "obook",
+    "o-book",
+    "document"
+  ]
+}

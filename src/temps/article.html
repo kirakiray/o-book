@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%title%></title>
+    <script
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.14/dist/ofa.min.js"
+      debug
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.14/libs/scsr/scsr.mjs"
+      type="module"
+    ></script>
+    <link rel="stylesheet" href="<%host%>/statics/css/public.css" />
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+    </style>
+    <script>
+      let configUrl = "<%configUrl%>";
+    </script>
+  </head>
+  <body>
+    <l-m src="<%host%>/statics/comps/doc-container.html"></l-m>
+    <l-m src="<%host%>/statics/comps/doc-header/doc-header.html"></l-m>
+    <o-app src="<%host%>/statics/app-config.mjs">
+      <template page>
+        <style>
+          .markdown-body::before,
+          .markdown-body::after {
+            display: block;
+            content: "";
+            height: 1px;
+          }
+          .markdown-body::after {
+            height: 32px;
+          }
+        </style>
+        <link
+          rel="stylesheet"
+          href="<%host%>/statics/css/github-markdown.css"
+        />
+        <%article%>
+        <script>
+          export const parent = "<%host%>/statics/layouts/article-layout.html";
+
+          import pageInit from "<%host%>/statics/page-init.mjs";
+
+          export default async (...args) => {
+            return await pageInit(PATH, args);
+          };
+        </script>
+      </template>
+    </o-app>
+    <div id="loading"></div>
+    <script src="<%host%>/statics/init.js"></script>
+  </body>
+</html>
