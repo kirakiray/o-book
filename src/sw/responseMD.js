@@ -44,12 +44,15 @@ const responseMD = async (url, configUrl = "") => {
 
   const firstHeading = lexs.find((e) => e.type === "heading");
 
+  const injectHead = (await storage.getItem("inject-head")) || "";
+
   const data = {
     host,
     title: firstHeading.text,
     url,
     article,
     configUrl,
+    injectHead,
   };
 
   // 替换模板内容

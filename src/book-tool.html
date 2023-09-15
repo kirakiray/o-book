@@ -227,6 +227,13 @@
 
           await storage.setItem("config-url", srcs);
 
+          const injectHead = this.$("template[inject-head]");
+          if (injectHead) {
+            await storage.setItem("inject-head", injectHead.html);
+          } else {
+            await storage.setItem("inject-head", "");
+          }
+
           await new Promise((res) => setTimeout(res), 100);
 
           await navigator.serviceWorker
