@@ -225,6 +225,7 @@
         const targetTemp = this.$('template[is="exm-article"]');
 
         if (targetTemp) {
+          targetTemp.css.display = "none";
           const links = targetTemp.all("a").map((e) => {
             let href = e.attr("href");
             const isMain = e.attr("main") === "";
