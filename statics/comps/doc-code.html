@@ -1,10 +1,10 @@
 <template component>
   <inject-host>
     <x-if :value="isDark.value">
-      <link rel="stylesheet" href="./hljs-dark.css" />
+      <link rel="stylesheet" href="../css/hljs-dark.css" />
     </x-if>
     <x-else>
-      <link rel="stylesheet" href="./hljs-light.css" />
+      <link rel="stylesheet" href="../css/hljs-light.css" />
     </x-else>
 
     <style>
@@ -69,7 +69,7 @@
     import hljs from "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/es/highlight.min.js";
 
     export default async function ({ load }) {
-      const { isDark } = await load("../../data.mjs");
+      const { isDark } = await load("../data.mjs");
 
       return {
         data: {
