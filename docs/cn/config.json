@@ -1,5 +1,8 @@
 {
-  "github": "https://github.com/kirakiray/o-book.js",
+  "github": "https://github.com/kirakiray/o-book",
+  "logo": {
+    "text": "Obook"
+  },
   "navs": [
     {
       "name": "使用文档",

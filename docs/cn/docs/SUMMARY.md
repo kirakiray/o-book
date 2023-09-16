@@ -1,8 +1,7 @@
 - [介绍](./index.md)
-- [基础文件](./file-ready.md)
-- 普通模式
-  - [使用方法](./normal/index.md)
-- 命令行模式
-  - [obook-cli](./cli/obook-cli.md)
-- webapp模式
-  - [直接使用](./webapp/index.md)
+- 启动项目
+  - [标准模式](./run-mode/base-mode.md)
+  - [命令行模式](./run-mode/cli-mode.md)
+  - [网页应用模式](./run-mode/webapp-mode.md)
+- [基础文件说明](./file-ready.md)
+- 
