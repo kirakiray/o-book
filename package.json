@@ -1,6 +1,6 @@
 {
   "name": "o-book",
-  "version": "2.0.7",
+  "version": "2.0.8",
   "type": "module",
   "description": "A document system built on ofa.js (like gitbook)",
   "main": "shell/index.js",
