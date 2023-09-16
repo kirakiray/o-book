@@ -231,7 +231,7 @@
             const isPreview = e.attr("preview") === "";
 
             if (this.editMode) {
-              const urldata = new URL(href);
+              const urldata = new URL(href, location.href);
               href = `${urldata.origin}/$${urldata.pathname}`;
             }
 
