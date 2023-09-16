@@ -1,0 +1,9 @@
+{
+  "github": "https://github.com/kirakiray/o-book.js",
+  "navs": [
+    {
+      "name": "使用文档",
+      "summary": "./docs/SUMMARY.md"
+    }
+  ]
+}
