@@ -48,16 +48,6 @@ function upgradeVersion(version) {
   return upgradedVersion;
 }
 
-// 启动遍历
-// const targetDirectory = process.env.PWD; // 替换成你的目标目录路径
-// traverseDirectory(targetDirectory)
-//   .then(() => {
-//     console.log("Finished updating files.");
-//   })
-//   .catch((err) => {
-//     console.error("Error:", err);
-//   });
-
 // 读取当前包的版本
 let pjson = fs.readFileSync(
   path.resolve(process.env.PWD, "./package.json"),
