@@ -6,6 +6,7 @@
   "main": "shell/index.js",
   "scripts": {
     "bump": "node scripts/bump",
+    "packs": "node scripts/pack-standup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "YAO",
