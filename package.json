@@ -5,6 +5,7 @@
   "description": "A document system built on ofa.js (like gitbook)",
   "main": "shell/index.js",
   "scripts": {
+    "bump": "node scripts/bump",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "YAO",
