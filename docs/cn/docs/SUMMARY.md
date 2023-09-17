@@ -3,4 +3,5 @@
   - [标准模式](./run-mode/base-mode.md)
   - [命令行模式](./run-mode/cli-mode.md)
   - [网页应用模式](./run-mode/webapp-mode.md)
-- [基础文件说明](./file-ready.md)
+- [基础文件](./base-files.md)
+- [项目文件](./project-docs.md)

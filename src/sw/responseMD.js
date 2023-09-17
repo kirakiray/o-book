@@ -23,38 +23,41 @@ const responseMD = async (url, configUrl = "") => {
 
   const selfOri = new URL(self.serviceWorker.scriptURL).origin;
 
-  // 修正link
-  targetTemp = targetTemp.replace(/\[.+?\]\(.+?\)/g, (str) => {
-    const link = str.replace(/\[.+?\]\((.+?)\)/, "$1");
-    const afterLink = new URL(link, url).href;
+  const fixTokens = (item) => {
+    if (item.type === "link") {
+      const { href } = item;
 
-    if (afterLink.includes(selfOri)) {
-      const path = afterLink.split("/@/")[1];
+      const afterLink = new URL(href, url).href;
 
-      if (/^publics\//.test(path)) {
-        return str;
+      if (afterLink.includes(selfOri)) {
+        const path = afterLink.split("/@/")[1];
+
+        if (!/^publics\//.test(path) && /\.md$/.test(href)) {
+          item.href = item.href.replace(/\.md$/, ".html");
+        }
       }
-      const text = str.replace(/\[(.+?)\]\(.+?\)/, "$1");
-
-      if (/\.md$/.test(link)) {
-        return `[${text}](${link.replace(/\.md$/, ".html")})`;
-      }
-
-      return str;
     }
 
-    return str;
+    if (item.tokens) {
+      item.tokens.forEach((e) => fixTokens(e));
+    } else if (item.items) {
+      item.items.forEach((e) => fixTokens(e));
+    }
+  };
+
+  const tokens = marked.lexer(targetTemp);
+
+  tokens.forEach((e) => {
+    fixTokens(e);
   });
 
-  const lexs = marked.lexer(targetTemp);
-
-  let article = `<article class="markdown-body">${marked.parse(targetTemp)}
+  let article = `<article class="markdown-body">${marked.parser(tokens)}
   <article-footer></article-footer>
   </article>`;
 
   // 看是否包裹类型
-  if (lexs[0].type === "html") {
-    const wrapCompName = lexs[0].text.replace(/.+ type\:(.+) [\s\S]+/, "$1");
+  if (tokens[0].type === "html") {
+    const wrapCompName = tokens[0].text.replace(/.+ type\:(.+) [\s\S]+/, "$1");
 
     const matchArr = wrapCompName.match(/<template is="(.+?)">/);
 
@@ -65,7 +68,7 @@ const responseMD = async (url, configUrl = "") => {
     }
   }
 
-  const firstHeading = lexs.find((e) => e.type === "heading");
+  const firstHeading = tokens.find((e) => e.type === "heading");
 
   const injectHead = (await storage.getItem("inject-head")) || "";
 
