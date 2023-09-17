@@ -166,15 +166,72 @@
             })
           );
 
+          const addWaitlist = async (e) => {
+            let isText = false;
+            const data = await fetch(e).then((e) => {
+              const contentType = e.headers.get("content-type");
+
+              if (contentType.includes("text")) {
+                isText = true;
+                return e.text();
+              }
+
+              return e.arrayBuffer();
+            });
+
+            const path = e.split("/@/")[1];
+
+            zip.file(path, data);
+
+            return { isText, data };
+          };
+
+          // 等待打包公共文件
+          const publics = [];
+
           await Promise.all(
             fileUrls.map(async (e) => {
-              const data = await fetch(e).then((e) => e.text());
+              const { isText, data } = await addWaitlist(e);
 
-              const path = e.split("/@/")[1];
+              if (!isText) {
+                return;
+              }
 
-              zip.file(path, data);
+              if (/\.html$/.test(e)) {
+                const t = $({ tag: "template", html: data });
+                const article = t.$("template[page]").$("article");
+
+                if (!article) {
+                  return;
+                }
+
+                [
+                  ...article.all("[src],[href]"),
+                  ...(article.$("template[is]")
+                    ? article.$("template[is]").all("[src],[href]")
+                    : []),
+                ].forEach((el) => {
+                  const inpath = el.attr("src") || el.attr("href");
+                  if (/^http/.test(inpath)) {
+                    return;
+                  }
+                  const fixedPath = new URL(inpath, e).href;
+
+                  if (/^publics/.test(fixedPath.split("/@/")[1])) {
+                    publics.push(fixedPath);
+                  }
+                });
+              }
             })
           );
+
+          if (publics.length) {
+            await Promise.all(
+              publics.map(async (e) => {
+                await addWaitlist(e);
+              })
+            );
+          }
 
           return zip;
         },
