@@ -1,4 +1,13 @@
 {
-  "name": "you project name",
-  "description": ""
+  "name": "you-project",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "obook dev",
+    "build": "obook build"
+  },
+  "obook": {
+    "input": "./_preview.html",
+    "output": "./dist"
+  }
 }

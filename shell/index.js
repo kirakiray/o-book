@@ -8,6 +8,8 @@ import path from "path";
 import AdmZip from "adm-zip";
 import { rimraf } from "rimraf";
 import { openPage } from "./openPage.mjs";
+import init from "./init";
+import update from "./update";
 
 // 无头浏览器实例
 let client;
@@ -23,6 +25,17 @@ if (packagejson) {
 const targetHtml = path.resolve(process.env.PWD, obook.input);
 
 const dir = path.dirname(targetHtml);
+
+if (process.argv.includes("update")) {
+  // update
+  update();
+  return;
+}
+if (process.argv.includes("init")) {
+  // init
+  init();
+  return;
+}
 
 const app = new Koa();
 
@@ -97,13 +110,15 @@ const server = app.listen(port);
 
 const inputName = obook.input.split("/").slice(-1)[0];
 
-console.log(`preview: http://localhost:${port}/${inputName}`);
-
 if (process.argv.includes("build")) {
+  console.log("The project is being packaged");
+
   client = await openPage(`http://localhost:${port}/${inputName}#upload-zip`);
 }
 
 if (process.argv.includes("dev")) {
+  console.log(`preview: http://localhost:${port}/${inputName}`);
+
   setTimeout(() => {
     open(`http://localhost:${port}/${inputName}`);
   }, 100);
