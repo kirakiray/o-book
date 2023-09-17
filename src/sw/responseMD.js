@@ -1,7 +1,7 @@
 const responseMD = async (url, configUrl = "") => {
   const realUrl = url.replace("/@/", "/").replace(/html$/, "md");
 
-  const targetTemp = await fetch(realUrl)
+  let targetTemp = await fetch(realUrl)
     .then((e) => {
       if (/^2/.test(e.status)) {
         return e.text();
@@ -21,11 +21,34 @@ const responseMD = async (url, configUrl = "") => {
     return e.text();
   });
 
+  const selfOri = new URL(self.serviceWorker.scriptURL).origin;
+
+  // 修正link
+  targetTemp = targetTemp.replace(/\[.+?\]\(.+?\)/g, (str) => {
+    const link = str.replace(/\[.+?\]\((.+?)\)/, "$1");
+    const afterLink = new URL(link, url).href;
+
+    if (afterLink.includes(selfOri)) {
+      const path = afterLink.split("/@/")[1];
+
+      if (/^publics\//.test(path)) {
+        return str;
+      }
+      const text = str.replace(/\[(.+?)\]\(.+?\)/, "$1");
+
+      if (/\.md$/.test(link)) {
+        return `[${text}](${link.replace(/\.md$/, ".html")})`;
+      }
+
+      return str;
+    }
+
+    return str;
+  });
+
   const lexs = marked.lexer(targetTemp);
 
-  let article = `<article class="markdown-body">${marked.parse(
-    targetTemp
-  )}
+  let article = `<article class="markdown-body">${marked.parse(targetTemp)}
   <article-footer></article-footer>
   </article>`;
 
