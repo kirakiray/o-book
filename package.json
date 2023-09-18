@@ -1,11 +1,11 @@
 {
   "name": "obook",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "type": "module",
   "description": "A document system built on ofa.js (like gitbook)",
   "main": "shell/index.js",
   "scripts": {
-    "bump": "node scripts/bump",
+    "bump": "node scripts/bump && node scripts/pack-standup",
     "packs": "node scripts/pack-standup",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
