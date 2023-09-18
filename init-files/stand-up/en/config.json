@@ -1,0 +1,12 @@
+{
+  "navs": [
+    {
+      "name": "NavOne",
+      "summary": "./nav1/SUMMARY.md"
+    },
+    {
+      "name": "NavTwo",
+      "summary": "./nav2/SUMMARY.md"
+    }
+  ]
+}

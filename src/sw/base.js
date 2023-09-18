@@ -1,4 +1,4 @@
-const host = "https://cdn.jsdelivr.net/npm/o-book@2.0.8";
+const host = "https://cdn.jsdelivr.net/npm/obook@2.1.0";
 // const host = "http://127.0.0.1:5512";
 
 importScripts(

@@ -24,15 +24,13 @@ export default async (PATH, [{ query, load }]) => {
 
       articleWrapCode(this.shadow.$("article"));
 
-      // const loading = $("#loading");
-      // if (loading) {
-      //   setTimeout(() => {
-      //     loading.classList.add("fadeout");
-      //     setTimeout(() => {
-      //       loading.remove();
-      //     }, 400);
-      //   }, 200);
-      // }
+      this.shadow.all("article a").forEach((e) => {
+        const href = e.attr("href") || "";
+
+        if (href.includes(location.origin) && /\.html/.test(href)) {
+          e.attr("olink", "");
+        }
+      });
     },
   };
 };

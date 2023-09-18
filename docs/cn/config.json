@@ -1,0 +1,12 @@
+{
+  "github": "https://github.com/kirakiray/o-book",
+  "logo": {
+    "text": "obook"
+  },
+  "navs": [
+    {
+      "name": "使用文档",
+      "summary": "./docs/SUMMARY.md"
+    }
+  ]
+}

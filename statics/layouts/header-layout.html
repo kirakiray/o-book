@@ -25,7 +25,7 @@
   </style>
   <doc-container>
     <doc-header slot="header">
-      <span slot="logo">OFA.js</span>
+      <span slot="logo">{{logoText}}</span>
       <ul>
         <x-fill :value="navs">
           <li class:active="$host.isActive($data)">
@@ -56,6 +56,7 @@
         navs: [],
         github: "",
         leftActiveUrl: "",
+        logoText: "",
       },
       proto: {
         isActive(data) {
@@ -71,6 +72,8 @@
         this.leftActiveUrl = `${location.origin}${location.pathname}`;
         this.attr("id", "header-layout");
         const data = await configData;
+
+        this.logoText = data.logo.text;
 
         this.navs = data.navs;
         this.github = data.github;
