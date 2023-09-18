@@ -27,7 +27,7 @@
           }
 
           let status, headers;
-          let data = await fetch(urldata.origin + realUrl).then((e) => {
+          let data = await wrapFetch(urldata.origin + realUrl).then((e) => {
             status = e.status;
             headers = e.headers;
 

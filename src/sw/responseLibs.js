@@ -2,7 +2,7 @@ const responseLibs = (() => {
   const main = async (configUrl) => {
     const realUrl = configUrl.replace("/@/", "/");
 
-    const configData = await fetch(realUrl).then((e) => e.json());
+    const configData = await wrapFetch(realUrl, "json");
 
     const libs = {};
 
@@ -66,7 +66,7 @@ const responseLibs = (() => {
     if (data.href) {
       const { href } = new URL(data.href, summaryUrl);
 
-      const article = await fetch(href).then((e) => e.text());
+      const article = await wrapFetch(href, "text");
 
       const tokens = marked.lexer(article);
 

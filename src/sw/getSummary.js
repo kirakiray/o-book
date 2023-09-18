@@ -49,11 +49,9 @@ const getSummary = (() => {
   }
 
   async function getSummary(url) {
-    const content = await fetch(url).then((e) => e.text());
+    const content = await wrapFetch(url, "text");
 
     const datas = markdownToJSON(content);
-
-    // fixHref(datas, url);
 
     return datas;
   }

@@ -1,4 +1,7 @@
 {
+  "logo": {
+    "text": "LogoText"
+  },
   "navs": [
     {
       "name": "导航1",

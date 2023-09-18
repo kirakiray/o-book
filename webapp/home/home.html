@@ -1,0 +1,141 @@
+<template page>
+  <link rel="stylesheet" href="./home.css" />
+  <style>
+    .pannel {
+      margin: 16px;
+    }
+  </style>
+  <div style="height: 1px"></div>
+  <x-if :value="!allOk && inited">
+    <x-if :value="!canuse"> 当前使用的浏览器不支持 File Access API </x-if>
+    <x-else>
+      <div class="container pannel">
+        <h1>obook app</h1>
+        <p>创建您的文档站</p>
+        <button on:click="selectLocal">选择本地文件夹</button>
+        <p>
+          放心，这个应用没有服务器，不会上传您的内容。它只会在浏览器端生成您的文档站。
+        </p>
+      </div>
+    </x-else>
+  </x-if>
+
+  <x-if :value="!allOk && !inited">
+    <x-if :value="initLoading === 0">
+      <div class="container pannel">
+        <p>当前目录未发现文档相关基础文件，是否进行初始化？</p>
+        <button on:click="initProject(_root)">确认进行初始化</button>
+      </div>
+    </x-if>
+    <x-else-if :value="initLoading === 1">
+      <div class="container pannel">项目初始化中...</div>
+    </x-else-if>
+    <x-else>
+      <div class="container pannel">项目文件写入完成，正在开始初始化</div>
+    </x-else>
+  </x-if>
+
+  <x-if :value="allOk">
+    <div class="pannel" style="text-align: center">
+      <b>请不要关闭这个标签</b>，点击下方链接进行预览。
+    </div>
+  </x-if>
+  <script>
+    import "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+
+    export default {
+      data: {
+        // 是否可用
+        canuse: true,
+        // 根节点
+        _root: null,
+        // 文件夹内是否查找得到项目相关文件
+        inited: true,
+        // 文件初始化中
+        initLoading: 0,
+        allOk: false,
+      },
+      proto: {
+        async initProject(root) {
+          this.initLoading = 1;
+          const zip = new JSZip();
+          const zipArrayBuffer = await fetch(
+            "http://127.0.0.1:5512/docs/publics/stand-up.zip"
+          ).then((e) => {
+            return e.arrayBuffer();
+          });
+
+          const zipData = await zip.loadAsync(zipArrayBuffer);
+
+          for (let [name, file] of Object.entries(zipData.files)) {
+            let data = await file.async("uint8array");
+            let targetFolder = root;
+
+            const paths = name.split("/");
+
+            while (paths.length > 1) {
+              const folderName = paths.shift();
+              targetFolder = await targetFolder.getDirectoryHandle(folderName, {
+                create: true,
+              });
+            }
+
+            const finnalName = paths[0];
+
+            const fileHandler = await targetFolder.getFileHandle(finnalName, {
+              create: true,
+            });
+
+            const writable = await fileHandler.createWritable();
+
+            await writable.write(data);
+            await writable.close();
+          }
+
+          this.initLoading = 2;
+          setTimeout(() => {
+            this.inited = true;
+            this.allOk = true;
+          }, 1000);
+        },
+        async selectLocal() {
+          const targetFolder = (this._root =
+            await window.showDirectoryPicker());
+
+          let hasPreview = false;
+
+          for await (const item of targetFolder.keys()) {
+            if (item === "_preview.html") {
+              hasPreview = true;
+              break;
+            }
+          }
+
+          if (!hasPreview) {
+            // 提示初始化
+            this.inited = false;
+            return;
+          }
+
+          this.allOk = true;
+        },
+        initBindFetch() {},
+      },
+      ready() {
+        // this.canuse = !!window.showDirectoryPicker;
+        navigator.serviceWorker
+          .register(new URL("./webapp-sw.js", location.href).href, {
+            scope: "./",
+          })
+          .then((reg) => {
+            setTimeout(() => {
+              reg.update();
+            }, 60 * 60 * 1000);
+          })
+          .catch((err) => {
+            console.error(err);
+          });
+      },
+    };
+  </script>
+</template>
