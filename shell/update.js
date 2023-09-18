@@ -1,1 +1,1 @@
-export default async function update() {}
+export default async function update({ obook }) {}

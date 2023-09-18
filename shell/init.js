@@ -1,1 +1,1 @@
-export default async function init() {}
+export default async function init({ obook }) {}
