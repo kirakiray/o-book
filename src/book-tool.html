@@ -1,33 +1,32 @@
 <template component>
-  <style>
-    :host {
-      display: block;
-      padding: 16px;
-    }
-
-    .nav-item {
-      margin: 8px;
-      padding: 8px;
-      border: #888888 solid 1px;
-    }
-  </style>
-  <x-if :value="loading"> 加载中。。。 </x-if>
+  <link rel="stylesheet" href="./css/obook.css" />
+  <x-if :value="loading"> Loading... </x-if>
   <x-else>
-    <div>o-book 生成器</div>
-    <button on:click="download">下载</button>
-    <h3>预览</h3>
+    <div class="pannel">
+      <h3 style="display: inline-block">{{locals.name}}</h3>
+      <button on:click="download" style="margin-left: 24px">
+        {{locals.download}}
+      </button>
+    </div>
 
-    <select sync:value="currentLang" on:change="changeLang">
-      <template is="replace-temp">
-        <x-fill :value="langOptions">
-          <option attr:value="$data.value">{{$data.name}}</option>
-        </x-fill>
-      </template>
-    </select>
-    <div>
+    <div class="pannel">
+      <h3 style="display: inline-block">{{locals.preview}}</h3>
+      <select
+        sync:value="currentLang"
+        on:change="changeLang"
+        style="margin-left: 8px"
+      >
+        <template is="replace-temp">
+          <x-fill :value="langOptions">
+            <option attr:value="$data.value">{{$data.name}}</option>
+          </x-fill>
+        </template>
+      </select>
+    </div>
+    <div style="display: flex; flex-wrap: wrap">
       <x-fill :value="navs">
         <div class="nav-item">
-          <h4>{{$data.name}}</h4>
+          <div class="nav-title">{{$data.name}}</div>
           <ul>
             <x-fill :value="$data.articles" name="li"></x-fill>
           </ul>
@@ -47,6 +46,7 @@
     import { getSummary } from "../statics/util.mjs";
     import storage from "./storage/index.mjs";
     import "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+    import { locals } from "./data.mjs";
 
     const langOpts = {
       en: "English",
@@ -55,11 +55,14 @@
       es: "española",
     };
 
+    const userLanguage = navigator.language || navigator.userLanguage;
+
     export default {
       attrs: {
         sw: "",
       },
       data: {
+        locals: /^zh\-/.test(userLanguage) ? locals.cn : locals.en,
         loading: true,
         navs: [],
         currentLang: "",
