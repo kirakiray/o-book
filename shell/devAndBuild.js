@@ -55,7 +55,15 @@ export default async function dev({ obook }) {
   };
 
   app.use(async (ctx, next) => {
-    if (ctx.method === "POST" && ctx.path === "/postzip") {
+    if (ctx.path === "/zip-error") {
+      console.log(
+        `Packing failed, please try again \n ${decodeURIComponent(
+          ctx.request.query?.err || ""
+        )}`
+      );
+      client.close();
+      server.close();
+    } else if (ctx.method === "POST" && ctx.path === "/postzip") {
       await new Promise((res) => {
         let data = [];
         let size = 0;

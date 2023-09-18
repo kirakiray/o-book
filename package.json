@@ -7,6 +7,7 @@
   "scripts": {
     "bump": "node scripts/bump && node scripts/pack-standup",
     "packs": "node scripts/pack-standup",
+    "build-doc": "nodemon --inspect ./shell/index.js build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "YAO",
@@ -25,6 +26,11 @@
   },
   "bin": {
     "obook": "shell/index.js"
+  },
+  "obook": {
+    "input": "./docs/_preview.html",
+    "output": "./dist",
+    "port": 44035
   },
   "keywords": [
     "obook",
