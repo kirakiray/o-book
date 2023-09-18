@@ -1,6 +1,10 @@
 <template component>
   <link rel="stylesheet" href="./css/obook.css" />
-  <x-if :value="loading"> Loading... </x-if>
+  <x-if :value="iserror">
+    {{locals.errorDesc}}
+    <div style="color: red">{{iserror}}</div>
+  </x-if>
+  <x-else-if :value="loading"> Loading... </x-else-if>
   <x-else>
     <div class="pannel">
       <h3 style="display: inline-block">{{locals.name}}</h3>
@@ -67,6 +71,7 @@
         navs: [],
         currentLang: "",
         langOptions: [],
+        iserror: "",
       },
       proto: {
         changeLang(e) {
@@ -81,8 +86,22 @@
                 resolve(data);
                 break;
               } catch (err) {
-                debugger;
-                await new Promise((res) => setTimeout(res, 500));
+                if (!sessionStorage.count) {
+                  sessionStorage.count = 1;
+                }
+                sessionStorage.count++;
+
+                if (sessionStorage.count > 5) {
+                  this.iserror = err.toString();
+                  if (location.hash === "#upload-zip") {
+                    fetch(
+                      `/zip-error?err=${encodeURIComponent(err.toString())}`
+                    );
+                  }
+                  return;
+                }
+
+                await new Promise((res) => setTimeout(res, 800));
                 location.reload();
               }
             }
