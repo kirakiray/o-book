@@ -5,7 +5,7 @@
   "description": "A document system built on ofa.js (like gitbook)",
   "main": "shell/index.js",
   "scripts": {
-    "bump": "node scripts/bump && node scripts/pack-standup",
+    "bump": "node scripts/bump && npm i && node scripts/pack-standup",
     "packs": "node scripts/pack-standup",
     "build-doc": "nodemon --inspect ./shell/index.js build",
     "test": "echo \"Error: no test specified\" && exit 1"
