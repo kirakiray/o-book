@@ -130,8 +130,6 @@
 
           const data = await zip.generateAsync({ type: "blob" });
 
-          console.log("pd: ", data);
-
           let uploadFileRequest = new Request(`/postzip`, {
             method: "post",
             body: data,

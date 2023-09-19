@@ -25,26 +25,31 @@ importScripts(`/src/sw/base.js`);
     if (agentReady && selfRoot.includes(selfRoot)) {
       const targetPath = url.replace(selfRoot + "/", "");
 
-      let resolve, reject;
-      const pms = (waiter[targetPath] = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-      }));
-
-      pms.resolve = resolve;
-      pms.reject = reject;
+      let pms;
+      if (waiter[targetPath]) {
+        pms = waiter[targetPath];
+      } else {
+        let resolve, reject;
+        pms = waiter[targetPath] = new Promise((res, rej) => {
+          resolve = res;
+          reject = rej;
+        });
+        pms.resolve = resolve;
+        pms.reject = reject;
+      }
 
       // 超时清除
-      const errTimer = setTimeout(() => {
-        if (waiter[targetPath]) {
-          resolve({
-            data: "",
-            header: {
-              status: 408,
-            },
-          });
-        }
-      }, 10000);
+      let errTimer;
+      // const errTimer = setTimeout(() => {
+      //   if (waiter[targetPath]) {
+      //     resolve({
+      //       data: "",
+      //       header: {
+      //         status: 408,
+      //       },
+      //     });
+      //   }
+      // }, 10000);
 
       self.clients.matchAll().then(function (clients) {
         clients.forEach(function (client) {
@@ -72,6 +77,7 @@ importScripts(`/src/sw/base.js`);
         if (!data) {
           return {};
         }
+
         const str = new TextDecoder("utf-8").decode(data);
         return JSON.parse(str);
       }

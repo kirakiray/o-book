@@ -170,8 +170,6 @@
                 file = await file.getFile();
               } catch (err) {}
 
-              // console.log(path, file);
-
               this.postToService({
                 type: "reserver",
                 data: await fileTo(file),
