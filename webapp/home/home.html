@@ -135,12 +135,12 @@
           this.initBindFetch();
         },
         async initBindFetch() {
-          window.addEventListener("beforeunload", function (e) {
+          window.addEventListener("beforeunload", (e) => {
             e.preventDefault();
-            e.returnValue = "";
-            if (!confirm("标签关闭后预览将会中断，是否关闭？")) {
-              e.returnValue = "标签关闭后预览将会中断，是否关闭？";
-            }
+
+            e.returnValue = this.locals.closeDesc;
+
+            return this.locals.closeDesc;
           });
 
           // 防止网页被挂起的操作

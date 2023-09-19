@@ -9,6 +9,7 @@ const cn = {
   initing: "正在写入项目文件...",
   initing2: "项目文件写入完成，正在进行初始化",
   donotClose: `<b>请不要关闭此标签</b>，点击下方链接进行预览。<p>请打开相应的文件夹以开始编写您的文档。</p>`,
+  closeDesc: "标签关闭后预览将会中断，是否关闭？",
 };
 
 const en = {
@@ -24,6 +25,8 @@ const en = {
   initing: "Writing project files...",
   initing2: "Project files have been written, initialization in progress",
   donotClose: `<b>Please do not close this tab</b>. Click the link below to preview.<p>Please open the corresponding folder to start writing your document.</p>`,
+  closeDesc:
+    "The preview will be interrupted when the tab is closed, is it closed?",
 };
 
 export { cn, en };
