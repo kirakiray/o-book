@@ -65,6 +65,7 @@
       attrs: {
         sw: "",
         noswinit: null,
+        filename: "obook.zip",
       },
       data: {
         locals: /^zh\-/.test(userLanguage) ? locals.cn : locals.en,
@@ -144,7 +145,7 @@
 
           // 下载
           zip.generateAsync({ type: "blob" }).then((content) => {
-            saveAs(content, "obook.zip");
+            saveAs(content, this.filename);
           });
         },
         async getZip() {

@@ -1,5 +1,5 @@
-// const host = "https://cdn.jsdelivr.net/npm/obook@2.1.2";
-const host = "http://127.0.0.1:5512";
+const host = "https://cdn.jsdelivr.net/npm/obook@2.1.2";
+// const host = "http://127.0.0.1:5512";
 
 importScripts(
   "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
