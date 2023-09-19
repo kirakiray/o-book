@@ -29,7 +29,7 @@
   },
   "obook": {
     "input": "./docs/_preview.html",
-    "output": "./dist",
+    "output": "../obook-docs",
     "port": 44035
   },
   "keywords": [
