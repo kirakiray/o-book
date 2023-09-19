@@ -10,7 +10,7 @@
 
 ```javascript
 // sw.js
-importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.2/src/sw/base.js`);
+importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.3/src/sw/base.js`);
 ```
 
 ### _preview.html
