@@ -96,6 +96,7 @@
           setTimeout(() => {
             this.inited = true;
             this.allOk = true;
+            this.initBindFetch();
           }, 1000);
         },
         async selectLocal() {
@@ -118,24 +119,84 @@
           }
 
           this.allOk = true;
+          this.initBindFetch();
         },
-        initBindFetch() {},
-      },
-      ready() {
-        // this.canuse = !!window.showDirectoryPicker;
-        navigator.serviceWorker
-          .register(new URL("./webapp-sw.js", location.href).href, {
-            scope: "./",
-          })
-          .then((reg) => {
-            setTimeout(() => {
-              reg.update();
-            }, 60 * 60 * 1000);
-          })
-          .catch((err) => {
-            console.error(err);
+        initBindFetch() {
+          window.addEventListener("beforeunload", function (e) {
+            e.preventDefault();
+            e.returnValue = "";
+            if (!confirm("标签关闭后预览将会中断，是否关闭？")) {
+              e.returnValue = "标签关闭后预览将会中断，是否关闭？";
+            }
           });
+
+          const longFetch = async () => {
+            const data = await fetch("./__long")
+              .then((e) => e.json())
+              .catch((err) => {
+                console.error(err);
+                return {};
+              });
+
+            if (data.type === "get") {
+              const { path } = data;
+
+              const arr = path.split("/");
+              const folderNameArr = arr.slice(0, -1);
+              const fileName = arr.slice(-1)[0];
+
+              let tFolder = this._root;
+
+              for (let name of folderNameArr) {
+                tFolder = await tFolder.getDirectoryHandle(name);
+              }
+
+              let tarFile = await tFolder.getFileHandle(fileName);
+              tarFile = await tarFile.getFile();
+
+              // 把对应的数据进行返回
+              fetch(`./__resolve?path=${path}`, {
+                method: "POST",
+                body: tarFile,
+              });
+            }
+
+            longFetch();
+            // console.log("__long: ", data);
+          };
+
+          longFetch();
+        },
+      },
+      async ready() {
+        this.canuse = !!window.showDirectoryPicker;
+
+        const swHref = new URL("./webapp-sw.js", location.href).href;
+
+        const reg = await navigator.serviceWorker.register(swHref, {
+          scope: "./",
+        });
+
+        setTimeout(() => {
+          reg.update();
+        }, 60 * 60 * 1000);
       },
     };
+
+    async function getHash(str) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(str);
+
+      // 使用SHA-256算法计算哈希值
+      const hash = await window.crypto.subtle.digest("SHA-256", data);
+
+      // 将哈希值转换为16进制字符串
+      const hashArray = new Uint8Array(hash);
+      const hashHex = Array.from(hashArray)
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("");
+
+      return hashHex;
+    }
   </script>
 </template>

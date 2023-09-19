@@ -92,6 +92,10 @@ self.addEventListener("fetch", async (event) => {
   }
 });
 
+self.addEventListener("install", () => {
+  self.skipWaiting();
+});
+
 function getRelativePath(fromPath, toPath) {
   const fromParts = fromPath.split("/");
   const toParts = toPath.split("/");
