@@ -93,6 +93,7 @@ self.addEventListener("fetch", async (event) => {
 });
 
 self.addEventListener("install", () => {
+  console.log("install");
   self.skipWaiting();
 });
 

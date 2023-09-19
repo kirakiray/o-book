@@ -1,5 +1,6 @@
 <template page>
   <link rel="stylesheet" href="./home.css" />
+  <l-m src="../../src/book-tool.html"></l-m>
   <style>
     .pannel {
       margin: 16px;
@@ -40,6 +41,8 @@
       <b>请不要关闭这个标签</b>，点击下方链接进行预览。
     </div>
   </x-if>
+
+  <div id="book-tool-container"></div>
   <script>
     import "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
 
@@ -121,7 +124,7 @@
           this.allOk = true;
           this.initBindFetch();
         },
-        initBindFetch() {
+        async initBindFetch() {
           window.addEventListener("beforeunload", function (e) {
             e.preventDefault();
             e.returnValue = "";
@@ -130,6 +133,7 @@
             }
           });
 
+          // 防止网页被挂起的操作
           const longFetch = async () => {
             const data = await fetch("./__long")
               .then((e) => e.json())
@@ -138,34 +142,58 @@
                 return {};
               });
 
-            if (data.type === "get") {
-              const { path } = data;
-
-              const arr = path.split("/");
-              const folderNameArr = arr.slice(0, -1);
-              const fileName = arr.slice(-1)[0];
-
-              let tFolder = this._root;
-
-              for (let name of folderNameArr) {
-                tFolder = await tFolder.getDirectoryHandle(name);
-              }
-
-              let tarFile = await tFolder.getFileHandle(fileName);
-              tarFile = await tarFile.getFile();
-
-              // 把对应的数据进行返回
-              fetch(`./__resolve?path=${path}`, {
-                method: "POST",
-                body: tarFile,
-              });
-            }
-
             longFetch();
-            // console.log("__long: ", data);
           };
 
           longFetch();
+
+          // 监听 service worker 返回的事件
+          navigator.serviceWorker.addEventListener("message", async (event) => {
+            const { data: e } = event;
+
+            if (e.type === "get") {
+              const { path } = e;
+
+              const pArr = path.split("/");
+              const dirArr = pArr.slice(0, -1);
+              const fileName = pArr.slice(-1)[0];
+
+              let folder = this._root;
+              let file = null;
+
+              try {
+                for (let f of dirArr) {
+                  folder = await folder.getDirectoryHandle(f);
+                }
+
+                file = await folder.getFileHandle(fileName);
+                file = await file.getFile();
+              } catch (err) {}
+
+              // console.log(path, file);
+
+              this.postToService({
+                type: "reserver",
+                data: await fileTo(file),
+                path,
+              });
+            }
+          });
+
+          // 初始化 book-tool 组件
+          let pdata = await this._root.getFileHandle("_preview.html");
+          pdata = await pdata.getFile();
+          const previewText = await fileTo(pdata, "text");
+
+          const temp = $({ tag: "template", html: previewText });
+
+          const booktool = temp.$("book-tool");
+          booktool.attr("noswinit", 1);
+
+          this.shadow.$("#book-tool-container").push(booktool);
+        },
+        postToService(data) {
+          navigator.serviceWorker.controller.postMessage(data);
         },
       },
       async ready() {
@@ -177,26 +205,34 @@
           scope: "./",
         });
 
+        // this.postToService({
+        //   type: "reserver",
+        // });
+
         setTimeout(() => {
           reg.update();
         }, 60 * 60 * 1000);
       },
     };
 
-    async function getHash(str) {
-      const encoder = new TextEncoder();
-      const data = encoder.encode(str);
-
-      // 使用SHA-256算法计算哈希值
-      const hash = await window.crypto.subtle.digest("SHA-256", data);
-
-      // 将哈希值转换为16进制字符串
-      const hashArray = new Uint8Array(hash);
-      const hashHex = Array.from(hashArray)
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("");
-
-      return hashHex;
+    function fileTo(file, type) {
+      if (!file) {
+        return "";
+      }
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          resolve(event.target.result);
+        };
+        reader.onerror = function (event) {
+          reject(event.target.error);
+        };
+        if (type === "text") {
+          reader.readAsText(file);
+        } else {
+          reader.readAsArrayBuffer(file);
+        }
+      });
     }
   </script>
 </template>

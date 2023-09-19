@@ -64,6 +64,7 @@
     export default {
       attrs: {
         sw: "",
+        noswinit: null,
       },
       data: {
         locals: /^zh\-/.test(userLanguage) ? locals.cn : locals.en,
@@ -315,20 +316,22 @@
 
           await new Promise((res) => setTimeout(res), 100);
 
-          await navigator.serviceWorker
-            .register(new URL(sw, location.href).href, {
-              scope: "./",
-            })
-            .then((reg) => {
-              setTimeout(() => {
-                reg.update();
-              }, 60 * 60 * 1000);
-            })
-            .catch((err) => {
-              console.error(err);
-            });
+          if (this.noswinit === null) {
+            await navigator.serviceWorker
+              .register(new URL(sw, location.href).href, {
+                scope: "./",
+              })
+              .then((reg) => {
+                setTimeout(() => {
+                  reg.update();
+                }, 60 * 60 * 1000);
+              })
+              .catch((err) => {
+                console.error(err);
+              });
 
-          await new Promise((res) => setTimeout(res), 500);
+            await new Promise((res) => setTimeout(res), 500);
+          }
 
           await this.loadArticles();
 

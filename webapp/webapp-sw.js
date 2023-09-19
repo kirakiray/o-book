@@ -2,52 +2,59 @@ importScripts(`/src/sw/base.js`);
 (() => {
   const selfRoot = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1");
   const longUrl = selfRoot + "/__long";
-  const resolveUrl = selfRoot + "/__resolve";
-
-  // 只允许有一个标签占用 __long地址
-  let inResp = false;
-  let timer, resolve;
 
   // 等待代理应用返回数据
   const waiter = {};
-  const waiterResolve = {};
+
+  self.addEventListener("message", function (event) {
+    const { data: e } = event;
+
+    // console.log("message: ", e);
+    if (e.type === "reserver" && e.path) {
+      const targetPms = waiter[e.path];
+
+      if (targetPms) {
+        targetPms.resolve({ data: e.data });
+      }
+    }
+  });
+
+  let agentReady = false;
 
   fetchOptions.agent = async (url, type) => {
-    if (resolve && selfRoot.includes(selfRoot)) {
+    if (agentReady && selfRoot.includes(selfRoot)) {
       const targetPath = url.replace(selfRoot + "/", "");
 
-      resolve(
-        new Response(
-          JSON.stringify({
-            type: "get",
-            path: targetPath,
-          }),
-          {
-            status: 200,
-          }
-        )
-      );
-      resolve = null;
-      
-      const pms = (waiter[targetPath] = new Promise((res) => {
-        waiterResolve[targetPath] = res;
+      let resolve, reject;
+      const pms = (waiter[targetPath] = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
       }));
+
+      pms.resolve = resolve;
+      pms.reject = reject;
 
       // 超时清除
       const errTimer = setTimeout(() => {
-        if (waiterResolve[targetPath]) {
-          waiterResolve[targetPath]({
+        if (waiter[targetPath]) {
+          resolve({
             data: "",
             header: {
               status: 408,
             },
           });
-
-          //   // 清除内存
-          //   waiter[targetPath] = null;
-          //   waiterResolve[targetPath] = null;
         }
       }, 10000);
+
+      self.clients.matchAll().then(function (clients) {
+        clients.forEach(function (client) {
+          // console.log("client:", client);
+          client.postMessage({
+            type: "get",
+            path: targetPath,
+          });
+        });
+      });
 
       const { data, header } = await pms;
 
@@ -55,10 +62,18 @@ importScripts(`/src/sw/base.js`);
 
       // 清除内存
       waiter[targetPath] = null;
-      waiterResolve[targetPath] = null;
 
       if (type === "text") {
+        if (!data) {
+          return "";
+        }
         return new TextDecoder("utf-8").decode(data);
+      } else if (type === "json") {
+        if (!data) {
+          return {};
+        }
+        const str = new TextDecoder("utf-8").decode(data);
+        return JSON.parse(str);
       }
 
       return new Response(data, {
@@ -75,21 +90,23 @@ importScripts(`/src/sw/base.js`);
 
   self.addEventListener("fetch", (event) => {
     const { request } = event;
-    const urlData = new URL(request.url);
-    const url = `${urlData.origin}${urlData.pathname}`;
 
-    if (url === longUrl) {
-      if (resolve) {
-        debugger;
-        return;
-      }
+    if (request.url === longUrl) {
+      const abortController = new AbortController();
 
+      const signal = abortController.signal;
+      request.signal = signal;
+
+      let timer;
+      signal.addEventListener("abort", function () {
+        clearTimeout(timer);
+        agentReady = false;
+      });
+
+      agentReady = true;
       event.respondWith(
         new Promise(async (res) => {
-          resolve = res;
           timer = setTimeout(() => {
-            resolve = null;
-            // 时间到了就返回数据
             res(
               new Response(
                 JSON.stringify(
@@ -102,27 +119,9 @@ importScripts(`/src/sw/base.js`);
                 )
               )
             );
+            agentReady = false;
           }, 5000);
         })
-      );
-    } else if (url === resolveUrl) {
-      const targetPath = new URLSearchParams(urlData.search).get("path");
-
-      event.respondWith(
-        (async () => {
-          const data = await request.arrayBuffer();
-
-          const targetResolve = waiterResolve[targetPath];
-          if (targetResolve) {
-            targetResolve({
-              data,
-            });
-          }
-
-          return new Response("ok", {
-            status: 200,
-          });
-        })()
       );
     }
   });

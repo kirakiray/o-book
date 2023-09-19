@@ -17,7 +17,9 @@ const responseMD = async (url, configUrl = "") => {
     });
   }
 
-  let tempText = await wrapFetch(`${host}/src/temps/article.html`, "text");
+  let tempText = await fetch(`${host}/src/temps/article.html`).then((e) =>
+    e.text()
+  );
 
   const selfOri = new URL(self.serviceWorker.scriptURL).origin;
 
