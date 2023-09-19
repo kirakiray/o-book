@@ -1,4 +1,4 @@
-importScripts(`/src/sw/base.js`);
+importScripts(`../src/sw/base.js`);
 (() => {
   const selfRoot = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1");
   const longUrl = selfRoot + "/__long";
