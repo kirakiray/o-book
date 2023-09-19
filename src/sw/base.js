@@ -1,9 +1,10 @@
-const host = "https://cdn.jsdelivr.net/npm/obook@2.1.2";
-// const host = "http://127.0.0.1:5512";
+// const host = "https://cdn.jsdelivr.net/npm/obook@2.1.2";
+const host = "http://127.0.0.1:5512";
 
 importScripts(
   "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
   `${host}/src/storage/index.js`,
+  `${host}/src/sw/wrapFetch.js`,
   `${host}/src/sw/getSummary.js`,
   `${host}/src/sw/responseMD.js`,
   `${host}/src/sw/responseLibs.js`
@@ -49,9 +50,7 @@ self.addEventListener("fetch", async (event) => {
         const darr = realUrl.split("/@/");
 
         if (isConfig) {
-          const data = await fetch(`${darr[0]}/${darr[1]}`).then((e) =>
-            e.json()
-          );
+          const data = await wrapFetch(`${darr[0]}/${darr[1]}`, "json");
 
           data.urls = originConfigs;
 
@@ -59,7 +58,7 @@ self.addEventListener("fetch", async (event) => {
         }
 
         if (darr.length && /^publics/.test(darr[1])) {
-          return fetch(`${darr[0]}/${darr[1]}`);
+          return wrapFetch(`${darr[0]}/${darr[1]}`);
         }
 
         let targetConfig;
@@ -91,6 +90,11 @@ self.addEventListener("fetch", async (event) => {
       })()
     );
   }
+});
+
+self.addEventListener("install", () => {
+  console.log("install");
+  self.skipWaiting();
 });
 
 function getRelativePath(fromPath, toPath) {

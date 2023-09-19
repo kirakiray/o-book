@@ -1,7 +1,7 @@
 const responseMD = async (url, configUrl = "") => {
   const realUrl = url.replace("/@/", "/").replace(/html$/, "md");
 
-  let targetTemp = await fetch(realUrl)
+  let targetTemp = await wrapFetch(realUrl)
     .then((e) => {
       if (/^2/.test(e.status)) {
         return e.text();
@@ -17,9 +17,9 @@ const responseMD = async (url, configUrl = "") => {
     });
   }
 
-  let tempText = await fetch(`${host}/src/temps/article.html`).then((e) => {
-    return e.text();
-  });
+  let tempText = await fetch(`${host}/src/temps/article.html`).then((e) =>
+    e.text()
+  );
 
   const selfOri = new URL(self.serviceWorker.scriptURL).origin;
 

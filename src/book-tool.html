@@ -64,6 +64,7 @@
     export default {
       attrs: {
         sw: "",
+        noswinit: null,
       },
       data: {
         locals: /^zh\-/.test(userLanguage) ? locals.cn : locals.en,
@@ -129,8 +130,6 @@
 
           const data = await zip.generateAsync({ type: "blob" });
 
-          console.log("pd: ", data);
-
           let uploadFileRequest = new Request(`/postzip`, {
             method: "post",
             body: data,
@@ -145,7 +144,7 @@
 
           // 下载
           zip.generateAsync({ type: "blob" }).then((content) => {
-            saveAs(content, "example.zip");
+            saveAs(content, "obook.zip");
           });
         },
         async getZip() {
@@ -315,20 +314,22 @@
 
           await new Promise((res) => setTimeout(res), 100);
 
-          await navigator.serviceWorker
-            .register(new URL(sw, location.href).href, {
-              scope: "./",
-            })
-            .then((reg) => {
-              setTimeout(() => {
-                reg.update();
-              }, 60 * 60 * 1000);
-            })
-            .catch((err) => {
-              console.error(err);
-            });
+          if (this.noswinit === null) {
+            await navigator.serviceWorker
+              .register(new URL(sw, location.href).href, {
+                scope: "./",
+              })
+              .then((reg) => {
+                setTimeout(() => {
+                  reg.update();
+                }, 60 * 60 * 1000);
+              })
+              .catch((err) => {
+                console.error(err);
+              });
 
-          await new Promise((res) => setTimeout(res), 500);
+            await new Promise((res) => setTimeout(res), 500);
+          }
 
           await this.loadArticles();
 
