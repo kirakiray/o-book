@@ -8,15 +8,13 @@
   </style>
   <div style="height: 1px"></div>
   <x-if :value="!allOk && inited">
-    <x-if :value="!canuse"> 当前使用的浏览器不支持 File Access API </x-if>
+    <x-if :value="!canuse"> {{locals.notAccess}} </x-if>
     <x-else>
       <div class="container pannel">
-        <h1>obook app</h1>
-        <p>创建您的文档站</p>
-        <button on:click="selectLocal">选择本地文件夹</button>
-        <p>
-          放心，这个应用没有服务器，不会上传您的内容。它只会在浏览器端生成您的文档站。
-        </p>
+        <h1>obook webapp</h1>
+        <p>{{locals.desc1}}</p>
+        <button on:click="selectLocal">{{locals.selectBtn}}</button>
+        <p>{{locals.desc2}}</p>
       </div>
     </x-else>
   </x-if>
@@ -24,27 +22,38 @@
   <x-if :value="!allOk && !inited">
     <x-if :value="initLoading === 0">
       <div class="container pannel">
-        <p>当前目录未发现文档相关基础文件，是否进行初始化？</p>
-        <button on:click="initProject(_root)">确认进行初始化</button>
+        <p>{{locals.initDesc}}</p>
+        <button on:click="initProject(_root)">
+          {{locals.confirmInitDesc}}
+        </button>
       </div>
     </x-if>
     <x-else-if :value="initLoading === 1">
-      <div class="container pannel">项目初始化中...</div>
+      <div class="container pannel">{{locals.initing}}</div>
     </x-else-if>
     <x-else>
-      <div class="container pannel">项目文件写入完成，正在开始初始化</div>
+      <div class="container pannel">{{locals.initing2}}</div>
     </x-else>
   </x-if>
 
   <x-if :value="allOk">
-    <div class="pannel" style="text-align: center">
-      <b>请不要关闭这个标签</b>，点击下方链接进行预览。
-    </div>
+    <div
+      class="pannel"
+      style="text-align: center"
+      :html="locals.donotClose"
+    ></div>
   </x-if>
 
   <div id="book-tool-container"></div>
   <script>
     import "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+    import { cn, en } from "../locals.js";
+
+    const userLanguage = navigator.language || navigator.userLanguage;
+
+    if (/^zh\-/.test(userLanguage)) {
+      $("head title").text = "obook文档预览器";
+    }
 
     export default {
       data: {
@@ -57,6 +66,7 @@
         // 文件初始化中
         initLoading: 0,
         allOk: false,
+        locals: /^zh\-/.test(userLanguage) ? cn : en,
       },
       proto: {
         async initProject(root) {
