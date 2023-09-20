@@ -8,5 +8,6 @@
       "name": "使用文档",
       "summary": "./docs/SUMMARY.md"
     }
-  ]
+  ],
+  "pages": ["./index.md"]
 }

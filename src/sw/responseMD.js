@@ -1,96 +1,169 @@
-const responseMD = async (url, configUrl = "") => {
-  const realUrl = url.replace("/@/", "/").replace(/html$/, "md");
+const responseMD = (() => {
+  const returnDocuments = async ({ url, configUrl, tokens }) => {
+    let tempText = await fetch(`${host}/src/temps/article.html`).then((e) =>
+      e.text()
+    );
 
-  let targetTemp = await wrapFetch(realUrl)
-    .then((e) => {
-      if (/^2/.test(e.status)) {
-        return e.text();
-      } else {
-        return null;
+    const articleText = marked.parser(tokens);
+
+    let article = `<article class="markdown-body">${articleText}
+    <article-footer></article-footer>
+    </article>`;
+
+    // 看是否包裹类型
+    if (tokens[0].type === "html") {
+      const wrapCompName = tokens[0].text.replace(
+        /.+ type\:(.+) [\s\S]+/,
+        "$1"
+      );
+
+      const matchArr = wrapCompName.match(/<template is="(.+?)">/);
+
+      if (matchArr) {
+        const wrapComp = matchArr[1];
+
+        article = `<${wrapComp}>${article}</${wrapComp}>`;
       }
-    })
-    .catch(() => null);
+    }
 
-  if (!targetTemp) {
-    return new Response("", {
-      status: 404,
+    const firstHeading = tokens.find((e) => e.type === "heading");
+
+    const injectHead = (await storage.getItem("inject-head")) || "";
+
+    const data = {
+      host,
+      title: firstHeading.text,
+      url,
+      article,
+      configUrl,
+      injectHead,
+    };
+
+    // 替换模板内容
+    Object.keys(data).forEach((name) => {
+      const reg = new RegExp(`\<%${name}%\>`, "g");
+      tempText = tempText.replace(reg, data[name]);
     });
-  }
 
-  let tempText = await fetch(`${host}/src/temps/article.html`).then((e) =>
-    e.text()
-  );
+    return new Response(tempText, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    });
+  };
 
-  const selfOri = new URL(self.serviceWorker.scriptURL).origin;
+  const returnNormal = async ({ tokens, url, configUrl }) => {
+    let tempText = await fetch(`${host}/src/temps/page.html`).then((e) =>
+      e.text()
+    );
+    let isDe1 = -1;
+    const firstHeading = tokens.find((e, index) => {
+      if (e.type === "heading" && e.depth === 1) {
+        isDe1 = index;
+      }
+      return e.type === "heading";
+    });
 
-  const fixTokens = (item) => {
-    if (item.type === "link") {
-      const { href } = item;
+    if (isDe1 > -1) {
+      tokens.splice(isDe1, 1);
+    }
 
-      const afterLink = new URL(href, url).href;
+    const article = marked.parser(tokens);
 
-      if (afterLink.includes(selfOri)) {
-        const path = afterLink.split("/@/")[1];
+    const injectHead = (await storage.getItem("inject-head")) || "";
 
-        if (!/^publics\//.test(path) && /\.md$/.test(href)) {
-          item.href = item.href.replace(/\.md$/, ".html");
+    const data = {
+      host,
+      title: firstHeading.text,
+      url,
+      article,
+      configUrl,
+      injectHead,
+    };
+
+    // 替换模板内容
+    Object.keys(data).forEach((name) => {
+      const reg = new RegExp(`\<%${name}%\>`, "g");
+      tempText = tempText.replace(reg, data[name]);
+    });
+
+    return new Response(tempText, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    });
+  };
+
+  const responseMD = async (url, configUrl = "") => {
+    const realUrl = url.replace("/@/", "/").replace(/html$/, "md");
+    const realConfigUrl = new URL(configUrl, realUrl).href;
+    const configData = await wrapFetch(realConfigUrl, "json");
+
+    let isPage = false;
+    if (configData.pages) {
+      configData.pages.some((l) => {
+        const fixedUrl = new URL(l, realConfigUrl).href;
+
+        if (fixedUrl === realUrl) {
+          return (isPage = true);
+        }
+      });
+    }
+
+    let targetTemp = await wrapFetch(realUrl)
+      .then((e) => {
+        if (/^2/.test(e.status)) {
+          return e.text();
+        } else {
+          return null;
+        }
+      })
+      .catch(() => null);
+
+    if (!targetTemp) {
+      return new Response("", {
+        status: 404,
+      });
+    }
+
+    const selfOri = new URL(self.serviceWorker.scriptURL).origin;
+
+    const fixTokens = (item) => {
+      if (item.type === "link") {
+        const { href } = item;
+
+        const afterLink = new URL(href, url).href;
+
+        if (afterLink.includes(selfOri)) {
+          const path = afterLink.split("/@/")[1];
+
+          if (!/^publics\//.test(path) && /\.md$/.test(href)) {
+            item.href = item.href.replace(/\.md$/, ".html");
+          }
         }
       }
+
+      if (item.tokens) {
+        item.tokens.forEach((e) => fixTokens(e));
+      } else if (item.items) {
+        item.items.forEach((e) => fixTokens(e));
+      }
+    };
+
+    const tokens = marked.lexer(targetTemp);
+
+    tokens.forEach((e) => {
+      fixTokens(e);
+    });
+
+    if (isPage) {
+      return await returnNormal({ url, configUrl, tokens });
     }
 
-    if (item.tokens) {
-      item.tokens.forEach((e) => fixTokens(e));
-    } else if (item.items) {
-      item.items.forEach((e) => fixTokens(e));
-    }
+    return await returnDocuments({ url, configUrl, tokens });
   };
 
-  const tokens = marked.lexer(targetTemp);
-
-  tokens.forEach((e) => {
-    fixTokens(e);
-  });
-
-  let article = `<article class="markdown-body">${marked.parser(tokens)}
-  <article-footer></article-footer>
-  </article>`;
-
-  // 看是否包裹类型
-  if (tokens[0].type === "html") {
-    const wrapCompName = tokens[0].text.replace(/.+ type\:(.+) [\s\S]+/, "$1");
-
-    const matchArr = wrapCompName.match(/<template is="(.+?)">/);
-
-    if (matchArr) {
-      const wrapComp = matchArr[1];
-
-      article = `<${wrapComp}>${article}</${wrapComp}>`;
-    }
-  }
-
-  const firstHeading = tokens.find((e) => e.type === "heading");
-
-  const injectHead = (await storage.getItem("inject-head")) || "";
-
-  const data = {
-    host,
-    title: firstHeading.text,
-    url,
-    article,
-    configUrl,
-    injectHead,
-  };
-
-  // 替换模板内容
-  Object.keys(data).forEach((name) => {
-    const reg = new RegExp(`\<%${name}%\>`, "g");
-    tempText = tempText.replace(reg, data[name]);
-  });
-
-  return new Response(tempText, {
-    status: 200,
-    headers: {
-      "Content-Type": "text/html; charset=utf-8",
-    },
-  });
-};
+  return responseMD;
+})();
