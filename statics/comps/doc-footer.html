@@ -3,11 +3,13 @@
     :host {
       display: block;
       padding: 32px 16px;
+      box-shadow: rgba(139, 139, 139, 0.1) 0 -2px 3px;
     }
 
     .container {
       display: flex;
-      justify-content: space-around;
+      /* justify-content: space-around; */
+      justify-content: center;
       align-items: flex-start;
       flex-wrap: wrap;
       max-width: 1800px;
@@ -17,7 +19,7 @@
     ul {
       list-style-type: none;
       padding: 0;
-      margin: 0 24px;
+      margin: 0 48px;
       max-width: 320px;
     }
 
@@ -84,18 +86,22 @@
         const footerUrl = new URL(cdata.footer, curl).href;
 
         let { footerData } = cdata;
-        footerData = JSON.parse(JSON.stringify(footerData));
 
         if (!footerData) {
           this.css.display = "none";
           return;
         }
 
+        footerData = JSON.parse(JSON.stringify(footerData));
+
         const fixItem = (item) => {
           if (item.href) {
-            item.href = new URL(item.href, footerUrl).href;
+            const udata = new URL(item.href, footerUrl);
+            item.href = udata.href;
             item.href = item.href.replace(/\.md$/, ".html");
-            item.olink = true;
+            if (udata.origin === location.origin) {
+              item.olink = true;
+            }
           }
 
           if (item.childs) {
@@ -130,7 +136,6 @@
         footerData.forEach(fixItem);
 
         this.footerData = footerData;
-        console.log(footerData);
       },
     };
   </script>
