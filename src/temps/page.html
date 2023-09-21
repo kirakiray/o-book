@@ -44,6 +44,12 @@
         <%article%>
         <script>
           export const parent = "<%host%>/statics/layouts/header-layout.html";
+
+          import pageInit from "<%host%>/statics/page-init.mjs";
+
+          export default async (...args) => {
+            return await pageInit(PATH, args);
+          };
         </script>
       </template>
     </o-app>
