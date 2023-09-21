@@ -96,6 +96,36 @@ const responseMD = (() => {
     });
   };
 
+  const returnRedirect = async ({ redirectTo, realUrl, url }) => {
+    let tempText = await fetch(`${host}/src/temps/redirect.html`).then((e) =>
+      e.text()
+    );
+
+    const relatePath = getRelativePath(
+      url.replace(/(.+)\/.+/, "$1"),
+      redirectTo
+    );
+
+    const data = {
+      host,
+      redirectTo: relatePath.replace(/\.md$/, ".html"),
+    };
+
+    // 替换模板内容
+    Object.keys(data).forEach((name) => {
+      const reg = new RegExp(`\<%${name}%\>`, "g");
+      tempText = tempText.replace(reg, data[name]);
+    });
+
+    // 重定向地址到指定页面
+    return new Response(tempText, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    });
+  };
+
   const responseMD = async (url, configUrl = "") => {
     const realUrl = url.replace("/@/", "/").replace(/html$/, "md");
     const realConfigUrl = new URL(configUrl, realUrl).href;
@@ -123,6 +153,40 @@ const responseMD = (() => {
       .catch(() => null);
 
     if (!targetTemp) {
+      // 判断是不是 pages 的映射路径
+      if (configData.pages) {
+        const relateConfigUrl = new URL(configUrl, url).href;
+
+        let redirectTo = null,
+          afterUrl = null;
+        configData.pages.some((l) => {
+          const fixedUrl = new URL(l, relateConfigUrl).href;
+
+          // 如果和修正目录一致，则则跳转到修正页面
+          const farr = fixedUrl.split("/@/");
+          if (farr.length === 2) {
+            const pathArr = farr[1].split("/");
+            if (pathArr.length >= 2) {
+              const absUrl = [farr[0], ...pathArr.slice(1)].join("/");
+
+              if (realUrl === absUrl) {
+                redirectTo = fixedUrl;
+                afterUrl = new URL(l, realConfigUrl).href;
+                return true;
+              }
+            }
+          }
+        });
+
+        if (redirectTo !== null) {
+          return await returnRedirect({
+            url,
+            redirectTo,
+            realUrl: afterUrl,
+          });
+        }
+      }
+
       return new Response("", {
         status: 404,
       });
