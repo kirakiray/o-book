@@ -1,0 +1,53 @@
+<template component>
+  <style>
+    :host {
+      display: block;
+      padding: 32px 16px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0 24px;
+    }
+
+    ul li {
+      padding: 0;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    ul .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    ul li a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul li a:hover {
+      text-decoration: underline;
+    }
+  </style>
+  <div>
+    <div class="container">
+      <ul>
+        <li class="title">Learn React</li>
+        <li><a href="">快速使用</a></li>
+        <li>快速使用2</li>
+        <li>快速使用3</li>
+        <li>快速使用4</li>
+      </ul>
+    </div>
+  </div>
+</template>

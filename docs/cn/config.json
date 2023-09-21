@@ -10,5 +10,6 @@
       "summary": "./docs/SUMMARY.md"
     }
   ],
-  "pages": ["./index.md"]
+  "pages": ["./index.md"],
+  "footer": ""
 }

@@ -3,6 +3,7 @@
   <l-m src="../comps/doc-header/doc-header.html"></l-m>
   <l-m src="../comps/doc-search/doc-search.html"></l-m>
   <l-m src="../comps/lang-select.html"></l-m>
+  <l-m src="../comps/doc-footer.html"></l-m>
   <link rel="stylesheet" href="../font/iconfont.css" />
 
   <style>
@@ -25,6 +26,10 @@
     .logo-text {
       font-family: "Optimistic Text", -apple-system, ui-sans-serif, system-ui,
         "system-ui", "Segoe UI", Roboto;
+    }
+
+    doc-footer {
+      transition: opacity ease .5s;
     }
   </style>
   <doc-container>
@@ -59,6 +64,7 @@
       <doc-search slot="right" style="margin-right: 16px"></doc-search>
     </doc-header>
     <slot></slot>
+    <doc-footer></doc-footer>
   </doc-container>
   <script>
     import { configData } from "../data.mjs";
@@ -101,6 +107,12 @@
       routerChange() {
         this.shadow.$("doc-container").scrollTop = 0;
         this.leftActiveUrl = `${location.origin}${location.pathname}`;
+        this.shadow.$("doc-footer").style.transition = "none";
+        this.shadow.$("doc-footer").style.opacity = "0";
+        setTimeout(() => {
+          this.shadow.$("doc-footer").style.transition = "";
+          this.shadow.$("doc-footer").style.opacity = "1";
+        }, 100);
       },
     };
   </script>

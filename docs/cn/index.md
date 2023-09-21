@@ -20,7 +20,7 @@
 
 ### 你甚至可以不看文档，使用我们的Web应用程序，也能轻松起步
 
-[obook webapp](https://kirakiray.github.io/o-book/webapp/)
+[obook previewer](https://kirakiray.github.io/o-book/webapp/)
 
 </simp-block>
 
@@ -38,7 +38,7 @@
 
 ### 兼容移动端，包含白天黑夜模式；打包好的文档站，具备完整的搜索功能
 
-而其他文档站生成工具需要额外花费购买搜索微服务
+而其他文档站生成工具可能需要额外花费购买搜索微服务
 
 </simp-block>
 
