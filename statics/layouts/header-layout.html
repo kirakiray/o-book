@@ -22,10 +22,22 @@
       color: inherit;
       margin-right: 16px;
     }
+    .logo-text {
+      font-family: "Optimistic Text", -apple-system, ui-sans-serif, system-ui,
+        "system-ui", "Segoe UI", Roboto;
+    }
   </style>
   <doc-container>
     <doc-header slot="header">
-      <span slot="logo">{{logoText}}</span>
+      <x-if :value="logoImg">
+        <img
+          slot="logo"
+          attr:src="logoImg || ''"
+          alt="logo"
+          style="height: 30px; margin-right: 4px"
+        />
+      </x-if>
+      <span slot="logo" class="logo-text">{{logoText || ''}}</span>
       <ul>
         <x-fill :value="navs">
           <li class:active="$host.isActive($data)">
@@ -57,6 +69,7 @@
         github: "",
         leftActiveUrl: "",
         logoText: "",
+        logoImg: "",
       },
       proto: {
         isActive(data) {
@@ -73,7 +86,14 @@
         this.attr("id", "header-layout");
         const data = await configData;
 
-        this.logoText = data.logo.text;
+        this.logoText = data?.logo?.text;
+        if (data?.logo?.url) {
+          const absConfigUrl = new URL(configUrl, location.href).href;
+
+          const logoUrl = data?.logo?.url;
+
+          this.logoImg = new URL(logoUrl, absConfigUrl).href;
+        }
 
         this.navs = data.navs;
         this.github = data.github;

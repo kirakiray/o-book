@@ -4,6 +4,8 @@
 
 <simp-block>
 
+<img src="../publics/logo.svg" class="logo" />
+
 ## obook是什么？
 
 ### 如果您想专注于写文档，同时希望快速创建免费且精美的网站，那么obook就是您的不二选择

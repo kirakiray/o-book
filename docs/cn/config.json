@@ -1,7 +1,8 @@
 {
   "github": "https://github.com/kirakiray/o-book",
   "logo": {
-    "text": "obook"
+    "text": "obook",
+    "url": "../publics/logo.svg"
   },
   "navs": [
     {
