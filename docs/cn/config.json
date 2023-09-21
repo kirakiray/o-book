@@ -11,5 +11,5 @@
     }
   ],
   "pages": ["./index.md"],
-  "footer": ""
+  "footer": "./footer.md"
 }

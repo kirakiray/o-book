@@ -8,7 +8,7 @@
     .container {
       display: flex;
       justify-content: space-around;
-      align-items: center;
+      align-items: flex-start;
       flex-wrap: wrap;
       max-width: 1800px;
       margin: 0 auto;
@@ -18,9 +18,13 @@
       list-style-type: none;
       padding: 0;
       margin: 0 24px;
+      max-width: 320px;
     }
 
     ul li {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
       padding: 0;
       margin: 8px 0;
       font-size: 14px;
@@ -35,19 +39,99 @@
       text-decoration: none;
     }
 
-    ul li a:hover {
+    ul li a[href]:hover {
       text-decoration: underline;
     }
+
+    ul li img {
+      max-height: 20px;
+      margin-right: 4px;
+    }
   </style>
-  <div>
-    <div class="container">
+  <div class="container">
+    <x-fill :value="footerData">
       <ul>
-        <li class="title">Learn React</li>
-        <li><a href="">快速使用</a></li>
-        <li>快速使用2</li>
-        <li>快速使用3</li>
-        <li>快速使用4</li>
+        <li class="title">
+          <x-if :value="$data.img"> <img attr:src="$data.img" /> </x-if>
+
+          {{$data.name}}
+        </li>
+        <x-fill :value="$data.childs" name="li"> </x-fill>
       </ul>
-    </div>
+    </x-fill>
+    <template name="li">
+      <li>
+        <a attr:href="$data.href || null" attr:olink="$data.olink || null">
+          <x-if :value="$data.img">
+            <img attr:src="$data.img" />
+          </x-if>
+          {{$data.name}}</a
+        >
+      </li>
+    </template>
   </div>
+  <script>
+    import { configData } from "../data.mjs";
+
+    export default {
+      data: {
+        footerData: [],
+      },
+      async attached() {
+        const cdata = await configData;
+
+        const curl = new URL(configUrl, location.href).href;
+        const footerUrl = new URL(cdata.footer, curl).href;
+
+        let { footerData } = cdata;
+        footerData = JSON.parse(JSON.stringify(footerData));
+
+        if (!footerData) {
+          this.css.display = "none";
+          return;
+        }
+
+        const fixItem = (item) => {
+          if (item.href) {
+            item.href = new URL(item.href, footerUrl).href;
+            item.href = item.href.replace(/\.md$/, ".html");
+            item.olink = true;
+          }
+
+          if (item.childs) {
+            item.childs.forEach((e) => fixItem(e));
+          }
+
+          let name = item.name;
+          const temp = $({
+            tag: "template",
+            html: name,
+          });
+
+          if (temp.$("img")) {
+            let img;
+            temp.all("img").forEach((imgEl) => {
+              img = imgEl.attr("src");
+              if (img) {
+                img = new URL(img, footerUrl).href;
+              }
+              imgEl.remove();
+            });
+
+            if (img) {
+              item.img = img;
+            }
+
+            item.name = temp.html.trim();
+          }
+        };
+
+        // 修正地址
+        footerData.forEach(fixItem);
+
+        this.footerData = footerData;
+        console.log(footerData);
+      },
+    };
+  </script>
 </template>
