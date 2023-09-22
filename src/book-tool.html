@@ -28,18 +28,20 @@
       </select>
     </div>
     <div style="display: flex; flex-wrap: wrap">
-      <div class="nav-item">
-        <div class="nav-title">Pages</div>
-        <ul>
-          <x-fill :value="pages">
-            <li>
-              <a attr:href="$data || null" target="_blank"
-                >{{$host.getPageName($data) }}
-              </a>
-            </li>
-          </x-fill>
-        </ul>
-      </div>
+      <x-if :value="pages.length">
+        <div class="nav-item">
+          <div class="nav-title">Pages</div>
+          <ul>
+            <x-fill :value="pages">
+              <li>
+                <a attr:href="$data || null" target="_blank"
+                  >{{$host.getPageName($data) }}
+                </a>
+              </li>
+            </x-fill>
+          </ul>
+        </div>
+      </x-if>
       <x-fill :value="navs">
         <div class="nav-item">
           <div class="nav-title">{{$data.name}}</div>
@@ -134,12 +136,14 @@
             fixArticles(e.articles, summaryUrl);
           });
 
-          const fixedPages = pages.map((e) => {
-            return new URL(e, jsonUrl).href.replace(/\.md/, ".html");
-          });
+          if (pages) {
+            const fixedPages = pages.map((e) => {
+              return new URL(e, jsonUrl).href.replace(/\.md/, ".html");
+            });
+            this.pages = fixedPages;
+          }
 
           this.navs = navs;
-          this.pages = fixedPages;
         },
         async loadArticles() {
           await this.init(this.srcs[0].src);
@@ -207,6 +211,18 @@
 
                 articles.forEach((item) => eachChilds(item));
               });
+
+              if (jdata.pages) {
+                // 打包 pages
+                jdata.pages.forEach((purl) => {
+                  const p = new URL(purl, jsonUrl).href.replace(
+                    /\.md$/,
+                    ".html"
+                  );
+
+                  fileUrls.push(p);
+                });
+              }
             })
           );
 
@@ -243,19 +259,12 @@
 
               if (/\.html$/.test(e)) {
                 const t = $({ tag: "template", html: data });
-                const article = t.$("template[page]").$("article");
+                const temp = t.$("template[page]");
+                const article = temp.$("article");
 
-                if (!article) {
-                  return;
-                }
-
-                [
-                  ...article.all("[src],[href]"),
-                  ...(article.$("template[is]")
-                    ? article.$("template[is]").all("[src],[href]")
-                    : []),
-                ].forEach((el) => {
+                const f = (el) => {
                   const inpath = el.attr("src") || el.attr("href");
+
                   if (/^http/.test(inpath)) {
                     return;
                   }
@@ -264,10 +273,23 @@
                   if (/^publics/.test(fixedPath.split("/@/")[1])) {
                     publics.push(fixedPath);
                   }
-                });
+                };
+
+                if (!article) {
+                  temp.all("[src],[href]").forEach(f);
+                  return;
+                }
+
+                [
+                  ...article.all("[src],[href]"),
+                  ...(article.$("template[is]")
+                    ? article.$("template[is]").all("[src],[href]")
+                    : []),
+                ].forEach(f);
               }
             })
           );
+          debugger;
 
           if (publics.length) {
             await Promise.all(
