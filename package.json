@@ -1,1 +1,41 @@
-{"name":"obook","version":"2.1.6","type":"module","description":"A document system built on ofa.js (like gitbook)","main":"shell/index.js","scripts":{"bump":"node scripts/bump && npm i && node scripts/pack-standup","packs":"node scripts/pack-standup","build-doc":"node ./shell/index.js build","bddev":"nodemon --inspect ./shell/index.js build","test":"echo \"Error: no test specified\" && exit 1"},"author":"YAO","license":"MIT","dependencies":{"adm-zip":"^0.5.10","koa":"^2.14.2","koa-static":"^5.0.0","open":"^9.1.0","puppeteer":"^21.2.1","rimraf":"^5.0.1"},"repository":{"type":"git","url":"git+https://github.com/kirakiray/o-book.git"},"bin":{"obook":"shell/index.js"},"obook":{"input":"./docs/_preview.html","output":"../obook-docs","port":44035},"keywords":["obook","o-book","document"]}
+{
+  "name": "obook",
+  "version": "2.1.7",
+  "type": "module",
+  "description": "A document system built on ofa.js (like gitbook)",
+  "main": "shell/index.js",
+  "scripts": {
+    "bump": "node scripts/bump && npm i && node scripts/pack-standup",
+    "packs": "node scripts/pack-standup",
+    "build-doc": "node ./shell/index.js build",
+    "bddev": "nodemon --inspect ./shell/index.js build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YAO",
+  "license": "MIT",
+  "dependencies": {
+    "adm-zip": "^0.5.10",
+    "koa": "^2.14.2",
+    "koa-static": "^5.0.0",
+    "open": "^9.1.0",
+    "puppeteer": "^21.2.1",
+    "rimraf": "^5.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kirakiray/o-book.git"
+  },
+  "bin": {
+    "obook": "shell/index.js"
+  },
+  "obook": {
+    "input": "./docs/_preview.html",
+    "output": "../obook-docs",
+    "port": 44035
+  },
+  "keywords": [
+    "obook",
+    "o-book",
+    "document"
+  ]
+}
