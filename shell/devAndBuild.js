@@ -62,7 +62,7 @@ export default async function dev({ obook }) {
         )}`
       );
       client.close();
-      server.close();
+      // server.close();
     } else if (ctx.method === "POST" && ctx.path === "/postzip") {
       await new Promise((res) => {
         let data = [];

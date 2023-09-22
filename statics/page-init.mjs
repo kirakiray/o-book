@@ -9,5 +9,8 @@ export default async (PATH, [{ query, load }]) => {
         }
       });
     },
+    loaded() {
+      $("body").emit("page-ready");
+    },
   };
 };

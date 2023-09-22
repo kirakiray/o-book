@@ -1,2 +1,5 @@
-// importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.5/src/sw/base.js`);
-importScripts(`../src/sw/base.js`);
+if (serviceWorker.scriptURL.includes("127")) {
+  importScripts(`../src/sw/base.js`);
+} else {
+  importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.6/src/sw/base.js`);
+}
