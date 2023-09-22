@@ -1,5 +1,10 @@
-// const host = "https://cdn.jsdelivr.net/npm/obook@2.1.4";
-const host = "http://127.0.0.1:5512";
+let host;
+const hostUrlData = new URL(self.serviceWorker.scriptURL);
+if (hostUrlData.hostname.includes("127")) {
+  host = hostUrlData.origin;
+} else {
+  host = "https://cdn.jsdelivr.net/npm/obook@2.1.5";
+}
 
 importScripts(
   "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
