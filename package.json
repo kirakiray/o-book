@@ -8,6 +8,7 @@
     "bump": "node scripts/bump && npm i && node scripts/pack-standup",
     "packs": "node scripts/pack-standup",
     "build-doc": "node ./shell/index.js build",
+    "bddev": "nodemon --inspect ./shell/index.js build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "YAO",
