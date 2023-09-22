@@ -7,3 +7,5 @@
 - [项目文件](./project-docs.md)
 - [添加分析代码](./add-analysis.md)
 - [多语言支持](./i18n.md)
+- [添加非文档页面](./normal-pages.md)
+- [添加底部内容](./add-footer.md)
