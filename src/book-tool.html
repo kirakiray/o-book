@@ -193,7 +193,7 @@
           };
 
           await Promise.all(
-            this.srcs.map(async ({ src }) => {
+            this.srcs.map(async ({ src }, index) => {
               const jsonUrl = new URL("@/" + src, location.href).href;
               const libUrl = jsonUrl.replace(/(.+)\/.+/, "$1/libs.json");
 
@@ -221,6 +221,21 @@
                   );
 
                   fileUrls.push(p);
+
+                  if (index === 0) {
+                    const path =
+                      p.split("/@/").length === 2 ? p.split("/@/")[1] : null;
+
+                    if (path) {
+                      const parr = path.split("/");
+
+                      if (parr.length >= 2) {
+                        fileUrls.push(
+                          `${p.split("/@/")[0]}/@/${parr.slice(1).join("/")}`
+                        );
+                      }
+                    }
+                  }
                 });
               }
             })
@@ -260,6 +275,9 @@
               if (/\.html$/.test(e)) {
                 const t = $({ tag: "template", html: data });
                 const temp = t.$("template[page]");
+                if (!temp) {
+                  return;
+                }
                 const article = temp.$("article");
 
                 const f = (el) => {
@@ -289,7 +307,6 @@
               }
             })
           );
-          debugger;
 
           if (publics.length) {
             await Promise.all(
