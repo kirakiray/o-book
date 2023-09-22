@@ -13,7 +13,10 @@
         height: 100%;
       }
     </style>
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.14/dist/ofa.min.js" dev></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.14/dist/ofa.min.js"
+      dev
+    ></script>
   </head>
   <body>
     <!-- <l-m src="../src/book-tool.html"></l-m> -->
@@ -22,6 +25,22 @@
     ></l-m>
     <book-tool sw="./doc-sw.js">
       <source src="./cn/config.json" lang="cn" />
+      <template inject-head>
+        <!-- Google tag (gtag.js) -->
+        <script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-8YBSTGPGF8"
+        ></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          gtag("js", new Date());
+
+          gtag("config", "G-8YBSTGPGF8");
+        </script>
+      </template>
     </book-tool>
   </body>
 </html>
