@@ -13,6 +13,15 @@
   const load = lm(import.meta);
 
   Promise.all([
+    new Promise((res) => {
+      let timer;
+      $("body").one("page-ready", () => {
+        res();
+        clearTimeout(timer);
+      });
+
+      timer = setTimeout(res, 5000);
+    }),
     load("./comps/article-nav/article-nav.html"),
     load("./comps/doc-code.html"),
     load("./comps/doc-header/doc-header.html"),
