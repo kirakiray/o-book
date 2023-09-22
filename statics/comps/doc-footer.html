@@ -1,0 +1,142 @@
+<template component>
+  <style>
+    :host {
+      display: block;
+      padding: 32px 16px;
+      box-shadow: rgba(139, 139, 139, 0.1) 0 -2px 3px;
+    }
+
+    .container {
+      display: flex;
+      /* justify-content: space-around; */
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0 48px;
+      max-width: 320px;
+    }
+
+    ul li {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    ul .title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+    ul li a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul li a[href]:hover {
+      text-decoration: underline;
+    }
+
+    ul li img {
+      max-height: 20px;
+      margin-right: 4px;
+    }
+  </style>
+  <div class="container">
+    <x-fill :value="footerData">
+      <ul>
+        <li class="title">
+          <x-if :value="$data.img"> <img attr:src="$data.img" /> </x-if>
+
+          {{$data.name}}
+        </li>
+        <x-fill :value="$data.childs" name="li"> </x-fill>
+      </ul>
+    </x-fill>
+    <template name="li">
+      <li>
+        <a attr:href="$data.href || null" attr:olink="$data.olink || null">
+          <x-if :value="$data.img">
+            <img attr:src="$data.img" />
+          </x-if>
+          {{$data.name}}</a
+        >
+      </li>
+    </template>
+  </div>
+  <script>
+    import { configData } from "../data.mjs";
+
+    export default {
+      data: {
+        footerData: [],
+      },
+      async attached() {
+        const cdata = await configData;
+
+        const curl = new URL(configUrl, location.href).href;
+        const footerUrl = new URL(cdata.footer, curl).href;
+
+        let { footerData } = cdata;
+
+        if (!footerData) {
+          this.css.display = "none";
+          return;
+        }
+
+        footerData = JSON.parse(JSON.stringify(footerData));
+
+        const fixItem = (item) => {
+          if (item.href) {
+            const udata = new URL(item.href, footerUrl);
+            item.href = udata.href;
+            item.href = item.href.replace(/\.md$/, ".html");
+            if (udata.origin === location.origin) {
+              item.olink = true;
+            }
+          }
+
+          if (item.childs) {
+            item.childs.forEach((e) => fixItem(e));
+          }
+
+          let name = item.name;
+          const temp = $({
+            tag: "template",
+            html: name,
+          });
+
+          if (temp.$("img")) {
+            let img;
+            temp.all("img").forEach((imgEl) => {
+              img = imgEl.attr("src");
+              if (img) {
+                img = new URL(img, footerUrl).href;
+              }
+              imgEl.remove();
+            });
+
+            if (img) {
+              item.img = img;
+            }
+
+            item.name = temp.html.trim();
+          }
+        };
+
+        // 修正地址
+        footerData.forEach(fixItem);
+
+        this.footerData = footerData;
+      },
+    };
+  </script>
+</template>

@@ -28,6 +28,20 @@
       </select>
     </div>
     <div style="display: flex; flex-wrap: wrap">
+      <x-if :value="pages.length">
+        <div class="nav-item">
+          <div class="nav-title">Pages</div>
+          <ul>
+            <x-fill :value="pages">
+              <li>
+                <a attr:href="$data || null" target="_blank"
+                  >{{$host.getPageName($data) }}
+                </a>
+              </li>
+            </x-fill>
+          </ul>
+        </div>
+      </x-if>
       <x-fill :value="navs">
         <div class="nav-item">
           <div class="nav-title">{{$data.name}}</div>
@@ -71,16 +85,21 @@
         locals: /^zh\-/.test(userLanguage) ? locals.cn : locals.en,
         loading: true,
         navs: [],
+        pages: [],
         currentLang: "",
         langOptions: [],
         iserror: "",
       },
       proto: {
+        getPageName(url) {
+          return url.replace(/.+\//, "");
+        },
         changeLang(e) {
           this.init(this.srcs.find((item) => item.lang === e.target.value).src);
         },
         async init(src) {
           const jsonUrl = new URL("@/" + src, location.href).href;
+
           const data = await new Promise(async (resolve) => {
             while (true) {
               try {
@@ -109,13 +128,20 @@
             }
           });
 
-          const { navs } = data;
+          const { navs, pages } = data;
 
           navs.forEach((e) => {
             const summaryUrl = new URL(e.summary, jsonUrl).href;
 
             fixArticles(e.articles, summaryUrl);
           });
+
+          if (pages) {
+            const fixedPages = pages.map((e) => {
+              return new URL(e, jsonUrl).href.replace(/\.md/, ".html");
+            });
+            this.pages = fixedPages;
+          }
 
           this.navs = navs;
         },
@@ -167,7 +193,7 @@
           };
 
           await Promise.all(
-            this.srcs.map(async ({ src }) => {
+            this.srcs.map(async ({ src }, index) => {
               const jsonUrl = new URL("@/" + src, location.href).href;
               const libUrl = jsonUrl.replace(/(.+)\/.+/, "$1/libs.json");
 
@@ -185,6 +211,33 @@
 
                 articles.forEach((item) => eachChilds(item));
               });
+
+              if (jdata.pages) {
+                // 打包 pages
+                jdata.pages.forEach((purl) => {
+                  const p = new URL(purl, jsonUrl).href.replace(
+                    /\.md$/,
+                    ".html"
+                  );
+
+                  fileUrls.push(p);
+
+                  if (index === 0) {
+                    const path =
+                      p.split("/@/").length === 2 ? p.split("/@/")[1] : null;
+
+                    if (path) {
+                      const parr = path.split("/");
+
+                      if (parr.length >= 2) {
+                        fileUrls.push(
+                          `${p.split("/@/")[0]}/@/${parr.slice(1).join("/")}`
+                        );
+                      }
+                    }
+                  }
+                });
+              }
             })
           );
 
@@ -221,19 +274,15 @@
 
               if (/\.html$/.test(e)) {
                 const t = $({ tag: "template", html: data });
-                const article = t.$("template[page]").$("article");
-
-                if (!article) {
+                const temp = t.$("template[page]");
+                if (!temp) {
                   return;
                 }
+                const article = temp.$("article");
 
-                [
-                  ...article.all("[src],[href]"),
-                  ...(article.$("template[is]")
-                    ? article.$("template[is]").all("[src],[href]")
-                    : []),
-                ].forEach((el) => {
+                const f = (el) => {
                   const inpath = el.attr("src") || el.attr("href");
+
                   if (/^http/.test(inpath)) {
                     return;
                   }
@@ -242,7 +291,19 @@
                   if (/^publics/.test(fixedPath.split("/@/")[1])) {
                     publics.push(fixedPath);
                   }
-                });
+                };
+
+                if (!article) {
+                  temp.all("[src],[href]").forEach(f);
+                  return;
+                }
+
+                [
+                  ...article.all("[src],[href]"),
+                  ...(article.$("template[is]")
+                    ? article.$("template[is]").all("[src],[href]")
+                    : []),
+                ].forEach(f);
               }
             })
           );

@@ -1,5 +1,5 @@
-const host = "https://cdn.jsdelivr.net/npm/obook@2.1.3";
-// const host = "http://127.0.0.1:5512";
+// const host = "https://cdn.jsdelivr.net/npm/obook@2.1.4";
+const host = "http://127.0.0.1:5512";
 
 importScripts(
   "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
@@ -13,7 +13,7 @@ importScripts(
 const workPath = self.serviceWorker.scriptURL.replace(/(.+)\/.+/, "$1") + "/@/";
 
 const responseConfig = async (cdata, relateUrl) => {
-  const { navs } = cdata;
+  const { navs, footer } = cdata;
 
   await Promise.all(
     navs.map(async (e) => {
@@ -26,6 +26,12 @@ const responseConfig = async (cdata, relateUrl) => {
       e.articles = data;
     })
   );
+
+  if (footer) {
+    const footerData = await getSummary(new URL(footer, relateUrl).href);
+
+    cdata.footerData = footerData;
+  }
 
   return new Response(JSON.stringify(cdata), {
     status: 200,

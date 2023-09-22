@@ -3,6 +3,7 @@
   <l-m src="../comps/doc-header/doc-header.html"></l-m>
   <l-m src="../comps/doc-search/doc-search.html"></l-m>
   <l-m src="../comps/lang-select.html"></l-m>
+  <l-m src="../comps/doc-footer.html"></l-m>
   <link rel="stylesheet" href="../font/iconfont.css" />
 
   <style>
@@ -22,10 +23,26 @@
       color: inherit;
       margin-right: 16px;
     }
+    .logo-text {
+      font-family: "Optimistic Text", -apple-system, ui-sans-serif, system-ui,
+        "system-ui", "Segoe UI", Roboto;
+    }
+
+    doc-footer {
+      transition: opacity ease 0.5s;
+    }
   </style>
   <doc-container>
     <doc-header slot="header">
-      <span slot="logo">{{logoText}}</span>
+      <x-if :value="logoImg">
+        <img
+          slot="logo"
+          attr:src="logoImg || ''"
+          alt="logo"
+          style="height: 30px; margin-right: 4px"
+        />
+      </x-if>
+      <span slot="logo" class="logo-text">{{logoText || ''}}</span>
       <ul>
         <x-fill :value="navs">
           <li class:active="$host.isActive($data)">
@@ -47,6 +64,7 @@
       <doc-search slot="right" style="margin-right: 16px"></doc-search>
     </doc-header>
     <slot></slot>
+    <doc-footer></doc-footer>
   </doc-container>
   <script>
     import { configData } from "../data.mjs";
@@ -57,6 +75,7 @@
         github: "",
         leftActiveUrl: "",
         logoText: "",
+        logoImg: "",
       },
       proto: {
         isActive(data) {
@@ -73,7 +92,14 @@
         this.attr("id", "header-layout");
         const data = await configData;
 
-        this.logoText = data.logo.text;
+        this.logoText = data?.logo?.text;
+        if (data?.logo?.url) {
+          const absConfigUrl = new URL(configUrl, location.href).href;
+
+          const logoUrl = data?.logo?.url;
+
+          this.logoImg = new URL(logoUrl, absConfigUrl).href;
+        }
 
         this.navs = data.navs;
         this.github = data.github;
@@ -81,6 +107,12 @@
       routerChange() {
         this.shadow.$("doc-container").scrollTop = 0;
         this.leftActiveUrl = `${location.origin}${location.pathname}`;
+        this.shadow.$("doc-footer").style.transition = "none";
+        this.shadow.$("doc-footer").style.opacity = "0";
+        setTimeout(() => {
+          this.shadow.$("doc-footer").style.transition = "";
+          this.shadow.$("doc-footer").style.opacity = "1";
+        }, 100);
       },
     };
   </script>

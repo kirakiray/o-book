@@ -1,0 +1,85 @@
+<template component>
+  <inject-host>
+    <style>
+      simp-block a {
+        box-sizing: border-box;
+        display: inline-block;
+        height: 44px;
+        line-height: 44px;
+        padding: 0 20px;
+        font-size: 16px;
+        border-radius: 30px;
+        font-weight: bold;
+        background-color: var(--active-color);
+        color: white;
+        text-decoration: none;
+      }
+
+      simp-block a + a {
+        margin-left: 16px;
+      }
+
+      simp-block a:nth-child(2n) {
+        background-color: transparent;
+        border: var(--active-color) solid 1px;
+        color: var(--active-color);
+      }
+
+      simp-block:nth-child(2n + 1) {
+        background-color: var(--aside-hover-bg);
+      }
+    </style>
+  </inject-host>
+  <style>
+    :host {
+      display: block;
+    }
+
+    .container {
+      display: flex;
+      justify-items: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 120px 16px;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    ::slotted(*) {
+      margin: 0;
+      padding: 0;
+    }
+
+    ::slotted(h1),
+    ::slotted(h2),
+    ::slotted(h3),
+    ::slotted(h4),
+    ::slotted(h5) {
+      margin: 0;
+      padding: 0;
+    }
+
+    ::slotted(h2) {
+      font-size: 52px;
+      line-height: 1.2em;
+    }
+    ::slotted(h3) {
+      margin: 16px 0;
+      font-size: 28px;
+      font-weight: 400;
+    }
+
+    ::slotted(p) {
+      margin: 8px 0;
+      font-size: 20px;
+    }
+
+    ::slotted(.logo) {
+      width: 100px;
+      margin-bottom: 16px;
+    }
+  </style>
+  <div class="container">
+    <slot></slot>
+  </div>
+</template>

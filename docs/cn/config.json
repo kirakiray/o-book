@@ -1,12 +1,15 @@
 {
   "github": "https://github.com/kirakiray/o-book",
   "logo": {
-    "text": "obook"
+    "text": "obook",
+    "url": "../publics/logo.svg"
   },
   "navs": [
     {
       "name": "使用文档",
       "summary": "./docs/SUMMARY.md"
     }
-  ]
+  ],
+  "pages": ["./index.md"],
+  "footer": "./footer.md"
 }
