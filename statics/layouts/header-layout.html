@@ -23,6 +23,13 @@
       color: inherit;
       margin-right: 16px;
     }
+    .logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: inherit;
+      text-decoration: none;
+    }
     .logo-text {
       font-family: "Optimistic Text", -apple-system, ui-sans-serif, system-ui,
         "system-ui", "Segoe UI", Roboto;
@@ -34,15 +41,17 @@
   </style>
   <doc-container>
     <doc-header slot="header">
-      <x-if :value="logoImg">
-        <img
-          slot="logo"
-          attr:src="logoImg || ''"
-          alt="logo"
-          style="height: 30px; margin-right: 4px"
-        />
-      </x-if>
-      <span slot="logo" class="logo-text">{{logoText || ''}}</span>
+      <a slot="logo" class="logo" attr:href="logoLink || null" olink>
+        <x-if :value="logoImg">
+          <img
+            slot="logo"
+            attr:src="logoImg || ''"
+            alt="logo"
+            style="height: 30px; margin-right: 4px"
+          />
+        </x-if>
+        <span slot="logo" class="logo-text">{{logoText || ''}}</span>
+      </a>
       <ul>
         <x-fill :value="navs">
           <li class:active="$host.isActive($data)">
@@ -76,6 +85,7 @@
         leftActiveUrl: "",
         logoText: "",
         logoImg: "",
+        logoLink: "",
       },
       proto: {
         isActive(data) {
@@ -103,6 +113,11 @@
 
         this.navs = data.navs;
         this.github = data.github;
+
+        if (data.pages && data.pages.includes("./index.md")) {
+          const curl = new URL(configUrl, location.href).href;
+          this.logoLink = new URL("./index.html", curl).href;
+        }
       },
       routerChange() {
         this.shadow.$("doc-container").scrollTop = 0;
