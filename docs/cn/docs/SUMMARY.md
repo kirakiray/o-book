@@ -5,3 +5,4 @@
   - [网页应用模式](./run-mode/webapp-mode.md)
 - [基础文件](./base-files.md)
 - [项目文件](./project-docs.md)
+- [添加分析代码](./add-analysis.md)
