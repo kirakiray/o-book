@@ -28,6 +28,18 @@
       </select>
     </div>
     <div style="display: flex; flex-wrap: wrap">
+      <div class="nav-item">
+        <div class="nav-title">Pages</div>
+        <ul>
+          <x-fill :value="pages">
+            <li>
+              <a attr:href="$data || null" target="_blank"
+                >{{$host.getPageName($data) }}
+              </a>
+            </li>
+          </x-fill>
+        </ul>
+      </div>
       <x-fill :value="navs">
         <div class="nav-item">
           <div class="nav-title">{{$data.name}}</div>
@@ -71,16 +83,21 @@
         locals: /^zh\-/.test(userLanguage) ? locals.cn : locals.en,
         loading: true,
         navs: [],
+        pages: [],
         currentLang: "",
         langOptions: [],
         iserror: "",
       },
       proto: {
+        getPageName(url) {
+          return url.replace(/.+\//, "");
+        },
         changeLang(e) {
           this.init(this.srcs.find((item) => item.lang === e.target.value).src);
         },
         async init(src) {
           const jsonUrl = new URL("@/" + src, location.href).href;
+
           const data = await new Promise(async (resolve) => {
             while (true) {
               try {
@@ -109,7 +126,7 @@
             }
           });
 
-          const { navs } = data;
+          const { navs, pages } = data;
 
           navs.forEach((e) => {
             const summaryUrl = new URL(e.summary, jsonUrl).href;
@@ -117,7 +134,12 @@
             fixArticles(e.articles, summaryUrl);
           });
 
+          const fixedPages = pages.map((e) => {
+            return new URL(e, jsonUrl).href.replace(/\.md/, ".html");
+          });
+
           this.navs = navs;
+          this.pages = fixedPages;
         },
         async loadArticles() {
           await this.init(this.srcs[0].src);
@@ -301,7 +323,6 @@
           if (!srcs.length) {
             return;
           }
-          
 
           this.__sw = sw;
 
