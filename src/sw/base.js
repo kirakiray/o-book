@@ -3,7 +3,7 @@ const hostUrlData = new URL(self.serviceWorker.scriptURL);
 if (hostUrlData.hostname.includes("127")) {
   host = hostUrlData.origin;
 } else {
-  host = "https://cdn.jsdelivr.net/npm/obook@2.1.7";
+  host = "https://cdn.jsdelivr.net/npm/obook@2.1.8";
 }
 
 importScripts(
