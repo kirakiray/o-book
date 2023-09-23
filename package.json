@@ -33,6 +33,14 @@
     "output": "../obook-docs",
     "port": 44035
   },
+  "obook-translate": {
+    "mainLang": "cn",
+    "entry": "./docs/cn",
+    "caches": "./docs/.trans-caches",
+    "needs": {
+      "t-cn": "./docs/t-cn"
+    }
+  },
   "keywords": [
     "obook",
     "o-book",
