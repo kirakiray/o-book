@@ -1,0 +1,1 @@
+In the above code, we use the `source` tag to import document configuration files of different language versions. At the same time, the `lang` attribute is used to specify the language used in the document. The currently supported language options are as follows:

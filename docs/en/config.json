@@ -1,0 +1,7 @@
+{
+  "github": "https://github.com/kirakiray/o-book",
+  "logo": { "text": "obook", "url": "../publics/logo.svg" },
+  "navs": [{ "name": "Documents", "summary": "./docs/SUMMARY.md" }],
+  "pages": ["./index.md"],
+  "footer": "./footer.md"
+}

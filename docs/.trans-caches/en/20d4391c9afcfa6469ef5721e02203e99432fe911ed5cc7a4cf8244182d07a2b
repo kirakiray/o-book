@@ -1,0 +1,14 @@
+```json
+{
+  "navs": [
+    {
+      "name": "Documentation",
+      "summary": "./docs/SUMMARY.md"
+    },
+    // {
+    //   "name": "Navigation Name",
+    //   "summary": "./folder/SUMMARY.md"
+    // }
+  ]
+}
+```
