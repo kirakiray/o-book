@@ -30,6 +30,13 @@ if (argv.includes("update")) {
   // setTimeout(() => {
   trans(transConfigs);
   // }, 2000);
+} else if (
+  argv.includes("version") ||
+  argv.includes("-v") ||
+  argv.includes("--version")
+) {
+  const versionStr = "obook@2.1.9";
+  console.log(versionStr.replace("obook@", ""));
 } else {
   console.log(`
 Please select the command you want to execute:
