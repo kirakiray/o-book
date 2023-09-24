@@ -34,6 +34,7 @@ export default async function tocaches({ configs, hashObj }) {
     });
 
     await new Promise((resolve) => {
+      // let timer;
       // 当前并发数
       let concurrening = 0;
       // 最大并发数
@@ -50,6 +51,7 @@ export default async function tocaches({ configs, hashObj }) {
 
         if (!targetHash) {
           if (transedCount === hashs.length) {
+            // clearInterval(timer);
             resolve();
           }
           return;
@@ -79,6 +81,9 @@ export default async function tocaches({ configs, hashObj }) {
 
       // 点火
       f();
+
+      // 保证不熄火机制
+      // timer = setInterval(f, 100);
     });
 
     // 判断要删除的

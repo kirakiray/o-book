@@ -4,9 +4,9 @@
   - ©2023
 - Documentation
   - [Introduction](./docs/index.md)
-  - [Introduction to Base Files](./docs/base-files.md)
-  - [Introduction to Project Files](./docs/project-docs.md)
+  - [Introduction to basic files](./docs/base-files.md)
+  - [Introduction to project documents](./docs/project-docs.md)
 - About ofa.js
-  - [ofa.js Official Website](https://ofajs.com/)
-  - [Creating Components](https://ofajs.com/en/cases/simple-component.html)
+  - [ofa.js official website](https://ofajs.com/)
+  - [Creating components](https://ofajs.com/en/cases/simple-component.html)
 ```

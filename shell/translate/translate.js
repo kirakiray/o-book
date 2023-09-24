@@ -25,13 +25,13 @@ export default async function translate({ content, targetLang, originLang }) {
     throw new Error(`${originLang} not supported`);
   }
 
-  const result = await chat(
-    `translate this document from ${langMap[originLang]} to ${langMap[targetLang]} :\n${content}`
-  ).catch(() => {
+  // const prompt = `Translate this markdown sentence/phrase/word into ${langMap[targetLang]}:\n${content}`;
+  // const prompt = `translate this document from ${langMap[originLang]} to ${langMap[targetLang]} :\n${content}`;
+  const prompt = `Translate the ${langMap[originLang]} in this sentence/phrase/word into ${langMap[targetLang]}, if it is in markdown format then keep the markdown format and return the result directly:\n${content}`;
+
+  const result = await chat(prompt).catch(() => {
     // 再试一次
-    return chat(
-      `translate this document from ${langMap[originLang]} to ${langMap[targetLang]} :\n${content}`
-    );
+    return chat(prompt);
   });
 
   return result;
