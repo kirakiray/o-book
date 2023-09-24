@@ -67,8 +67,6 @@ export default async function buildDoc({ configs, articles }) {
       await write(path, article);
     }
 
-    console.log(`${lang} 文档写入完成`);
+    console.log(`${lang} document write complete`);
   }
-
-  console.log("所有文档翻译并输出完成");
 }

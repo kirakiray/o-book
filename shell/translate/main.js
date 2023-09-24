@@ -7,19 +7,21 @@ import { getHashLineData } from "./util.mjs";
 export default async function trans(configs) {
   if (!configs.caches) {
     console.error(
-      `caches 目录是必须的，请配置caches目录；缓存能大幅减少 openai 的花费；`
+      `The 'caches' field is required, please configure the caches directory; caching reduces openai spend significantly;`
     );
     return;
   }
 
   if (!configs.dirs) {
-    console.error(`dirs 字段是必需的；它代表各个语言的文档存放目录。`);
+    console.error(
+      `The 'dirs' field is required; it represents the directory where the documentation for each language is stored.`
+    );
     return;
   }
 
   if (!configs.main) {
     console.error(
-      `main 字段是必需的；它代表将哪个语言的目录翻译到其他语言的目录。`
+      `The 'main' field is required; it represents which language's directory will be translated to the other language's directory.`
     );
     return;
   }
@@ -41,7 +43,7 @@ export default async function trans(configs) {
 
   await buildDoc({ configs, articles });
 
-  console.log(`文档翻译完毕`);
+  console.log(`Documentation translated.`);
 }
 
 // setTimeout(() => {}, 10000000);

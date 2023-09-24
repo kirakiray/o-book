@@ -67,7 +67,7 @@ export default async function tocaches({ configs, hashObj }) {
           transedCount++;
 
           console.clear();
-          console.log(`翻译${lang}段落中 : ${transedCount} / ${hashs.length}`);
+          console.log(`Translate ${lang} in paragraph : ${transedCount} / ${hashs.length}`);
 
           langDir.write(targetHash, data);
 
@@ -96,9 +96,9 @@ export default async function tocaches({ configs, hashObj }) {
     );
 
     if (needDelete.length) {
-      console.log(`已删除 ${needDelete.length} 个无用段落`);
+      console.log(`Deleted ${needDelete.length} useless paragraphs.`);
     }
 
-    console.log(`${lang} 段落数据翻译完成`);
+    console.log(`${lang} Paragraph data translation completed`);
   }
 }

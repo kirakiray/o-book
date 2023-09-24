@@ -82,7 +82,7 @@ export async function chat(prompt) {
     });
 
     req.on("error", (error) => {
-      console.error("请求发生错误:", error);
+      console.error("error request:", error);
       reject(error);
     });
 
