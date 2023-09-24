@@ -1,0 +1,1 @@
+As for static servers, you can use locally installed servers like Nginx, Apache, etc. as long as they can be used to access static HTML files.

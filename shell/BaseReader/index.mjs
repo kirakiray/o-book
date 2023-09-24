@@ -3,8 +3,8 @@ import BaseReader from "./base.mjs";
 export { BaseReader };
 
 // 底部兼容层，方便以后迁移到浏览器
-export async function readDir(path) {
-  return new BaseReader(path);
+export async function readDir(path, bool = false) {
+  return new BaseReader(path, bool);
 }
 
 export async function write(path, content) {

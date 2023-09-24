@@ -1,0 +1,3 @@
+<img src="../publics/logo.svg" class="logo" />
+
+This is an image tag with the source file "../publics/logo.svg" and a class attribute of "logo".

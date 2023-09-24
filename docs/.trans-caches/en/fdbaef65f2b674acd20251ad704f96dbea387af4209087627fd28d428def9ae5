@@ -1,0 +1,10 @@
+## config.json
+
+{
+    "version": "1.0",
+    "name": "My App",
+    "environment": "development",
+    "apiUrl": "https://api.example.com",
+    "apiKey": "abcdefgh12345678",
+    "debugMode": true
+}

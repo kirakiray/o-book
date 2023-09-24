@@ -1,0 +1,1 @@
+Command line mode requires a certain foundation of front-end development knowledge. After installing the `o-book` module using `npm`, you can use the command line to preview and package projects. This mode can also be part of script automation.

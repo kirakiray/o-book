@@ -1,0 +1,1 @@
+Sometimes, you may need to add some pages that are not of document type, such as the homepage. In this case, you can specify the relative address of the Markdown file for non-document type pages by editing the `pages` property in the `config.json` file.

@@ -1,0 +1,2 @@
+1. Open the `_preview.html` file using your code editor.
+2. Add a `<template>` tag within the `<book-tool>` tag with the `inject-head` attribute, and place your tracking code inside the template, similar to the following example:

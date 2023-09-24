@@ -1,0 +1,9 @@
+```json
+// config.json
+{
+  ...
+  "footer": "./footer.md"
+  ...
+}
+```
+Note: The text inside the JSON document does not require translation as it is written in English.

@@ -9,14 +9,18 @@
     "packs": "node scripts/pack-standup",
     "build-doc": "node ./shell/index.js build",
     "bddev": "nodemon --inspect ./shell/index.js build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "trans": "node ./shell/index.js trans",
+    "dtrans": "nodemon --inspect ./shell/index.js trans"
   },
   "author": "YAO",
   "license": "MIT",
   "dependencies": {
     "adm-zip": "^0.5.10",
+    "chinese-s2t": "^1.0.0",
+    "crypto": "^1.0.1",
     "koa": "^2.14.2",
     "koa-static": "^5.0.0",
+    "marked": "^9.0.3",
     "open": "^9.1.0",
     "puppeteer": "^21.2.1",
     "rimraf": "^5.0.1"
@@ -34,11 +38,12 @@
     "port": 44035
   },
   "obook-translate": {
-    "mainLang": "cn",
-    "entry": "./docs/cn",
     "caches": "./docs/.trans-caches",
-    "needs": {
-      "t-cn": "./docs/t-cn"
+    "main": "cn",
+    "dirs": {
+      "cn": "./docs/cn",
+      "t-cn": "./docs/t-cn",
+      "en": "./docs/en"
     }
   },
   "keywords": [

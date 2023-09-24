@@ -1,0 +1,7 @@
+{
+  "obook": {
+    "input": "./_preview.html",
+    "output": "./dist",
+    "port": 44038
+  }
+}
