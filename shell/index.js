@@ -20,7 +20,9 @@ const { argv } = process;
 
 if (argv.includes("update")) {
   // update
+  // setTimeout(() => {
   update({ obook });
+  // }, 2000);
 } else if (argv.includes("init")) {
   // init
   init({ obook });
