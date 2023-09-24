@@ -20,6 +20,8 @@ export default async function buildDoc({ configs, articles }) {
 
     const cdata = JSON.parse(JSON.stringify(configData));
 
+    let needWrite = true;
+
     // 查看旧的 config.json 是否存在或出现改动，如有变化就重新翻译写入
     let oldConfig = await entryDir.read("config.json");
     if (oldConfig) {
@@ -31,22 +33,26 @@ export default async function buildDoc({ configs, articles }) {
         }
       });
 
-      if (!isSame) {
-        // 不一样就要重新翻译
-        await Promise.all(
-          cdata.navs.map(async (e) => {
-            const name = await translate({
-              content: e.name,
-              targetLang: lang,
-              originLang: configs.main,
-            });
-
-            e.name = name;
-          })
-        );
-
-        await entryDir.write("config.json", JSON.stringify(cdata));
+      if (isSame) {
+        needWrite = false;
       }
+    }
+
+    if (needWrite) {
+      // 不一样就要重新翻译
+      await Promise.all(
+        cdata.navs.map(async (e) => {
+          const name = await translate({
+            content: e.name,
+            targetLang: lang,
+            originLang: configs.main,
+          });
+
+          e.name = name;
+        })
+      );
+
+      await entryDir.write("config.json", JSON.stringify(cdata));
     }
 
     const langDir = await cacheDir.read(lang);

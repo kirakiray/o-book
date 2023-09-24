@@ -75,7 +75,7 @@ export async function chat(prompt) {
           resolve(msg);
         } catch (err) {
           console.error(err);
-          debugger;
+          console.error(responseData);
           reject(err);
         }
       });

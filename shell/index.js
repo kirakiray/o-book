@@ -35,8 +35,8 @@ if (argv.includes("update")) {
   argv.includes("-v") ||
   argv.includes("--version")
 ) {
-  const versionStr = "obook@2.1.9";
-  console.log(versionStr.replace("obook@", ""));
+  // 打包时，这个字符串会被替换版本号
+  console.log("obook@2.1.9".replace("obook@", ""));
 } else {
   console.log(`
 Please select the command you want to execute:
@@ -45,5 +45,6 @@ dev: Enter development mode, you can preview the obook packaged file in real tim
 build: Package the project, make sure the obook property is set in the package.json file.
 update: Upgrade all obook in the project to the latest version.
 trans: translate your markdown documents.
+-v: show obook version
 `);
 }
