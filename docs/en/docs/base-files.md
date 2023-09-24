@@ -9,7 +9,7 @@ The most important foundational files for `o-book` are two, namely `sw.js` and `
 `sw.js` is one of the base files with only one line of code. Its content is to reference the official file for initialization, so it does not require much attention.
 
 // sw.js
-importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.9/src/sw/base.js`);
+importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.10/src/sw/base.js`);
 
 ### _preview.html
 
