@@ -49,14 +49,18 @@ self.addEventListener("fetch", async (event) => {
   if (request.url.includes(workPath)) {
     event.respondWith(
       (async () => {
+        let rurl = request.url;
+        if (/\/$/.test(rurl)) {
+          rurl = rurl + "index.html";
+        }
         const originConfigs = await storage.getItem("config-url");
         const configs = originConfigs.map((e) => {
           return new URL(e.src, workPath).href;
         });
 
-        const isConfig = configs.find((e) => e === request.url);
+        const isConfig = configs.find((e) => e === rurl);
 
-        let realUrl = request.url.replace(/(.+)\?.*/, "$1");
+        let realUrl = rurl.replace(/(.+)\?.*/, "$1");
         realUrl = realUrl.replace(/(.+)#.*/, "$1");
         const darr = realUrl.split("/@/");
 
