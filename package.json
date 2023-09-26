@@ -1,6 +1,6 @@
 {
   "name": "obook",
-  "version": "2.1.12",
+  "version": "2.1.13",
   "type": "module",
   "description": "A document system built on ofa.js (like gitbook)",
   "main": "shell/index.js",
@@ -34,7 +34,7 @@
   },
   "obook": {
     "input": "./docs/_preview.html",
-    "output": "../obook-docs",
+    "output": "../obook-website",
     "port": 44035
   },
   "obook-translate": {
