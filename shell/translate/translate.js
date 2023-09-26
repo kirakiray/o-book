@@ -25,17 +25,8 @@ export default async function translate({ content, targetLang, originLang }) {
     throw new Error(`${originLang} not supported`);
   }
 
-  // const prompt = `Translate the ${langMap[originLang]} in the text separated by \`\`\`\` returns into ${langMap[targetLang]}, if it is in html or markdown format, the format is also retained when returning the result
-  // \`\`\`\`
-  // ${content}
-  // \`\`\`\`
-  // `;
-
-  // const prompt = `Translate the ${langMap[originLang]} in this into ${langMap[targetLang]}, if it is in markdown or html format then keep the format, delimited by \`\`\`\`
-  // \`\`\`\`${content}\`\`\`\`
-  // `;
-
-  const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\` returns into ${langMap[targetLang]}, preserving the original markdown or html markup. If the text does not contain ${langMap[originLang]}, return to the original
+  const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\`
+returns into ${langMap[targetLang]}, preserving the original markdown or html markup. If the text does not contain ${langMap[originLang]}, return to the original
 \`\`\`\`
 ${content}
 \`\`\`\`

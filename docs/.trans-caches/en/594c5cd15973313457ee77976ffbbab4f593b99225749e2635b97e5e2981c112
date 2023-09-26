@@ -1,0 +1,1 @@
+In the same mode, use the `obook build` command to package the project to the `dist` directory defined in `package.json`.

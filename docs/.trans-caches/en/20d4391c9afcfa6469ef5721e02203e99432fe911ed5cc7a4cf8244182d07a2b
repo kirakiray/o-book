@@ -1,0 +1,14 @@
+```json
+{
+  "navs": [
+    {
+      "name": "使用文档",
+      "summary": "./docs/SUMMARY.md"
+    },
+    // {
+    //   "name": "导航名",
+    //   "summary": "./folder/SUMMARY.md"
+    // }
+  ]
+}
+```

@@ -1,0 +1,5 @@
+
+1. Use the latest version of Chrome browser (or other browsers that support the File Access API) to open the [obook webapp](https://kirakiray.github.io/o-book/webapp/).
+
+2. On the webpage, click on the "Select Local Folder" button to open your local project folder.
+```
