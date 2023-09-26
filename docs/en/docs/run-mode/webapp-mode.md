@@ -2,11 +2,9 @@
 
 This is the least cost way to use obook, the following are the steps to use it:
 
+1. Use the latest version of the Chrome browser (or any other browser that supports the File Access API) to open the [obook webapp](https://kirakiray.github.io/o-book/webapp/).
 
-1. Use the latest version of Chrome browser (or other browsers that support the File Access API) to open the [obook webapp](https://kirakiray.github.io/o-book/webapp/).
-
-2. On the webpage, click on the "Select Local Folder" button to open your local project folder.
-```
+2. Click on the "Select Local Folder" button on the webpage to open your local project folder.
 
 Now, you can click on the link for a preview.
 

@@ -1,4 +1,4 @@
-# Add bottom content
+# Add Footer content
 
 You can define the content displayed at the bottom of all pages by editing the `footer` property in the `config.json` file. In the `footer` property, specify a relative path to reference the Markdown file that contains the footer content.
 

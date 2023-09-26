@@ -1,15 +1,12 @@
 # Command Line Mode
 
-Command line mode is started by using the `obook` command to launch your project, requiring a certain foundation of development knowledge. The following is the usage process:
-```
 
-1. Make sure that `Node.js` is installed on your system and that the version is greater than or equal to 18.
+Command line mode is used to start your project by using the `obook` command, and it requires a certain knowledge base of development. The following is the usage process:
+1. Make sure the system has `Node.js` installed and ensure that the version is greater than or equal to 18.
 
-2. Use the command `npm i obook -g` in the command line to install `o-book` on your local machine.
+2. Install `o-book` on your local machine by using the command `npm i obook -g` in the command line.
 
-3. After downloading the project files, make sure that the `package.json` file in the root directory of the project is configured with the `obook` property as shown below:
-```
-
+3. After downloading the project files, make sure the `package.json` file in the root directory of the project is configured with the `obook` property as shown below:
 ```json
 {
   "obook": {

@@ -33,9 +33,7 @@ In this structure, the `.md` file is the file where you actually write the conte
 
 The format of SUMMARY.md is a simple list of links. The name of the link is the name of the chapter, and the target of the link is the path of the chapter file, which will be displayed on the left side of the documentation site.
 
-For example, the information of the current document station's `SUMMARY.md` is as follows:
-```
- 
+For example, the information of the `SUMMARY.md` file of the current document site is as follows:
 
 ```md
 - [Introduction](./index.md)

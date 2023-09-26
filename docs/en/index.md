@@ -6,9 +6,6 @@
 <simp-block>
 
 
-```
-
-
 <img src="../publics/logo.svg" class="logo" />
 
 ## What is obook?
@@ -24,9 +21,6 @@
 
 <simp-block>
 
-
-```
-
 ## Extremely Simple
 
 ### You can even get started without reading the documentation by using our web application.
@@ -40,9 +34,6 @@
 
 <simp-block>
 
-
-```
-
 ## Completely Free
 
 ### Generated is a static website, which can be hosted on GitHub Pages without the need to purchase a server.
@@ -53,9 +44,6 @@
 
 
 <simp-block>
-
-
-```
 
 ## Powerful Features
 
@@ -71,9 +59,6 @@ Using other document station generators may require purchasing search microservi
 
 <simp-block>
 
-
-```
-
 ## Multilingual Support
 
 ### The native components of the website provide multi-language support
@@ -86,9 +71,6 @@ Currently supports **English**, **Simplified Chinese**, **Traditional Chinese**,
 
 
 <simp-block>
-
-
-```
 
 ## Case study
 

@@ -26,7 +26,7 @@ export default async function translate({ content, targetLang, originLang }) {
   }
 
   const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\`
-returns into ${langMap[targetLang]}, preserving the original markdown or html markup. If the text does not contain ${langMap[originLang]}, return to the text delimited by \`\`\`\`
+returns into ${langMap[targetLang]}. If the text does not contain ${langMap[originLang]}, returns empty text
 
 \`\`\`\`
 ${content}
@@ -37,6 +37,10 @@ ${content}
     // 再试一次
     return chat(prompt);
   });
+
+  if (!result.trim()) {
+    return content;
+  }
 
   return result;
 }
@@ -77,6 +81,11 @@ export async function chat(prompt) {
           const result = JSON.parse(responseData);
           let msg = result.choices[0].message.content;
           msg = msg.replace(/\`\`\`\`/g, "");
+
+          const marr = msg.match(/\`\`\`/g);
+          if (marr && marr.length === 1) {
+            msg = msg.replace("```", "");
+          }
 
           console.log(prompt);
           console.log(msg);
