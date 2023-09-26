@@ -2,11 +2,11 @@
 {
   "navs": [
     {
-      "name": "Documentation",
+      "name": "使用文档",
       "summary": "./docs/SUMMARY.md"
     },
     // {
-    //   "name": "Navigation Name",
+    //   "name": "导航名",
     //   "summary": "./folder/SUMMARY.md"
     // }
   ]

@@ -25,14 +25,22 @@ export default async function translate({ content, targetLang, originLang }) {
     throw new Error(`${originLang} not supported`);
   }
 
-  // const prompt = `Translate this markdown sentence/phrase/word into ${langMap[targetLang]}:\n${content}`;
-  // const prompt = `translate this document from ${langMap[originLang]} to ${langMap[targetLang]} :\n${content}`;
-  const prompt = `Translate the ${langMap[originLang]} in this sentence/phrase/word into ${langMap[targetLang]}, if it is in markdown format then keep the markdown format and return the result directly:\n${content}`;
+  const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\`
+returns into ${langMap[targetLang]}. If the text does not contain ${langMap[originLang]}, returns empty text
+
+\`\`\`\`
+${content}
+\`\`\`\`
+  `;
 
   const result = await chat(prompt).catch(() => {
     // 再试一次
     return chat(prompt);
   });
+
+  if (!result.trim()) {
+    return content;
+  }
 
   return result;
 }
@@ -71,7 +79,18 @@ export async function chat(prompt) {
       res.on("end", () => {
         try {
           const result = JSON.parse(responseData);
-          const msg = result.choices[0].message.content;
+          let msg = result.choices[0].message.content;
+          msg = msg.replace(/\`\`\`\`/g, "");
+
+          const marr = msg.match(/\`\`\`/g);
+          if (marr && marr.length === 1) {
+            msg = msg.replace("```", "");
+          }
+
+          console.log(prompt);
+          console.log(msg);
+
+          debugger;
           resolve(msg);
         } catch (err) {
           console.error(err);

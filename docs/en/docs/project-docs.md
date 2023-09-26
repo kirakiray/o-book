@@ -1,6 +1,6 @@
-# Project Documents
+# Project Files
 
-The project document is the file where you actually write the documentation. The project directory structure is roughly as follows:
+The project files are the files where you actually write documents. The project directory structure is roughly as follows:
 
 - **config.json**
 - docs
@@ -8,74 +8,42 @@ The project document is the file where you actually write the documentation. The
   - *article1.md*
   - *article2.md*
 
-In this structure, the `.md` file is the file where you actually write the content of the document. You just need to write the document in Markdown format.
+In this structure, the `.md` file is the file where you actually write the content of the document, and you just need to write the document in Markdown format.
 
 ## config.json
 
-{
-    "version": "1.0",
-    "name": "My App",
-    "environment": "development",
-    "apiUrl": "https://api.example.com",
-    "apiKey": "abcdefgh12345678",
-    "debugMode": true
-}
+`config.json` is the configuration file for the document site, used to configure the top navigation and other settings. The `navs` attribute is used to configure the navigation bar, and the `summary` attribute corresponds to the `SUMMARY.md` file path mentioned below. You can configure multiple navigation options.
 
-`config.json` is the configuration file for the document site. It is used to configure the top navigation and other settings. The `navs` property is used to configure the navigation bar, where the `summary` property corresponds to the path of the `SUMMARY.md` file mentioned below. You can configure multiple navigation options.
-
+```json
 {
   "navs": [
     {
-      "name": "Documentation",
+      "name": "使用文档",
       "summary": "./docs/SUMMARY.md"
     },
     // {
-    //   "name": "Navigation Name",
+    //   "name": "导航名",
     //   "summary": "./folder/SUMMARY.md"
     // }
   ]
 }
+```
 
-This document provides a summary of the content of the repository.
+## SUMMARY.md
 
-## Introduction
+The format of SUMMARY.md is a simple list of links. The name of the link is the name of the chapter, and the target of the link is the path of the chapter file, which will be displayed on the left side of the documentation site.
 
-The repository contains various files and documents related to our project. In this summary, we will briefly describe the purpose and structure of each file.
-
-## File Structure
-
-Here is an overview of the file structure:
-
-- **README.md**: This file provides general information about the project.
-- **src**: This folder contains all the source code files.
-- **docs**: This folder contains all the documentation files.
-- **data**: This folder contains all the data files used in the project.
-
-## File Descriptions
-
-- `file1.js`: This file contains the implementation of a function that performs a specific task.
-- `file2.py`: This file is a Python script that generates a report based on the data provided.
-- `document1.md`: This document provides detailed information about the project requirements.
-- `document2.md`: This document describes the testing methodology used in the project.
-- `data.csv`: This file contains the raw data used for analysis.
-
-## Conclusion
-
-This summary provides an overview of the file structure and descriptions of the main files in the repository. For more detailed information, please refer to the individual files and documents.
-
-The format of SUMMARY.md is a simple list of links. The names of the links are the names of the chapters, and the links point to the paths of the chapter files, which will be displayed on the left side of the document website.
-
-For example, the information of the current document site's `SUMMARY.md` is as follows:
+For example, the information of the `SUMMARY.md` file of the current document site is as follows:
 
 ```md
 - [Introduction](./index.md)
-- Start the project
-  - [Standard mode](./run-mode/base-mode.md)
-  - [Command line mode](./run-mode/cli-mode.md)
-  - [Web application mode](./run-mode/webapp-mode.md)
-- [Base files](./base-files.md)
-- [Project documentation](./project-docs.md)
+- Start the Project
+  - [Standard Mode](./run-mode/base-mode.md)
+  - [Command Line Mode](./run-mode/cli-mode.md)
+  - [Web Application Mode](./run-mode/webapp-mode.md)
+- [Base Files](./base-files.md)
+- [Project Documentation](./project-docs.md)
 ```
 
-These project files are the key part of building the document site, and they will help you organize and showcase your document content. Please write your documents following the above structure and format.
+These project files are crucial to building a documentation site, as they will help you organize and showcase your document content. Please write your document following the above structure and format.
 

@@ -1,1 +1,1 @@
-`sw.js` is one of the basic files, only consisting of a single line of code, which references official files for initialization and does not require much attention.
+`sw.js` is one of the basic files with only one line of code, which is used to initialize the official file. It does not require much attention.
