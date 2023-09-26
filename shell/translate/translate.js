@@ -26,7 +26,8 @@ export default async function translate({ content, targetLang, originLang }) {
   }
 
   const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\`
-returns into ${langMap[targetLang]}, preserving the original markdown or html markup. If the text does not contain ${langMap[originLang]}, return to the original
+returns into ${langMap[targetLang]}, preserving the original markdown or html markup. If the text does not contain ${langMap[originLang]}, return to the text delimited by \`\`\`\`
+
 \`\`\`\`
 ${content}
 \`\`\`\`
