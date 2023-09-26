@@ -1,9 +1,9 @@
 ```html
-<!-- The book-tool component is loaded through l-m -->
+<!-- Load the book-tool component via l-m -->
 <l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.0/src/book-tool.html"></l-m>
-<!-- The sw attribute refers to the sw.js file mentioned above. If the sw.js file is renamed, it needs to be changed accordingly -->
+<!-- Reference the sw.js file mentioned above using the sw property. If the name of sw.js is changed, it should be updated here as well. -->
 <book-tool sw="./sw.js">
-    <!-- References to your project configuration files -->
+    <!-- Reference your project's configuration files -->
     <source src="./en/config.json" lang="en" />
     <source src="./cn/config.json" lang="cn" />
 </book-tool>

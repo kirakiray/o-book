@@ -38,7 +38,7 @@ export default async function tocaches({ configs, hashObj }) {
       // 当前并发数
       let concurrening = 0;
       // 最大并发数
-      const maxConcurrening = configs.concurrent || 3;
+      const maxConcurrening = configs.concurrent || 2;
 
       // 保持并发数进行翻译
       const f = () => {

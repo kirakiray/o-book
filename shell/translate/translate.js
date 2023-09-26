@@ -25,9 +25,21 @@ export default async function translate({ content, targetLang, originLang }) {
     throw new Error(`${originLang} not supported`);
   }
 
-  // const prompt = `Translate this markdown sentence/phrase/word into ${langMap[targetLang]}:\n${content}`;
-  // const prompt = `translate this document from ${langMap[originLang]} to ${langMap[targetLang]} :\n${content}`;
-  const prompt = `Translate the ${langMap[originLang]} in this sentence/phrase/word into ${langMap[targetLang]}, if it is in markdown format then keep the markdown format and return the result directly:\n${content}`;
+  // const prompt = `Translate the ${langMap[originLang]} in the text separated by \`\`\`\` returns into ${langMap[targetLang]}, if it is in html or markdown format, the format is also retained when returning the result
+  // \`\`\`\`
+  // ${content}
+  // \`\`\`\`
+  // `;
+
+  // const prompt = `Translate the ${langMap[originLang]} in this into ${langMap[targetLang]}, if it is in markdown or html format then keep the format, delimited by \`\`\`\`
+  // \`\`\`\`${content}\`\`\`\`
+  // `;
+
+  const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\` returns into ${langMap[targetLang]}, preserving the original markdown or html markup. If the text does not contain ${langMap[originLang]}, return to the original
+\`\`\`\`
+${content}
+\`\`\`\`
+  `;
 
   const result = await chat(prompt).catch(() => {
     // 再试一次
@@ -71,7 +83,13 @@ export async function chat(prompt) {
       res.on("end", () => {
         try {
           const result = JSON.parse(responseData);
-          const msg = result.choices[0].message.content;
+          let msg = result.choices[0].message.content;
+          msg = msg.replace(/\`\`\`\`/g, "");
+
+          console.log(prompt);
+          console.log(msg);
+
+          debugger;
           resolve(msg);
         } catch (err) {
           console.error(err);
