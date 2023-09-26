@@ -87,10 +87,6 @@ export async function chat(prompt) {
             msg = msg.replace("```", "");
           }
 
-          console.log(prompt);
-          console.log(msg);
-
-          debugger;
           resolve(msg);
         } catch (err) {
           console.error(err);
