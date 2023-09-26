@@ -25,7 +25,7 @@ let lastVer = "";
 // 处理文件内容
 async function processFile(filePath) {
   const fileContent = await fs.promises.readFile(filePath, "utf-8");
-  const reg = /obook@\d\.\d\.\d/g;
+  const reg = /obook@\d+?\.\d+?\.\d+?/g;
   if (reg.test(fileContent)) {
     const updatedContent = fileContent.replace(reg, `obook@${lastVer}`);
 
