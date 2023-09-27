@@ -87,6 +87,15 @@ const responseMD = (() => {
       });
     });
 
+    configData.pages.forEach((e) => {
+      const pageUrl = new URL(e, fixedConfigUrl).href;
+      const rurl = getRelativePath(url.replace(/(.+)\/.+/, "$1"), pageUrl);
+      flatLinks.push({
+        relativePath: rurl.replace(/\.md/, ".html"),
+        name: rurl.replace(/(.+\/)(.+)/, "$2").replace(".md", ""),
+      });
+    });
+
     let crawlerCode = ``;
 
     flatLinks.forEach((e) => {
