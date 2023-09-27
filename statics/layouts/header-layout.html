@@ -114,7 +114,10 @@
         this.navs = data.navs;
         this.github = data.github;
 
-        if (data.pages && data.pages.includes("./index.md")) {
+        if (
+          data.pages &&
+          (data.pages.includes("./index.md") || data.pages.includes("index.md"))
+        ) {
           const curl = new URL(configUrl, location.href).href;
           this.logoLink = new URL("./index.html", curl).href;
         }
