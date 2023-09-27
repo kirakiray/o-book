@@ -6,6 +6,8 @@ if (hostUrlData.hostname.includes("127")) {
   host = "https://cdn.jsdelivr.net/npm/obook@2.1.14";
 }
 
+// const host = "https://cdn.jsdelivr.net/npm/obook@2.1.14";
+
 importScripts(
   "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
   `${host}/src/storage/index.js`,

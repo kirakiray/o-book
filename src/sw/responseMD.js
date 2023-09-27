@@ -37,7 +37,7 @@ const responseMD = (() => {
       article,
       configUrl,
       injectHead,
-      crawlerCode: getCrawlerCode({ configUrl, url, configData }),
+      crawlerCode: await getCrawlerCode({ configUrl, url, configData }),
     };
 
     // 替换模板内容
@@ -74,7 +74,14 @@ const responseMD = (() => {
     return arr;
   };
 
-  const getCrawlerCode = ({ configUrl, url, configData }) => {
+  const langOpts = {
+    en: "English",
+    cn: "简体中文",
+    "t-cn": "繁体中文",
+    es: "española",
+  };
+
+  const getCrawlerCode = async ({ configUrl, url, configData }) => {
     const fixedConfigUrl = new URL(configUrl, url).href;
     const navs = JSON.parse(JSON.stringify(configData.navs));
     const flatLinks = [];
@@ -87,14 +94,40 @@ const responseMD = (() => {
       });
     });
 
-    configData.pages.forEach((e) => {
-      const pageUrl = new URL(e, fixedConfigUrl).href;
-      const rurl = getRelativePath(url.replace(/(.+)\/.+/, "$1"), pageUrl);
-      flatLinks.push({
-        relativePath: rurl.replace(/\.md/, ".html"),
-        name: rurl.replace(/(.+\/)(.+)/, "$2").replace(".md", ""),
-      });
-    });
+    const originConfigs = await storage.getItem("config-url");
+
+    const root = url.split("/@/")[0];
+
+    await Promise.all(
+      originConfigs.map(async (e) => {
+        const configUrl = new URL(e.src, root + "/").href;
+        const { lang } = e;
+
+        const configData = await wrapFetch(configUrl, "json");
+
+        if (configData.pages) {
+          const relateRoot = new URL(e.src, root + "/@/").href;
+          configData.pages.forEach((item) => {
+            const purl = new URL(item, relateRoot).href.replace(
+              /\.md$/,
+              ".html"
+            );
+
+            const relateUrl = getRelativePath(
+              url.replace(/(.+)\/.+/, "$1"),
+              purl
+            );
+
+            flatLinks.push({
+              relativePath: relateUrl,
+              name:
+                (langOpts[lang] ? langOpts[lang] + "-" : "") +
+                relateUrl.replace(/(.+\/)(.+)/, "$2"),
+            });
+          });
+        }
+      })
+    );
 
     let crawlerCode = ``;
 
@@ -134,7 +167,7 @@ const responseMD = (() => {
       article,
       configUrl,
       injectHead,
-      crawlerCode: getCrawlerCode({ configUrl, url, configData }),
+      crawlerCode: await getCrawlerCode({ configUrl, url, configData }),
     };
 
     // 替换模板内容
