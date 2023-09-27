@@ -41,7 +41,13 @@
   </style>
   <doc-container>
     <doc-header slot="header">
-      <a slot="logo" class="logo" attr:href="logoLink || null" olink>
+      <a
+        slot="logo"
+        class="logo"
+        attr:href="logoLink || null"
+        olink
+        on:click="clickLogo"
+      >
         <x-if :value="logoImg">
           <img
             slot="logo"
@@ -88,6 +94,11 @@
         logoLink: "",
       },
       proto: {
+        clickLogo(e) {
+          if (location.href === this.logoLink) {
+            e.preventDefault();
+          }
+        },
         isActive(data) {
           if (data) {
             return this.app.current.src.includes(
