@@ -1,5 +1,5 @@
 const responseMD = (() => {
-  const returnDocuments = async ({ url, configUrl, tokens }) => {
+  const returnDocuments = async ({ url, configUrl, tokens, configData }) => {
     let tempText = await fetch(`${host}/src/temps/article.html`).then((e) =>
       e.text()
     );
@@ -37,6 +37,7 @@ const responseMD = (() => {
       article,
       configUrl,
       injectHead,
+      crawlerCode: getCrawlerCode({ configUrl, url, configData }),
     };
 
     // 替换模板内容
@@ -53,7 +54,51 @@ const responseMD = (() => {
     });
   };
 
-  const returnNormal = async ({ tokens, url, configUrl }) => {
+  const fixSummaryHref = (e, summaryUrl, pageUrl) => {
+    const arr = [];
+    if (e.href) {
+      const href = new URL(e.href, summaryUrl).href;
+      const fixedHref = href.replace(/\.md$/, ".html");
+      e.relativePath = getRelativePath(
+        pageUrl.replace(/(.+)\/.+/, "$1"),
+        fixedHref
+      );
+      arr.push(e);
+    } else if (e.childs) {
+      e.childs.forEach((item) => {
+        const carr = fixSummaryHref(item, summaryUrl, pageUrl);
+        arr.push(...carr);
+      });
+    }
+
+    return arr;
+  };
+
+  const getCrawlerCode = ({ configUrl, url, configData }) => {
+    const fixedConfigUrl = new URL(configUrl, url).href;
+    const navs = JSON.parse(JSON.stringify(configData.navs));
+    const flatLinks = [];
+    navs.forEach((e) => {
+      const summaryUrl = new URL(e.summary, fixedConfigUrl).href;
+
+      e.summaryData.forEach((item) => {
+        const arr = fixSummaryHref(item, summaryUrl, url);
+        flatLinks.push(...arr);
+      });
+    });
+
+    let crawlerCode = ``;
+
+    flatLinks.forEach((e) => {
+      crawlerCode += `<li><a href="${e.relativePath}">${e.name}</a></li>\n`;
+    });
+
+    crawlerCode = `<ul>\n${crawlerCode}\n</ul>`;
+
+    return crawlerCode;
+  };
+
+  const returnNormal = async ({ tokens, url, configUrl, configData }) => {
     let tempText = await fetch(`${host}/src/temps/page.html`).then((e) =>
       e.text()
     );
@@ -80,6 +125,7 @@ const responseMD = (() => {
       article,
       configUrl,
       injectHead,
+      crawlerCode: getCrawlerCode({ configUrl, url, configData }),
     };
 
     // 替换模板内容
@@ -222,11 +268,20 @@ const responseMD = (() => {
       fixTokens(e);
     });
 
+    // 修正 navs 的数据
+    await Promise.all(
+      configData.navs.map(async (e) => {
+        const summaryUrl = new URL(e.summary, realConfigUrl).href;
+
+        e.summaryData = await getSummary(summaryUrl);
+      })
+    );
+
     if (isPage) {
-      return await returnNormal({ url, configUrl, tokens });
+      return await returnNormal({ url, configUrl, tokens, configData });
     }
 
-    return await returnDocuments({ url, configUrl, tokens });
+    return await returnDocuments({ url, configUrl, tokens, configData });
   };
 
   return responseMD;

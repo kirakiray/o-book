@@ -77,3 +77,6 @@ body > #loading:before {
     opacity: 0;
   }
 }
+.body-important {
+  display: none;
+}
