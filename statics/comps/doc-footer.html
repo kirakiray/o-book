@@ -73,7 +73,15 @@
     </template>
   </div>
   <script>
-    import { configData } from "../data.mjs";
+    import { configData, getLang } from "../data.mjs";
+    import locals from "../locals/main.mjs";
+
+    const langOpts = {
+      en: "English",
+      cn: "简体中文",
+      "t-cn": "繁体中文",
+      es: "española",
+    };
 
     export default {
       data: {
@@ -134,6 +142,40 @@
 
         // 修正地址
         footerData.forEach(fixItem);
+
+        const nowLang = await getLang();
+
+        if (cdata.urls.length >= 2) {
+          const relateCurl = new URL(configUrl, location.href).href;
+          const currentObj = cdata.urls.find((e) => e.lang === nowLang);
+          const configRoot = relateCurl.replace(
+            currentObj.src.replace(/\.\//, ""),
+            ""
+          );
+
+          if (
+            cdata.pages.includes("./index.md") ||
+            cdata.pages.includes("index.md")
+          ) {
+            footerData.push({
+              name: locals.morelang,
+              childs: cdata.urls
+                .map((e) => {
+                  if (!langOpts[e.lang]) {
+                    return null;
+                  }
+
+                  const configSrc = new URL(e.src, configRoot).href;
+
+                  return {
+                    name: langOpts[e.lang],
+                    href: new URL("./index.html", configSrc).href,
+                  };
+                })
+                .filter((e) => e),
+            });
+          }
+        }
 
         this.footerData = footerData;
       },

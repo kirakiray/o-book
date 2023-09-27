@@ -11,6 +11,7 @@ const en = {
   refresh: "Refresh",
   previous: "Previous",
   next: "Next",
+  morelang: "More languages",
 };
 
 const cn = {
@@ -24,6 +25,7 @@ const cn = {
   refresh: "刷新页面",
   previous: "上一篇",
   next: "下一篇",
+  morelang: "更多语言",
 };
 
 const tw = {
@@ -37,6 +39,7 @@ const tw = {
   refresh: "刷新頁面",
   previous: "上一篇",
   next: "下一篇",
+  morelang: "更多语言",
 };
 
 const es = {
@@ -50,6 +53,7 @@ const es = {
   refresh: "Actualizar página",
   previous: "Anterior",
   next: "Siguiente",
+  morelang: "Más idiomas",
 };
 
 const locals = $.stanz(en);
