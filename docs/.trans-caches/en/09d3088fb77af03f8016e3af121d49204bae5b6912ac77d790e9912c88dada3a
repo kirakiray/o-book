@@ -1,0 +1,1 @@
+You can click [Create Component](https://ofajs.com/en/cases/simple-component.html) to learn how to develop a custom component that meets your needs. Once you have finished developing your own component, place it in the **publics** directory at the root of the document station, and use a relative path to reference this component for use in the document. An example is as follows:

@@ -22,7 +22,7 @@ async function traverseDirectory(directoryPath) {
 // 处理文件内容
 async function processFile(filePath) {
   const fileContent = await fs.promises.readFile(filePath, "utf-8");
-  const reg = new RegExp(`obook@${oldVer}`);
+  const reg = new RegExp(`obook@${oldVer}`, "g");
   if (reg.test(fileContent)) {
     const updatedContent = fileContent.replace(reg, `obook@${newVer}`);
 
