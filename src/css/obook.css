@@ -4,6 +4,7 @@
   height: 100%;
   background-color: #f4f4f4;
   color: #1a1d1f;
+  overflow-y: auto;
 }
 .pannel {
   margin: 0 16px 16px 0;

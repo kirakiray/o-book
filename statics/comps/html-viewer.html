@@ -1,0 +1,194 @@
+<template component>
+  <x-if :value="isDark.value">
+    <link rel="stylesheet" href="../css/hljs-dark.css" />
+  </x-if>
+  <x-else>
+    <link rel="stylesheet" href="../css/hljs-light.css" />
+  </x-else>
+  <style>
+    .container {
+      display: flex;
+      border: rgba(170, 170, 170, 0.253) solid 1px;
+      border-radius: 4px;
+      overflow: auto;
+    }
+
+    .left-code {
+      position: relative;
+      display: block;
+      flex: 1;
+      min-height: 200px;
+      padding: 16px;
+      font-size: 14px;
+      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
+        Liberation Mono, monospace;
+      background-color: #f3f3f3;
+    }
+    .left-code.dark {
+      background-color: #181b20;
+    }
+    .code {
+      outline: none;
+    }
+    .code.unediabe {
+      opacity: 0.8;
+    }
+    .preview-con {
+      flex: 1;
+      min-height: 200px;
+    }
+    .preview-con iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+    }
+
+    .copy-btn {
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      border: #aaa solid 1px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0;
+      transition: all ease 0.2s;
+    }
+
+    .copy-btn.succeed {
+      border-color: #4ec9b0;
+      color: #4ec9b0;
+    }
+
+    .copy-btn:hover {
+      background-color: rgba(170, 170, 170, 0.05);
+    }
+
+    .container:hover .copy-btn {
+      opacity: 1;
+    }
+  </style>
+  <div class="container">
+    <div class="left-code" class:dark="isDark.value">
+      <x-fill :value="codes">
+        <!-- prettier-ignore -->
+        <div class="language-html code"
+          class:unediabe="!$data.editable"
+          attr:contenteditable="$data.editable ? 'plaintext-only' : null"
+          on:blur="$host.changeCode">{{$data.code}}</div>
+      </x-fill>
+      <div class="copy-btn" on:click="clickCopy" class:succeed="copySucceed">
+        {{copySucceed ? 'Succeed' : 'Copy'}}
+      </div>
+    </div>
+    <div class="preview-con">
+      <x-if :value="previewSrc">
+        <iframe attr:src="previewSrc" frameborder="0"></iframe>
+      </x-if>
+    </div>
+  </div>
+  <script>
+    import hljs from "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/es/highlight.min.js";
+
+    import { isDark } from "../data.mjs";
+    import { copyToClipboard, htmlDecode } from "../util.mjs";
+
+    export default {
+      data: {
+        codes: [],
+        previewSrc: "",
+        isDark: {
+          value: false,
+        },
+        copySucceed: false,
+      },
+      proto: {
+        clickCopy() {
+          this.copySucceed = true;
+
+          copyToClipboard(htmlDecode(this.code));
+          setTimeout(() => {
+            this.copySucceed = false;
+          }, 2000);
+        },
+        get code() {
+          let code = "";
+
+          this.codes.forEach((e, i) => {
+            code += e.code + (i !== this.codes.length - 1 ? "\n" : "");
+          });
+
+          return code;
+        },
+        changeCode(e) {
+          if (this.code !== e.target.textContent) {
+            this.code = e.target.textContent;
+            this.refresh();
+          }
+        },
+        refresh() {
+          setTimeout(() => {
+            this.shadow.all(".code").forEach((e) => {
+              hljs.highlightElement(e.ele);
+            });
+          }, 100);
+
+          let code = this.code;
+
+          const fileUrl = getFileUrl(code);
+
+          if (this.previewSrc) {
+            URL.revokeObjectURL(this.previewSrc);
+          }
+
+          this.previewSrc = "";
+          setTimeout(() => {
+            this.previewSrc = fileUrl;
+          }, 10);
+        },
+      },
+      attached() {
+        this.isDark = isDark;
+        if (this.$("template")) {
+          this.code = this.$("template").html;
+        } else if (this.$("code")) {
+          const codeEls = this.all("code");
+
+          const codes = [];
+
+          codeEls.forEach((el) => {
+            codes.push({
+              code: el.text.trim(),
+              editable: el.classList.contains("language-html"),
+            });
+          });
+
+          this.codes = codes;
+        }
+        this.refresh();
+      },
+      detached() {
+        this.isDark = {};
+      },
+    };
+
+    const getFileUrl = (code) => {
+      const content = `<!DOCTYPE html>
+          <html lang="en">
+    <head>
+    <meta charset="UTF-8" \/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" \/>
+    <title>preview<\/title>
+    <\/head>
+    <body>${code}<\/body>
+    <\/html>`;
+
+      const file = new File([content], "preview.html", {
+        type: "text/html",
+      });
+
+      return URL.createObjectURL(file);
+    };
+  </script>
+</template>

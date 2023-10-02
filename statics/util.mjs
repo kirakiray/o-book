@@ -89,3 +89,31 @@ function parseListItem(line) {
     return { name };
   }
 }
+
+export function htmlDecode(text) {
+  const element = document.createElement("textarea");
+  element.innerHTML = text;
+  let decodedText = element.value;
+
+  // 解码 Unicode 转义序列
+  decodedText = decodedText.replace(
+    /\\u[\dA-Fa-f]{4}|\\x[\dA-Fa-f]{2}/g,
+    function (match) {
+      return String.fromCharCode(parseInt(match.replace(/\\u|\\x/g, ""), 16));
+    }
+  );
+
+  return decodedText;
+}
+
+export function copyToClipboard(text) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+
+  document.body.appendChild(textarea);
+
+  textarea.select();
+  document.execCommand("copy");
+
+  document.body.removeChild(textarea);
+}
