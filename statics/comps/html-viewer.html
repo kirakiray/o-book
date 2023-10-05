@@ -1,4 +1,5 @@
 <template component>
+  <link rel="stylesheet" href="../font/iconfont.css" />
   <x-if :value="isDark.value">
     <link rel="stylesheet" href="../css/hljs-dark.css" />
   </x-if>
@@ -6,6 +7,9 @@
     <link rel="stylesheet" href="../css/hljs-light.css" />
   </x-else>
   <style>
+    :host {
+      display: block;
+    }
     .outer {
       container-type: inline-size;
     }
@@ -35,6 +39,7 @@
         Liberation Mono, monospace;
       background-color: #f0f0f0;
       text-align: left;
+      word-break: break-all;
     }
     .left-code.dark {
       background-color: #181b20;
@@ -46,6 +51,24 @@
       opacity: 0.8;
     }
     .preview-con {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .preview-tool {
+      height: 35px;
+      background-color: #eee;
+    }
+    .preview-tool > .btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 35px;
+      height: 35px;
+      color: #303030;
+      cursor: pointer;
+    }
+    .preview-main {
       flex: 1;
     }
     .preview-con iframe {
@@ -95,9 +118,14 @@
         </div>
       </div>
       <div class="preview-con">
-        <x-if :value="previewSrc">
-          <iframe attr:src="previewSrc" frameborder="0"></iframe>
-        </x-if>
+        <div class="preview-tool">
+          <div class="btn icon-shuaxin iconfont" on:click="reloadPage"></div>
+        </div>
+        <div class="preview-main">
+          <x-if :value="previewSrc">
+            <iframe attr:src="previewSrc" frameborder="0"></iframe>
+          </x-if>
+        </div>
       </div>
     </div>
   </div>
@@ -117,6 +145,13 @@
         copySucceed: false,
       },
       proto: {
+        reloadPage() {
+          let oldsrc = this.previewSrc;
+          this.previewSrc = "";
+          setTimeout(() => {
+            this.previewSrc = oldsrc;
+          }, 50);
+        },
         clickCopy() {
           this.copySucceed = true;
 
