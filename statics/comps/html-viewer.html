@@ -114,7 +114,7 @@
           <div class="language-html code"
             class:unediabe="!$data.editable"
             attr:contenteditable="$data.editable ? 'plaintext-only' : null"
-            on:blur="$host.changeCode">{{$data.code}}</div>
+            on:blur="$host.changeCode($event,$index)">{{$data.code}}</div>
         </x-fill>
         <div class="copy-btn" on:click="clickCopy" class:succeed="copySucceed">
           {{copySucceed ? 'Succeed' : 'Copy'}}
@@ -178,9 +178,10 @@
 
           return code;
         },
-        changeCode(e) {
+        changeCode(e, index) {
           if (this.code !== e.target.textContent) {
-            this.code = e.target.textContent;
+            const targetCode = this.codes[index];
+            targetCode.code = e.target.textContent;
             this.refresh();
           }
         },
