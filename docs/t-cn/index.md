@@ -1,6 +1,6 @@
 # obook：最簡單的文檔建站工具
 
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.17/blocks/simp-block.html"></l-m>
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.18/blocks/simp-block.html"></l-m>
 
 <simp-block>
 
