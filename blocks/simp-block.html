@@ -26,7 +26,7 @@
       }
 
       simp-block:nth-child(2n + 1) {
-        background-color: var(--aside-hover-bg);
+        background-color: var(--simp-block-bg);
       }
     </style>
   </inject-host>
@@ -49,13 +49,18 @@
     ::slotted(*) {
       margin: 0;
       padding: 0;
+      margin-top: 24px;
+      margin-bottom: 24px;
     }
 
     ::slotted(h1),
     ::slotted(h2),
     ::slotted(h3),
     ::slotted(h4),
-    ::slotted(h5) {
+    ::slotted(h5),
+    p {
+      margin-block-start: 0;
+      margin-block-end: 0;
       margin: 0;
       padding: 0;
     }

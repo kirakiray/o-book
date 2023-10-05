@@ -23,6 +23,7 @@ html {
   --article-nav-font-color: rgba(63, 63, 65, 0.6);
   --article-nav-font-hover-color: rgba(19, 19, 18, 0.8);
   --article-nav-font-active-color: #131312;
+  --simp-block-bg: #f5f6f7;
 }
 html.dark {
   color: #fff;
@@ -34,6 +35,7 @@ html.dark {
   --article-nav-font-color: rgba(235, 235, 245, 0.6);
   --article-nav-font-hover-color: rgba(255, 255, 245, 0.8);
   --article-nav-font-active-color: #fffff5;
+  --simp-block-bg: #252a33;
 }
 body > #loading {
   position: absolute;

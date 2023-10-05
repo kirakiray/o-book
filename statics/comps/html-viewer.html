@@ -15,6 +15,7 @@
       border: rgba(170, 170, 170, 0.253) solid 1px;
       border-radius: 4px;
       overflow: auto;
+      background-color: #fff;
     }
 
     @container (max-width: 700px) {
@@ -32,7 +33,8 @@
       font-size: 14px;
       font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
         Liberation Mono, monospace;
-      background-color: #f3f3f3;
+      background-color: #f0f0f0;
+      text-align: left;
     }
     .left-code.dark {
       background-color: #181b20;
@@ -51,7 +53,6 @@
       width: 100%;
       height: 100%;
       min-height: 200px;
-      background-color: transparent;
     }
 
     .copy-btn {
@@ -81,7 +82,7 @@
   </style>
   <div class="outer">
     <div class="container">
-      <div class="left-code" class:dark="isDark.value">
+      <div class="left-code" class:dark="isDark.value" part="code">
         <x-fill :value="codes">
           <!-- prettier-ignore -->
           <div class="language-html code"
