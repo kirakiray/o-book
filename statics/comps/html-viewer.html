@@ -56,6 +56,7 @@
       flex-direction: column;
     }
     .preview-tool {
+      display: flex;
       height: 35px;
       background-color: #eee;
     }
@@ -120,6 +121,7 @@
       <div class="preview-con">
         <div class="preview-tool">
           <div class="btn icon-shuaxin iconfont" on:click="reloadPage"></div>
+          <div class="btn icon-newtab iconfont" on:click="newTab"></div>
         </div>
         <div class="preview-main">
           <x-if :value="previewSrc && cansee">
@@ -147,6 +149,9 @@
         cansee: false,
       },
       proto: {
+        newTab() {
+          window.open(this.previewSrc);
+        },
         reloadPage() {
           let oldsrc = this.previewSrc;
           this.previewSrc = "";
