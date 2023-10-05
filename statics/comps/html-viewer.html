@@ -122,7 +122,7 @@
           <div class="btn icon-shuaxin iconfont" on:click="reloadPage"></div>
         </div>
         <div class="preview-main">
-          <x-if :value="previewSrc">
+          <x-if :value="previewSrc && cansee">
             <iframe attr:src="previewSrc" frameborder="0"></iframe>
           </x-if>
         </div>
@@ -143,6 +143,8 @@
           value: false,
         },
         copySucceed: false,
+        // 是否在可视范围内
+        cansee: false,
       },
       proto: {
         reloadPage() {
@@ -215,9 +217,22 @@
           this.codes = codes;
         }
         this.refresh();
+
+        const obs = (this._obs = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              this.cansee = true;
+            } else {
+              this.cansee = false;
+            }
+          });
+        }));
+
+        obs.observe(this.ele);
       },
       detached() {
         this.isDark = {};
+        this._obs.unobserve();
       },
     };
 
