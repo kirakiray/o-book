@@ -12,6 +12,8 @@ const en = {
   previous: "Previous",
   next: "Next",
   morelang: "More languages",
+  showallcode: "Show all codes",
+  hideunimportcode: "Hide unimportant codes",
 };
 
 const cn = {
@@ -26,6 +28,8 @@ const cn = {
   previous: "上一篇",
   next: "下一篇",
   morelang: "更多语言",
+  showallcode: "显示所有代码",
+  hideunimportcode: "隐藏不重要的代码",
 };
 
 const tw = {
@@ -40,6 +44,8 @@ const tw = {
   previous: "上一篇",
   next: "下一篇",
   morelang: "更多语言",
+  showallcode: "显示所有代码",
+  hideunimportcode: "隐藏不重要的代码",
 };
 
 const es = {
@@ -54,6 +60,8 @@ const es = {
   previous: "Anterior",
   next: "Siguiente",
   morelang: "Más idiomas",
+  showallcode: "Mostrar todos los códigos",
+  hideunimportcode: "Ocultar código no importante",
 };
 
 const locals = $.stanz(en);

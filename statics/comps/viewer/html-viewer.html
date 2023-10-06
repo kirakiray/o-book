@@ -1,127 +1,48 @@
 <template component>
-  <link rel="stylesheet" href="../font/iconfont.css" />
+  <link rel="stylesheet" href="../../font/iconfont.css" />
   <x-if :value="isDark.value">
-    <link rel="stylesheet" href="../css/hljs-dark.css" />
+    <link rel="stylesheet" href="../../css/hljs-dark.css" />
   </x-if>
   <x-else>
-    <link rel="stylesheet" href="../css/hljs-light.css" />
+    <link rel="stylesheet" href="../../css/hljs-light.css" />
   </x-else>
+
+  <link rel="stylesheet" href="./viewer.css" />
   <style>
-    :host {
-      display: block;
-    }
-    .outer {
-      container-type: inline-size;
-    }
-
-    .container {
-      display: flex;
-      border: rgba(170, 170, 170, 0.253) solid 1px;
-      border-radius: 4px;
-      overflow: auto;
-      background-color: #fff;
-    }
-
-    @container (max-width: 700px) {
-      .container {
-        flex-direction: column;
-      }
-    }
-
-    .left-code {
-      position: relative;
-      display: block;
-      flex: 1;
-      min-height: 200px;
-      padding: 16px;
-      font-size: 14px;
-      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas,
-        Liberation Mono, monospace;
-      background-color: #f0f0f0;
-      text-align: left;
-      word-break: break-all;
-    }
-    .left-code.dark {
-      background-color: #181b20;
-    }
-    .code {
-      outline: none;
-    }
-    .code.unediabe {
-      opacity: 0.8;
-    }
-    .preview-con {
-      border-left: rgba(170, 170, 170, 0.253) solid 1px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    .preview-tool {
-      display: flex;
-      height: 35px;
-      padding-left: 14px;
-      background: linear-gradient(to top, #efefef, #fefefe);
-    }
-    .preview-tool > .btn {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 35px;
-      height: 35px;
-      color: #303030;
-      cursor: pointer;
-    }
-    .preview-main {
-      flex: 1;
-    }
-    .preview-con iframe {
-      display: block;
-      width: 100%;
-      height: 100%;
-      min-height: 200px;
-    }
-
-    .copy-btn {
-      position: absolute;
-      right: 4px;
-      top: 4px;
-      border: #aaa solid 1px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      cursor: pointer;
-      opacity: 0;
-      transition: all ease 0.2s;
-    }
-
-    .copy-btn.succeed {
-      border-color: #4ec9b0;
-      color: #4ec9b0;
-    }
-
-    .copy-btn:hover {
-      background-color: rgba(170, 170, 170, 0.05);
-    }
-
-    .container:hover .copy-btn {
-      opacity: 1;
+    .hide-uneditable-code .unediabe {
+      display: none;
     }
   </style>
+
   <div class="outer">
-    <div class="container">
-      <div class="left-code" class:dark="isDark.value" part="code">
-        <x-fill :value="codes">
-          <!-- prettier-ignore -->
-          <div class="language-html code"
+    <div class="container" class:dark="isDark.value">
+      <div
+        class="left-code"
+        class:hide-uneditable-code="hideSomeCode"
+        part="code"
+      >
+        <div class="left-main">
+          <button on:click="hideSomeCode = !hideSomeCode">
+            {{hideSomeCode ? locals.showallcode : locals.hideunimportcode}}
+          </button>
+          <x-fill :value="codes">
+            <!-- prettier-ignore -->
+            <div class="language-html code"
             class:unediabe="!$data.editable"
             attr:contenteditable="$data.editable ? 'plaintext-only' : null"
             on:blur="$host.changeCode($event,$index)">{{$data.code}}</div>
-        </x-fill>
-        <div class="copy-btn" on:click="clickCopy" class:succeed="copySucceed">
-          {{copySucceed ? 'Succeed' : 'Copy'}}
+          </x-fill>
+          <div
+            class="copy-btn"
+            on:click="clickCopy"
+            class:succeed="copySucceed"
+          >
+            {{copySucceed ? 'Succeed' : 'Copy'}}
+          </div>
         </div>
       </div>
       <div class="preview-con">
-        <div class="preview-tool">
+        <div class="tools-con">
           <div class="btn icon-shuaxin iconfont" on:click="reloadPage"></div>
           <div class="btn icon-newtab iconfont" on:click="newTab"></div>
         </div>
@@ -136,8 +57,9 @@
   <script>
     import hljs from "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/es/highlight.min.js";
 
-    import { isDark } from "../data.mjs";
-    import { copyToClipboard, htmlDecode } from "../util.mjs";
+    import { isDark } from "../../data.mjs";
+    import { copyToClipboard, htmlDecode } from "../../util.mjs";
+    import locals from "../../locals/main.mjs";
 
     export default {
       data: {
@@ -149,6 +71,9 @@
         copySucceed: false,
         // 是否在可视范围内
         cansee: false,
+        // 是否隐藏了部分代码
+        hideSomeCode: true,
+        locals: {},
       },
       proto: {
         newTab() {
@@ -179,8 +104,8 @@
           return code;
         },
         changeCode(e, index) {
-          if (this.code !== e.target.textContent) {
-            const targetCode = this.codes[index];
+          const targetCode = this.codes[index];
+          if (targetCode.code !== e.target.textContent) {
             targetCode.code = e.target.textContent;
             this.refresh();
           }
@@ -237,20 +162,26 @@
         }));
 
         obs.observe(this.ele);
+
+        this.locals = locals;
       },
       detached() {
         this.isDark = {};
         this._obs.unobserve();
+        this.locals = {};
       },
     };
 
     const getFileUrl = (code) => {
       const content = `<!DOCTYPE html>
-          <html lang="en">
+    <html lang="en">
     <head>
     <meta charset="UTF-8" \/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" \/>
     <title>preview<\/title>
+    <style>
+      *:not(:defined){display:none;}
+    <\/style>
     <\/head>
     <body>${code}<\/body>
     <\/html>`;
