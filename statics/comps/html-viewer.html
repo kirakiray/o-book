@@ -105,10 +105,22 @@
     .container:hover .copy-btn {
       opacity: 1;
     }
+
+    .hide-uneditable-code .unediabe {
+      display: none;
+    }
   </style>
   <div class="outer">
     <div class="container">
-      <div class="left-code" class:dark="isDark.value" part="code">
+      <div
+        class="left-code"
+        class:dark="isDark.value"
+        class:hide-uneditable-code="hideSomeCode"
+        part="code"
+      >
+        <button on:click="hideSomeCode = !hideSomeCode">
+          {{hideSomeCode ? locals.showallcode : locals.hideunimportcode}}
+        </button>
         <x-fill :value="codes">
           <!-- prettier-ignore -->
           <div class="language-html code"
@@ -138,6 +150,7 @@
 
     import { isDark } from "../data.mjs";
     import { copyToClipboard, htmlDecode } from "../util.mjs";
+    import locals from "../locals/main.mjs";
 
     export default {
       data: {
@@ -149,6 +162,9 @@
         copySucceed: false,
         // 是否在可视范围内
         cansee: false,
+        // 是否隐藏了部分代码
+        hideSomeCode: true,
+        locals: {},
       },
       proto: {
         newTab() {
@@ -179,8 +195,8 @@
           return code;
         },
         changeCode(e, index) {
-          if (this.code !== e.target.textContent) {
-            const targetCode = this.codes[index];
+          const targetCode = this.codes[index];
+          if (targetCode.code !== e.target.textContent) {
             targetCode.code = e.target.textContent;
             this.refresh();
           }
@@ -237,10 +253,13 @@
         }));
 
         obs.observe(this.ele);
+
+        this.locals = locals;
       },
       detached() {
         this.isDark = {};
         this._obs.unobserve();
+        this.locals = {};
       },
     };
 
