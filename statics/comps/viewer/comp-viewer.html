@@ -10,7 +10,16 @@
   <div class="outer">
     <div class="container" class:dark="isDark.value">
       <div class="left-code" part="code">
-        <div class="tools-con">asd</div>
+        <div class="tools-con">
+          <span class="iconfont icon-code file-icon"></span>
+          {{compName}}.html
+
+          <div
+            class="btn iconfont icon-xiazai"
+            on:click="clickDownload"
+            style="margin-left: auto"
+          ></div>
+        </div>
         <div class="left-main">
           <!-- prettier-ignore -->
           <div class="language-html code"
@@ -50,7 +59,6 @@
         compName: null,
       },
       data: {
-        codes: [],
         code: "",
         previewSrc: "",
         isDark: {
@@ -62,6 +70,12 @@
         locals: {},
       },
       proto: {
+        clickDownload() {
+          const file = new File([this.code], this.compName + ".html", {
+            type: "text/html",
+          });
+          saveAs(file);
+        },
         newTab() {
           window.open(this.previewSrc);
         },
@@ -155,7 +169,7 @@
       <style>
         *:not(:defined){display:none;}
       <\/style>
-      <script src="http://127.0.0.1:5513/packages/ofa/main.mjs" type="module"><\/script>
+      <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.21/dist/ofa.min.js"><\/script>
       <\/head>
       <body>
       <l-m src="${compUrl} .html"></l-m>
@@ -169,5 +183,20 @@
 
       return URL.createObjectURL(file);
     };
+
+    function saveAs(file, fileName) {
+      const blobUrl = URL.createObjectURL(file);
+
+      const downloadLink = document.createElement("a");
+      downloadLink.href = blobUrl;
+      downloadLink.download = fileName || file.name;
+      downloadLink.style.display = "none";
+
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+
+      URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(downloadLink);
+    }
   </script>
 </template>

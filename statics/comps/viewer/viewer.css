@@ -62,11 +62,12 @@
 .copy-btn:hover {
   background-color: rgba(170, 170, 170, 0.05);
 }
-.container:hover .copy-btn {
+.left-main:hover .copy-btn {
   opacity: 1;
 }
 .tools-con {
   display: flex;
+  align-items: center;
   padding-left: 8px;
   height: 35px;
   background: linear-gradient(to top, #efefef, #fefefe);
@@ -81,6 +82,9 @@
   height: 35px;
   cursor: pointer;
 }
+.tools-con > .btn:hover {
+  background-color: rgba(170, 170, 170, 0.133);
+}
 .dark .left-code {
   background-color: #181b20;
 }
@@ -93,4 +97,10 @@
   flex: 1;
   min-height: 200px;
   padding: 16px;
+}
+.file-icon {
+  color: var(--active-color);
+  font-size: 20px;
+  margin-right: 4px;
+  font-weight: bold;
 }
