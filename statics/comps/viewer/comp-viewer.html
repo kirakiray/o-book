@@ -1,0 +1,173 @@
+<template component>
+  <link rel="stylesheet" href="../../font/iconfont.css" />
+  <x-if :value="isDark.value">
+    <link rel="stylesheet" href="../../css/hljs-dark.css" />
+  </x-if>
+  <x-else>
+    <link rel="stylesheet" href="../../css/hljs-light.css" />
+  </x-else>
+  <link rel="stylesheet" href="./viewer.css" />
+  <div class="outer">
+    <div class="container" class:dark="isDark.value">
+      <div class="left-code" part="code">
+        <div class="tools-con">asd</div>
+        <div class="left-main">
+          <!-- prettier-ignore -->
+          <div class="language-html code"
+              contenteditable="plaintext-only"
+              on:blur="changeCode">{{code}}</div>
+          <div
+            class="copy-btn"
+            on:click="clickCopy"
+            class:succeed="copySucceed"
+          >
+            {{copySucceed ? 'Succeed' : 'Copy'}}
+          </div>
+        </div>
+      </div>
+      <div class="preview-con">
+        <div class="tools-con">
+          <div class="btn icon-shuaxin iconfont" on:click="reloadPage"></div>
+          <div class="btn icon-newtab iconfont" on:click="newTab"></div>
+        </div>
+        <div class="preview-main">
+          <x-if :value="previewSrc && cansee">
+            <iframe attr:src="previewSrc" frameborder="0"></iframe>
+          </x-if>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    import hljs from "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/es/highlight.min.js";
+
+    import { isDark } from "../../data.mjs";
+    import { copyToClipboard, htmlDecode } from "../../util.mjs";
+    import locals from "../../locals/main.mjs";
+
+    export default {
+      attrs: {
+        compName: null,
+      },
+      data: {
+        codes: [],
+        code: "",
+        previewSrc: "",
+        isDark: {
+          value: false,
+        },
+        copySucceed: false,
+        // 是否在可视范围内
+        cansee: false,
+        locals: {},
+      },
+      proto: {
+        newTab() {
+          window.open(this.previewSrc);
+        },
+        reloadPage() {
+          let oldsrc = this.previewSrc;
+          this.previewSrc = "";
+          setTimeout(() => {
+            this.previewSrc = oldsrc;
+          }, 50);
+        },
+        clickCopy() {
+          this.copySucceed = true;
+
+          copyToClipboard(htmlDecode(this.code));
+          setTimeout(() => {
+            this.copySucceed = false;
+          }, 2000);
+        },
+        changeCode(e, index) {
+          if (e.target.textContent !== this.code) {
+            this.code = e.target.textContent;
+            this.refresh();
+          }
+        },
+        refresh() {
+          setTimeout(() => {
+            this.shadow.all(".code").forEach((e) => {
+              hljs.highlightElement(e.ele);
+            });
+          }, 100);
+
+          let code = this.code;
+
+          const fileUrl = getFileUrl(code, this.compName);
+
+          if (this.previewSrc) {
+            URL.revokeObjectURL(this.previewSrc);
+          }
+
+          this.previewSrc = "";
+          setTimeout(() => {
+            this.previewSrc = fileUrl;
+          }, 10);
+        },
+      },
+      attached() {
+        this.isDark = isDark;
+        if (this.$("template")) {
+          this.code = this.$("template").html;
+        } else if (this.$("code")) {
+          this.code = this.$("code").text;
+        }
+        this.refresh();
+
+        const obs = (this._obs = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              this.cansee = true;
+            } else {
+              this.cansee = false;
+            }
+          });
+        }));
+
+        obs.observe(this.ele);
+
+        this.locals = locals;
+      },
+      detached() {
+        this.isDark = {};
+        this._obs.unobserve();
+        this.locals = {};
+      },
+    };
+
+    const getFileUrl = (code, name) => {
+      //   const compFile = new File([code], name + ".html", {
+      //     type: "text/html",
+      //   });
+
+      //   const compUrl = URL.createObjectURL(compFile);
+
+      const compUrl = `data:text/plain;base64,${btoa(code)}`;
+
+      const content = `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+      <meta charset="UTF-8" \/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" \/>
+      <title>preview<\/title>
+      <style>
+        *:not(:defined){display:none;}
+      <\/style>
+      <script src="http://127.0.0.1:5513/packages/ofa/main.mjs" type="module"><\/script>
+      <\/head>
+      <body>
+      <l-m src="${compUrl} .html"></l-m>
+        <${name}><\/${name}>
+      <\/body>
+      <\/html>`;
+
+      const file = new File([content], "preview.html", {
+        type: "text/html",
+      });
+
+      return URL.createObjectURL(file);
+    };
+  </script>
+</template>
