@@ -1,1 +1,15 @@
-obook is a simplified Chinese text that describes a tool for creating free and beautiful websites for writing documents. It provides a simplified block and a logo.
+```markdown
+<l-m src="https://cdn.jsdelivr.net/npm/obook/blocks/simp-block.html"></l-m>
+
+<simp-block>
+
+<img src="... /publics/logo.svg" class="logo" />
+
+### What is an obook?
+
+### If you just want to focus on writing documents and want to create free and beautiful websites quickly, then obook is the way to go!
+
+[Using Documents](./docs/index.md)
+
+</simp-block>
+```

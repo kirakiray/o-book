@@ -1,9 +1,23 @@
 # Use Components
 
 Since obook is developed based on [ofa.js](https://ofajs.com/), the obook documentation supports the use of components developed with [ofa.js](https://ofajs.com/). You can use the `l-m` component to reference these custom components and wrap them around as if using HTML tags. Here's an example of using the [simp-block](https://cdn.jsdelivr.net/npm/obook/blocks/simp-block.html) component:
-obook is a simplified Chinese text that describes a tool for creating free and beautiful websites for writing documents. It provides a simplified block and a logo.
+```markdown
+<l-m src="https://cdn.jsdelivr.net/npm/obook/blocks/simp-block.html"></l-m>
 
-Developing your own components
+<simp-block>
+
+<img src="... /publics/logo.svg" class="logo" />
+
+### What is an obook?
+
+### If you just want to focus on writing documents and want to create free and beautiful websites quickly, then obook is the way to go!
+
+[Using Documents](./docs/index.md)
+
+</simp-block>
+```
+
+## Developing your own components
 
 You can click [Create Component](https://ofajs.com/en/cases/simple-component.html) to learn how to develop a custom component that meets your needs. Once you have finished developing your own component, place it in the **publics** directory at the root of the document station, and use a relative path to reference this component for use in the document. An example is as follows:
 
