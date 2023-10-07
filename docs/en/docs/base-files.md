@@ -10,7 +10,7 @@ The most important basic files of `o-book` are `sw.js` and `_preview.html`.
 
 ```javascript
 // sw.js
-importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.22/src/sw/base.js`);
+importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.23/src/sw/base.js`);
 ```
 
 ### _preview.html
@@ -19,7 +19,7 @@ importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.22/src/sw/base.js`);
 
 ```html
 <!-- Loaded the book-tool component using l-m -->
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.22/src/book-tool.html"></l-m>
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.23/src/book-tool.html"></l-m>
 <!-- Referenced the sw.js file mentioned above using the sw attribute. If the sw.js file has been renamed, it should be correspondingly changed here -->
 <book-tool sw="./sw.js">
     <!-- Referenced your project configuration file -->
