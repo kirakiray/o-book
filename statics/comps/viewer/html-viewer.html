@@ -44,6 +44,7 @@
         <div class="tools-con">
           <div class="btn icon-shuaxin iconfont" on:click="reloadPage"></div>
           <div class="btn icon-newtab iconfont" on:click="newTab"></div>
+          <a class="btn icon-xiazai iconfont" download="preview.html" attr:href="previewSrc"></a>
         </div>
         <div class="preview-main">
           <x-if :value="previewSrc && cansee">
