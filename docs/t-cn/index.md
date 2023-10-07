@@ -3,7 +3,6 @@
 <l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.23/blocks/simp-block.html"></l-m>
 
 <simp-block>
-
 <img src="../publics/logo.svg" class="logo" />
 
 ## obook是什麽？
@@ -14,8 +13,8 @@
 
 </simp-block>
 
-<simp-block>
 
+<simp-block>
 ## 極度簡單
 
 ### 你甚至可以不看文檔，使用我們的Web應用程序，也能輕松起步
@@ -24,16 +23,16 @@
 
 </simp-block>
 
-<simp-block>
 
+<simp-block>
 ## 完全免費
 
 ### 生成的是靜態網站，可以將其托管在GitHub Pages上，無需購買服務器
 
 </simp-block>
 
-<simp-block>
 
+<simp-block>
 ## 功能強大
 
 ### 兼容移動端，包含白天黑夜模式；打包好的文檔站，具備完整的搜索功能
@@ -42,8 +41,8 @@
 
 </simp-block>
 
-<simp-block>
 
+<simp-block>
 ## 多語言支持
 
 ### 網站原生組件提供多語言支持
@@ -52,8 +51,8 @@
 
 </simp-block>
 
-<simp-block>
 
+<simp-block>
 ## 案例
 
 當前站點就是案例
