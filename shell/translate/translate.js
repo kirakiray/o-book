@@ -26,20 +26,31 @@ export default async function translate({ content, targetLang, originLang }) {
   }
 
   const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\`
-returns into ${langMap[targetLang]}. If the text does not contain ${langMap[originLang]}, returns empty text
+returns into ${langMap[targetLang]}. If the text does not contain ${langMap[originLang]}, returns empty
 
 \`\`\`\`
 ${content}
 \`\`\`\`
   `;
 
-  const result = await chat(prompt).catch(() => {
+  let result = await chat(prompt).catch(() => {
     // 再试一次
     return chat(prompt);
   });
 
   if (!result.trim()) {
     return content;
+  }
+
+  let lastLength = content.match(/\n+$/) ? content.match(/\n+$/)[0].length : 0;
+
+  if (lastLength) {
+    // 保证返回的值也保留对应的回车
+    let i = result.match(/\n+$/) ? result.match(/\n+$/)[0].length : 0;
+
+    for (; i < lastLength; i++) {
+      result += "\n";
+    }
   }
 
   return result;

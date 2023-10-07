@@ -19,7 +19,7 @@
 
 
 <simp-block>
-## Extremely Simple
+## Extremely simple
 
 ### You can even get started without reading the documentation by using our web application.
 
