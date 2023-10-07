@@ -72,8 +72,29 @@
       width: 100px;
       margin-bottom: 16px;
     }
+
+    .outer {
+      container-type: inline-size;
+    }
+
+    @container (max-width: 700px) {
+      ::slotted(h2) {
+        font-size: 32px;
+        line-height: 1.2em;
+      }
+
+      ::slotted(h3) {
+        font-size: 24px;
+      }
+
+      ::slotted(p) {
+        font-size: 18px;
+      }
+    }
   </style>
-  <div class="container">
-    <slot></slot>
+  <div class="outer">
+    <div class="container">
+      <slot></slot>
+    </div>
   </div>
 </template>
