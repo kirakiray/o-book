@@ -26,11 +26,10 @@
             {{hideSomeCode ? locals.showallcode : locals.hideunimportcode}}
           </button>
           <x-fill :value="codes">
-            <!-- prettier-ignore -->
-            <div class="language-html code"
-            class:unediabe="!$data.editable"
-            attr:contenteditable="$data.editable ? 'plaintext-only' : null"
-            on:blur="$host.changeCode($event,$index)">{{$data.code}}</div>
+            <pre><div class="language-html code"
+                  class:unediabe="!$data.editable"
+                  attr:contenteditable="$data.editable ? 'plaintext-only' : null"
+                  on:blur="$host.changeCode($event,$index)">{{$data.code}}</div></pre>
           </x-fill>
           <div
             class="copy-btn"
@@ -133,9 +132,7 @@
       },
       attached() {
         this.isDark = isDark;
-        if (this.$("template")) {
-          this.code = this.$("template").html;
-        } else if (this.$("code")) {
+        if (this.$("code")) {
           const codeEls = this.all("code");
 
           const codes = [];

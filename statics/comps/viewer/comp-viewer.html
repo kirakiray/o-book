@@ -38,11 +38,20 @@
         <div class="tools-con">
           <div class="btn icon-shuaxin iconfont" on:click="reloadPage"></div>
           <div class="btn icon-newtab iconfont" on:click="newTab"></div>
+          <div
+            class:btn-active="previewing"
+            class="btn iconfont icon-yulan"
+            on:click="previewing = !previewing"
+            style="margin-left: auto; font-size: 20px"
+          ></div>
         </div>
         <div class="preview-main">
-          <x-if :value="previewSrc && cansee">
+          <x-if :value="previewing && previewSrc && cansee">
             <iframe attr:src="previewSrc" frameborder="0"></iframe>
           </x-if>
+          <pre
+            class:hide="previewing"
+          ><div class="previewer-code language-html code">{{previewCode}}</div></pre>
         </div>
       </div>
     </div>
@@ -57,9 +66,33 @@
     export default {
       attrs: {
         compName: null,
+        maxHeight: null,
+      },
+      watch: {
+        maxHeight(val) {
+          if (val) {
+            if (!/\D/.test(val)) {
+              val += "px";
+            }
+
+            this.shadow.$(".left-main").css.maxHeight = val;
+            this.shadow.$(".previewer-code") &&
+              (this.shadow.$(".previewer-code").css.maxHeight = val);
+          } else {
+            this.shadow.$(".left-main").css.maxHeight = null;
+            this.shadow.$(".previewer-code") &&
+              (this.shadow.$(".previewer-code").css.maxHeight = null);
+          }
+        },
       },
       data: {
+        // 组件代码
         code: "",
+        // 预览代码
+        previewCode: "",
+        // 是否预览代码中
+        previewing: true,
+        // 预览地址
         previewSrc: "",
         isDark: {
           value: false,
@@ -109,7 +142,13 @@
 
           let code = this.code;
 
-          const fileUrl = getFileUrl(code, this.compName);
+          const previewCode =
+            this._previewCode || `<${this.compName}><\/${this.compName}>`;
+
+          this.previewCode = `<l-m src="./${this.compName}.html"></l-m>
+${previewCode}`;
+
+          const fileUrl = getFileUrl(code, previewCode);
 
           if (this.previewSrc) {
             URL.revokeObjectURL(this.previewSrc);
@@ -123,11 +162,15 @@
       },
       attached() {
         this.isDark = isDark;
-        if (this.$("template")) {
-          this.code = this.$("template").html;
-        } else if (this.$("code")) {
-          this.code = this.$("code").text;
+        if (this.$("code.language-html")) {
+          this.code = this.$("code.language-html").text;
         }
+
+        if (this.$("code:not([class])")) {
+          const previewCode = this.$("code:not([class])").text;
+          this._previewCode = previewCode;
+        }
+
         this.refresh();
 
         const obs = (this._obs = new IntersectionObserver((entries) => {
@@ -151,7 +194,7 @@
       },
     };
 
-    const getFileUrl = (code, name) => {
+    const getFileUrl = (code, previewCode) => {
       //   const compFile = new File([code], name + ".html", {
       //     type: "text/html",
       //   });
@@ -173,7 +216,7 @@
       <\/head>
       <body>
       <l-m src="${compUrl} .html"></l-m>
-        <${name}><\/${name}>
+        ${previewCode}
       <\/body>
       <\/html>`;
 
