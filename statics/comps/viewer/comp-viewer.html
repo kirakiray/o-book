@@ -142,7 +142,8 @@
 
           let code = this.code;
 
-          const previewCode = `<${this.compName}><\/${this.compName}>`;
+          const previewCode =
+            this._previewCode || `<${this.compName}><\/${this.compName}>`;
 
           this.previewCode = `<l-m src="./${this.compName}.html"></l-m>
 ${previewCode}`;
@@ -161,11 +162,15 @@ ${previewCode}`;
       },
       attached() {
         this.isDark = isDark;
-        if (this.$("template")) {
-          this.code = this.$("template").html;
-        } else if (this.$("code")) {
-          this.code = this.$("code").text;
+        if (this.$("code.language-html")) {
+          this.code = this.$("code.language-html").text;
         }
+
+        if (this.$("code:not([class])")) {
+          const previewCode = this.$("code:not([class])").text;
+          this._previewCode = previewCode;
+        }
+
         this.refresh();
 
         const obs = (this._obs = new IntersectionObserver((entries) => {

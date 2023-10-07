@@ -132,9 +132,7 @@
       },
       attached() {
         this.isDark = isDark;
-        if (this.$("template")) {
-          this.code = this.$("template").html;
-        } else if (this.$("code")) {
+        if (this.$("code")) {
           const codeEls = this.all("code");
 
           const codes = [];
