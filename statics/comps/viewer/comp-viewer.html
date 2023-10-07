@@ -189,7 +189,7 @@ ${previewCode}`;
       },
       detached() {
         this.isDark = {};
-        this._obs.unobserve();
+        this._obs.disconnect();
         this.locals = {};
       },
     };
