@@ -35,4 +35,3 @@ importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.23/src/sw/base.js`);
 - **cn** 簡體中文
 - **t-cn** 繁體中文
 - **es** 西班牙語
-

@@ -7,4 +7,3 @@
 - 關於 ofa.js
   - [ofa.js 官網](https://ofajs.com/)
   - [制作組件](https://ofajs.com/en/cases/simple-component.html)
-

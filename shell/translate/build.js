@@ -66,8 +66,7 @@ export default async function buildDoc({ configs, articles }) {
       // 转换回翻译的正文
       for (let hash of articles[p]) {
         const e = await langDir.read(hash);
-
-        article += /\n$/.test(e) ? e : e + "\n\n";
+        article += e;
       }
 
       await write(path, article);
