@@ -1,29 +1,30 @@
-# Use Components
+# Using Components
 
-Since obook is developed based on [ofa.js](https://ofajs.com/), the obook documentation supports the use of components developed with [ofa.js](https://ofajs.com/). You can use the `l-m` component to reference these custom components and wrap them around as if using HTML tags. Here's an example of using the [simp-block](https://cdn.jsdelivr.net/npm/obook/blocks/simp-block.html) component:
+Since obook is based on [ofa.js](https://ofajs.com/) development, the obook documentation supports the use of components developed with [ofa.js](https://ofajs.com/). You can use the `l-m` component to reference these custom components and wrap them as if using HTML tags. Here is an example using the [simp-block](https://cdn.jsdelivr.net/npm/obook/blocks/simp-block.html) component:
+
 ```markdown
 <l-m src="https://cdn.jsdelivr.net/npm/obook/blocks/simp-block.html"></l-m>
 
 <simp-block>
 
-<img src="... /publics/logo.svg" class="logo" />
+<img src="../publics/logo.svg" class="logo" />
 
-### What is an obook?
+## What is obook?
 
-### If you just want to focus on writing documents and want to create free and beautiful websites quickly, then obook is the way to go!
+### If you only want to focus on writing documents and want to quickly create free and beautiful websites, then obook is your first choice
 
-[Using Documents](./docs/index.md)
+[Documentation](./docs/index.md)
 
 </simp-block>
 ```
 
-## Developing your own components
+## Developing Your Own Component
 
-You can click [Create Component](https://ofajs.com/en/cases/simple-component.html) to learn how to develop a custom component that meets your needs. Once you have finished developing your own component, place it in the **publics** directory at the root of the document station, and use a relative path to reference this component for use in the document. An example is as follows:
+You can click on [Making Components](https://ofajs.com/en/cases/simple-component.html) to learn how to develop custom components that meet your needs. Once you have developed your own component, place it in the **publics** directory under the root directory of the document station, and use relative paths to reference this component for use in the document. An example is shown below:
 
 ```html
 <!-- /publics/my-comp.html -->
-<!-- Your custom component developed -->
+<!-- Your custom component that you developed -->
 <template component>
   ...
 </template>
@@ -40,5 +41,4 @@ You can click [Create Component](https://ofajs.com/en/cases/simple-component.htm
 </my-comp>
 ```
 
-Please note that the Markdown content inside custom components will be translated into HTML elements. For example, regular line breaks will be converted into `p` elements, and `## ` will be translated into `h2`, and so on. Inside custom components, you can initialize and process elements by accessing the elements inside the slot.
-
+Please note that the Markdown content inside custom components will be translated into HTML elements. For example, regular line breaks will be converted into `p` elements, and `##` will be translated into `h2` elements, etc. Inside custom components, you can initialize and process elements by accessing the elements inside the slot.

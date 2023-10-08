@@ -1,1 +1,1 @@
-In the above example, we have set up a homepage (`index.md`), which means that the homepage will only include the top navigation component and will not display the left document navigation and right article navigation of the document type pages.
+In the above example, we set up a home page (`index.md`), which means the home page will only contain the top navigation component, and will not display the left document navigation and right article navigation for document type pages.

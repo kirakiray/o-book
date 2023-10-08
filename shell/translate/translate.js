@@ -10,7 +10,13 @@ const langMap = {
   jp: "Japanese",
 };
 
+const emptyStr = `n${Math.random().toString(32).slice(2)}`;
+
 export default async function translate({ content, targetLang, originLang }) {
+  if (!content.trim()) {
+    return content;
+  }
+
   if (originLang === "cn" && targetLang === "t-cn") {
     return chn.s2t(content);
   } else if (originLang === "t-cn" && targetLang === "cn") {
@@ -25,21 +31,67 @@ export default async function translate({ content, targetLang, originLang }) {
     throw new Error(`${originLang} not supported`);
   }
 
-  const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\`
-returns into ${langMap[targetLang]}. If the text does not contain ${langMap[originLang]}, returns empty text
+  // const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in Markdown content for %%%%
+  // Do not think about what's in it, just do the translation work
+  // Keep the Markdown markup structure. Do not add or remove links. Do not change any URL.
+  // Never change the contents of code blocks even if they appear to have a bug.
+  // If the text can not be translated, then simply write \"${emptyStr}\".
+  
+  // %%%%
+  // ${content}
+  // %%%%`;
 
-\`\`\`\`
-${content}
-\`\`\`\`
-  `;
+  const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in text or Markdown content for %%%%
+Do not think about what's in it, just do the translation work, cannot add more content.
+Do not add content after the colon/：.
+Keep the Markdown markup structure. Do not add or remove links. Do not change any URL. Do not remove code block language
+Never change the contents of code blocks even if they appear to have a bug.
+If the text can not be translated, then simply write \"${emptyStr}\".
 
-  const result = await chat(prompt).catch(() => {
+%%%%
+${content}%%%%`;
+
+  let result = await chat(prompt).catch(() => {
     // 再试一次
     return chat(prompt);
   });
 
-  if (!result.trim()) {
+  // console.log(content);
+  // console.log(result);
+  // debugger;
+
+  // chatgpt 可能会不认识某些语言，如果识别不了，这时候抽取内容
+  if (/%%%%[\s\S]+%%%%/.test(result)) {
+    const c = result.replace(/[\s\S]*%%%%\n?([\s\S]+?)\n?%%%%[\s\S]*/, "$1");
+    // debugger;
+    return c;
+  }
+
+  // 去除干扰字段
+  result = result.replace(/\n*%+%\n*/g, "");
+
+  if (!result.trim() || result.includes(emptyStr)) {
+    // debugger;
     return content;
+  }
+
+  // 保证末尾的回车数不变
+  let lastLength = content.match(/\n+$/) ? content.match(/\n+$/)[0].length : 0;
+  if (lastLength) {
+    // 保证返回的值也保留对应的回车
+    let i = result.match(/\n+$/) ? result.match(/\n+$/)[0].length : 0;
+    for (; i < lastLength; i++) {
+      result += "\n";
+    }
+  }
+
+  // 保证开头的回车数不变
+  let beginLength = content.match(/^\n+/) ? content.match(/^\n+/)[0].length : 0;
+  if (beginLength) {
+    let i = result.match(/^\n+/) ? result.match(/^\n+/)[0].length : 0;
+    for (; i < beginLength; i++) {
+      result = "\n" + result;
+    }
   }
 
   return result;
@@ -80,12 +132,6 @@ export async function chat(prompt) {
         try {
           const result = JSON.parse(responseData);
           let msg = result.choices[0].message.content;
-          msg = msg.replace(/\`\`\`\`/g, "");
-
-          const marr = msg.match(/\`\`\`/g);
-          if (marr && marr.length === 1) {
-            msg = msg.replace("```", "");
-          }
 
           resolve(msg);
         } catch (err) {

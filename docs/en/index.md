@@ -8,71 +8,54 @@
 
 ## What is obook?
 
-### If you only want to focus on writing documents and want to quickly create a free and beautiful website, then obook is your best choice.
-
+### If you just want to focus on writing documents and want to quickly create a free and beautiful website, then obook is your best choice.
 
 [User Documentation](./docs/index.md)
 
 </simp-block>
 
-
-
-
 <simp-block>
+
 ## Extremely Simple
 
-### You can even get started without reading the documentation by using our web application.
+### You can even get started without reading the documentation by using our Web application
 
 [obook previewer](https://kirakiray.github.io/o-book/webapp/)
 
+</simp-block>
+
+<simp-block>
+
+## Completely free
+
+### The generated is a static website that can be hosted on GitHub Pages without needing to purchase a server.
 
 </simp-block>
 
-
-
-
 <simp-block>
-## Completely Free
 
-### Generated is a static website, which can be hosted on GitHub Pages without the need to purchase a server.
-
-
-</simp-block>
-
-
-
-
-<simp-block>
 ## Powerful Features
 
-### Compatible with mobile devices, including day and night modes; packaged documentation station with complete search function
+### Compatible with mobile devices, including day and night modes; a packaged documentation website with full search capabilities
 
-
-Using other document station generators may require purchasing search microservices.
-
+Using other document generators may require purchasing a search microservice.
 
 </simp-block>
 
-
-
-
 <simp-block>
-## Multilingual Support
 
-### The native components of the website provide multi-language support
+## Multi-language support
 
-Currently supports **English**, **Simplified Chinese**, **Traditional Chinese**, **Spanish**
+### Website native components provide multilingual support
 
+Currently supported languages are **English**, **Simplified Chinese**, **Traditional Chinese**, and **Spanish**.
 
 </simp-block>
 
-
-
-
 <simp-block>
+
 ## Case study
 
-The current site is an example.
+The current site is a case study.
 
 </simp-block>
-
