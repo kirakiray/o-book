@@ -2,11 +2,11 @@
 {
   "navs": [
     {
-      "name": "User Documentation",
+      "name": "Documentation",
       "summary": "./docs/SUMMARY.md"
     },
     // {
-    //   "name": "Navigation Name",
+    //   "name": "Nav Name",
     //   "summary": "./folder/SUMMARY.md"
     // }
   ]

@@ -1,60 +1,60 @@
-# obook: The simplest document website building tool
+# obook: The simplest document building tool
 
 <l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.23/blocks/simp-block.html"></l-m>
 
-<trans-block>
+<simp-block>
 
 <img src="../publics/logo.svg" class="logo" />
 
 ## What is obook?
 
-If you just want to focus on writing documents and want to quickly create a free and beautiful website, then obook is your best choice.
+### If you just want to focus on writing documents and want to quickly create a free and beautiful website, then obook is your best choice.
 
-[Documentation](./docs/index.md)
+[User Documentation](./docs/index.md)
 
 </simp-block>
 
-<trans-block>
+<simp-block>
 
-## Extremely simple
+## Extremely Simple
 
-### You can even get started without reading the documentation by using our web application.
+### You can even get started without reading the documentation by using our Web application
 
 [obook previewer](https://kirakiray.github.io/o-book/webapp/)
 
 </simp-block>
 
-<trans-block>
+<simp-block>
 
-## Completely Free
+## Completely free
 
-### The generated website is static and can be hosted on GitHub Pages without the need to purchase a server.
+### The generated is a static website that can be hosted on GitHub Pages without needing to purchase a server.
 
 </simp-block>
 
-<trans-block>
+<simp-block>
 
 ## Powerful Features
 
-### Mobile compatibility, including both day and night mode; packaged documentation site with a complete search function.
+### Compatible with mobile devices, including day and night modes; a packaged documentation website with full search capabilities
 
-Using other document site generators may require purchasing search microservices.
-
-</simp-block>
-
-<trans-block>
-
-## Multilingual Support
-
-### Native Website Components Provide Multi-language Support
-
-Currently supports **English**, **Simplified Chinese**, **Traditional Chinese**, **Spanish**.
+Using other document generators may require purchasing a search microservice.
 
 </simp-block>
 
-<trans-block>
+<simp-block>
 
-## Case Study
+## Multi-language support
+
+### Website native components provide multilingual support
+
+Currently supported languages are **English**, **Simplified Chinese**, **Traditional Chinese**, and **Spanish**.
+
+</simp-block>
+
+<simp-block>
+
+## Case study
 
 The current site is a case study.
 

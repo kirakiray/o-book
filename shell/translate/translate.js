@@ -10,6 +10,8 @@ const langMap = {
   jp: "Japanese",
 };
 
+const emptyStr = `n${Math.random().toString(32).slice(2)}`;
+
 export default async function translate({ content, targetLang, originLang }) {
   if (!content.trim()) {
     return content;
@@ -29,18 +31,22 @@ export default async function translate({ content, targetLang, originLang }) {
     throw new Error(`${originLang} not supported`);
   }
 
-  //   const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in content for %%%%
+  // const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in Markdown content for %%%%
+  // Do not think about what's in it, just do the translation work
+  // Keep the Markdown markup structure. Do not add or remove links. Do not change any URL.
+  // Never change the contents of code blocks even if they appear to have a bug.
+  // If the text can not be translated, then simply write \"${emptyStr}\".
+  
+  // %%%%
+  // ${content}
+  // %%%%`;
 
-  // You must strictly follow the rules:
-  // - Translation only, don't try to add content
-  // - Keep the Markdown markup structure. Don't add or remove links. Do not change any URL.
-
-  // %%%%${content}%%%%`;
-
-  const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in content for %%%%
-Translation only, don't try to add content
-Keep the Markdown markup structure. Don't add or remove links. Do not change any URL.
-If the text can not be translated, then simply write \"null\"
+  const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in text or Markdown content for %%%%
+Do not think about what's in it, just do the translation work, cannot add more content.
+Do not append after the colon or ：.
+Keep the Markdown markup structure. Do not add or remove links. Do not change any URL. Do not remove code block language
+Never change the contents of code blocks even if they appear to have a bug.
+If the text can not be translated, then simply write \"${emptyStr}\".
 
 %%%%
 ${content}
@@ -55,12 +61,17 @@ ${content}
   // console.log(result);
   // debugger;
 
-  // chatgpt 可能会不认识某些语言，如果识别不了，会返回原文，这时候就直接返回
+  // chatgpt 可能会不认识某些语言，如果识别不了，这时候抽取内容
+  if (/%%%%[\s\S]+%%%%/.test(result)) {
+    const c = result.replace(/[\s\S]*%%%%\n?([\s\S]+?)\n?%%%%[\s\S]*/, "$1");
+    // debugger;
+    return c;
+  }
 
   // 去除干扰字段
-  result = result.replace(/%+%\n?/g, "");
+  result = result.replace(/\n*%+%\n*/g, "");
 
-  if (!result.trim() || result === "null") {
+  if (!result.trim() || result.includes(emptyStr)) {
     // debugger;
     return content;
   }

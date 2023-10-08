@@ -1,12 +1,12 @@
-# Add analytics code
+# Add analysis code
 
-If you need to track and analyze the visitor data of your website, we recommend using Google Analytics.
+If you need to track and analyze the visitor data of your website, we recommend using [Google Analytics](https://analytics.google.com).
 
-To add analytical code, follow these steps:
+To add analytics code, please follow these steps:
 
-1. Open the `_preview.html` file using your code editor.
+1. Open the `_preview.html` file with your code editor.
 
-2. Add a `<template>` tag within the `<book-tool>` tag with the `inject-head` attribute, and place your tracking code inside the template, similar to the following:
+2. Add a `<template>` tag with the `inject-head` attribute inside the `<book-tool>` tag, and place your tracking code within the template, similar to the following example:
 
 ```html
 <book-tool sw="./doc-sw.js">
@@ -25,4 +25,4 @@ To add analytical code, follow these steps:
 </book-tool>
 ```
 
-Once you have added the analytics code, please repackage the project. The analytics code will be inserted at the header of all pages so you can easily track and analyze the visitor data of your website.
+Once you have added the analytical code, please repackage the project. The analytical code will be inserted into the header of all pages, allowing you to easily track and analyze the traffic data of your website.

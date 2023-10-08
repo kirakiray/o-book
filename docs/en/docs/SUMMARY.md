@@ -1,12 +1,12 @@
 - [Introduction](./index.md)
-- Start the Project
+- Start Project
   - [Standard Mode](./run-mode/base-mode.md)
   - [Command Line Mode](./run-mode/cli-mode.md)
   - [Web Application Mode](./run-mode/webapp-mode.md)
 - [Basic Files](./base-files.md)
-- [Project Documentation](./project-docs.md)
+- [Project Documents](./project-docs.md)
 - [Add Analysis Code](./add-analysis.md)
 - [Multi-language Support](./i18n.md)
-- [Add Non-document Pages](./normal-pages.md)
+- [Add Non-Document Pages](./normal-pages.md)
 - [Add Footer Content](./add-footer.md)
 - [Use Components](./use-component.md)

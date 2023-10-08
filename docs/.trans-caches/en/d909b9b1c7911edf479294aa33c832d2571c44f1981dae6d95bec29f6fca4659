@@ -1,6 +1,6 @@
 ```html
 <book-tool sw="./sw.js">
-    <!-- Refer to your project configuration files -->
+    <!-- Reference your project configuration file -->
     <source src="./en/config.json" lang="en" />
     <source src="./cn/config.json" lang="cn" />
     <source src="./t-cn/config.json" lang="t-cn" />

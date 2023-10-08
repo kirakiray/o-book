@@ -34,7 +34,7 @@ export default async function tocaches({ configs, hashObj }) {
     });
 
     await new Promise((resolve) => {
-      // let timer;
+      let timer;
       // 当前并发数
       let concurrening = 0;
       // 最大并发数
@@ -51,7 +51,7 @@ export default async function tocaches({ configs, hashObj }) {
 
         if (!targetHash) {
           if (transedCount === hashs.length) {
-            // clearInterval(timer);
+            clearInterval(timer);
             resolve();
           }
           return;
@@ -67,7 +67,9 @@ export default async function tocaches({ configs, hashObj }) {
           transedCount++;
 
           console.clear();
-          console.log(`Translate ${lang} in paragraph : ${transedCount} / ${hashs.length}`);
+          console.log(
+            `Translate ${lang} in paragraph : ${transedCount} / ${hashs.length}`
+          );
 
           langDir.write(targetHash, data);
 
@@ -83,7 +85,7 @@ export default async function tocaches({ configs, hashObj }) {
       f();
 
       // 保证不熄火机制
-      // timer = setInterval(f, 100);
+      timer = setInterval(f, 1000);
     });
 
     // 判断要删除的
