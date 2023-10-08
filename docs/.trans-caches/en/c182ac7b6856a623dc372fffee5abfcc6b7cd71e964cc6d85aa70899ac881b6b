@@ -1,6 +1,6 @@
 ```html
 <!-- /publics/my-comp.html -->
-<!-- Your custom component developed -->
+<!-- The custom component you developed -->
 <template component>
   ...
 </template>

@@ -1,78 +1,61 @@
-# obook: The simplest document building tool
+# obook: The simplest document website building tool
 
 <l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.23/blocks/simp-block.html"></l-m>
 
-<simp-block>
+<trans-block>
 
 <img src="../publics/logo.svg" class="logo" />
 
 ## What is obook?
 
-### If you only want to focus on writing documents and want to quickly create a free and beautiful website, then obook is your best choice.
+If you just want to focus on writing documents and want to quickly create a free and beautiful website, then obook is your best choice.
 
-
-[User Documentation](./docs/index.md)
+[Documentation](./docs/index.md)
 
 </simp-block>
 
+<trans-block>
 
-
-
-<simp-block>
 ## Extremely simple
 
 ### You can even get started without reading the documentation by using our web application.
 
 [obook previewer](https://kirakiray.github.io/o-book/webapp/)
 
-
 </simp-block>
 
+<trans-block>
 
-
-
-<simp-block>
 ## Completely Free
 
-### Generated is a static website, which can be hosted on GitHub Pages without the need to purchase a server.
-
+### The generated website is static and can be hosted on GitHub Pages without the need to purchase a server.
 
 </simp-block>
 
+<trans-block>
 
-
-
-<simp-block>
 ## Powerful Features
 
-### Compatible with mobile devices, including day and night modes; packaged documentation station with complete search function
+### Mobile compatibility, including both day and night mode; packaged documentation site with a complete search function.
 
-
-Using other document station generators may require purchasing search microservices.
-
+Using other document site generators may require purchasing search microservices.
 
 </simp-block>
 
+<trans-block>
 
-
-
-<simp-block>
 ## Multilingual Support
 
-### The native components of the website provide multi-language support
+### Native Website Components Provide Multi-language Support
 
-Currently supports **English**, **Simplified Chinese**, **Traditional Chinese**, **Spanish**
-
-
-</simp-block>
-
-
-
-
-<simp-block>
-## Case study
-
-The current site is an example.
+Currently supports **English**, **Simplified Chinese**, **Traditional Chinese**, **Spanish**.
 
 </simp-block>
 
+<trans-block>
+
+## Case Study
+
+The current site is a case study.
+
+</simp-block>

@@ -29,9 +29,9 @@ if (argv.includes("update")) {
 } else if (argv.includes("dev") || argv.includes("build")) {
   dev({ obook });
 } else if (argv.includes("trans")) {
-  setTimeout(() => {
-    trans(transConfigs);
-  }, 2000);
+  // setTimeout(() => {
+  trans(transConfigs);
+  // }, 2000);
 } else if (
   argv.includes("version") ||
   argv.includes("-v") ||

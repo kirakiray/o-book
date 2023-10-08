@@ -1,1 +1,1 @@
-You can add documents in other languages by modifying the `book-tool` component in the `_preview.html` file and adding `source` tags inside it. Please note that the documents in other languages must correspond one-to-one with the original content.
+You can add documents in other languages by modifying the `book-tool` component in the `_preview.html` file and adding a `source` tag in it. Please note that the documents in other languages must correspond to the original content one by one.

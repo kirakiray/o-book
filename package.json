@@ -40,6 +40,7 @@
   "obook-translate": {
     "caches": "./docs/.trans-caches",
     "main": "cn",
+    "concurrent": 2,
     "dirs": {
       "cn": "./docs/cn",
       "t-cn": "./docs/t-cn",

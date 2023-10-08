@@ -1,5 +1,5 @@
-1. Make sure the system has `Node.js` installed and ensure that the version is greater than or equal to 18.
+1. Make sure that `Node.js` is installed on your system and ensure that the version is greater than or equal to 18.
 
-2. Install `o-book` on your local machine by using the command `npm i obook -g` in the command line.
+2. Use the command `npm i obook -g` in the command line to install `o-book` on your local machine.
 
-3. After downloading the project files, make sure the `package.json` file in the root directory of the project is configured with the `obook` property as shown below:
+3. After downloading the project files, ensure that the `package.json` file in the root directory of the project is configured with the `obook` attribute as shown below:

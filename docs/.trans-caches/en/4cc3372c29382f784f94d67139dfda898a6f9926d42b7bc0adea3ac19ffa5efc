@@ -1,1 +1,1 @@
-[Command-line mode](./run-mode/cli-mode.md) requires a certain foundation of front-end development knowledge. Install the `o-book` module through `npm`, and then you can use the command line to preview and package projects. This mode can also be a part of script automation.
+You must have a certain foundation of front-end development knowledge in order to use [Command Line Mode](./run-mode/cli-mode.md). Install the `o-book` module using `npm`, and then you can use the command line to preview and package the project. This mode can also be part of script automation.
