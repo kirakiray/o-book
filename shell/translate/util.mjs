@@ -21,8 +21,15 @@ export const getHashLineData = async (
       continue;
     }
 
+    let t = "";
+
+    marked.lexer(data).forEach((e) => {
+      t += e.raw;
+    });
+
     // 去除无用行数
-    const mdDatas = marked.lexer(data).filter((e) => e.type !== "space");
+    // const mdDatas = marked.lexer(data).filter((e) => e.type !== "space");
+    const mdDatas = marked.lexer(data);
 
     const articleHash = [];
 

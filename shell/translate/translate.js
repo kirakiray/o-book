@@ -11,6 +11,10 @@ const langMap = {
 };
 
 export default async function translate({ content, targetLang, originLang }) {
+  if (!content.trim()) {
+    return content;
+  }
+
   if (originLang === "cn" && targetLang === "t-cn") {
     return chn.s2t(content);
   } else if (originLang === "t-cn" && targetLang === "cn") {
@@ -42,14 +46,22 @@ ${content}
     return content;
   }
 
+  // 保证末尾的回车数不变
   let lastLength = content.match(/\n+$/) ? content.match(/\n+$/)[0].length : 0;
-
   if (lastLength) {
     // 保证返回的值也保留对应的回车
     let i = result.match(/\n+$/) ? result.match(/\n+$/)[0].length : 0;
-
     for (; i < lastLength; i++) {
       result += "\n";
+    }
+  }
+
+  // 保证开头的回车数不变
+  let beginLength = content.match(/^\n+/) ? content.match(/^\n+/)[0].length : 0;
+  if (beginLength) {
+    let i = result.match(/^\n+/) ? result.match(/^\n+/)[0].length : 0;
+    for (; i < beginLength; i++) {
+      result = "\n" + result;
     }
   }
 
