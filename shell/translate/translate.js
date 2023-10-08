@@ -30,7 +30,10 @@ export default async function translate({ content, targetLang, originLang }) {
   }
 
   const prompt = `Translate ${langMap[originLang]} text separated by \`\`\`\`
-returns into ${langMap[targetLang]}. If the text does not contain ${langMap[originLang]}, returns empty
+returns into ${langMap[targetLang]}. 
+
+If the text does not contain ${langMap[originLang]}
+then simply write \"n0\"
 
 \`\`\`\`
 ${content}
@@ -42,7 +45,7 @@ ${content}
     return chat(prompt);
   });
 
-  if (!result.trim()) {
+  if (!result.trim() || result === "n0") {
     return content;
   }
 
