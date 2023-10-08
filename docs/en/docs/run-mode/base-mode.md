@@ -10,7 +10,7 @@ The standard mode is to use a local static server and open the prepared `_previe
 
 `_preview.html` file is the launcher for previewing the project. You can also use other extensions that can start a static server instead of LiveServer.
 
-This is the cheapest way to open using VSCode, where you can quickly launch a static server within the editor. Of course, you can also use other Markdown editors, such as Typora, development tools like Eclipse, or even your system's built-in text editor, as long as you find it convenient.
+This is the easy way to open using VSCode, where you can quickly launch a static server within the editor. Of course, you can also use other Markdown editors, such as Typora, development tools like Eclipse, or even your system's built-in text editor, as long as you find it convenient.
 
 As for the static server, you can use locally built servers such as Nginx, Apache, etc., as long as they can be used to access static HTML files.
 
