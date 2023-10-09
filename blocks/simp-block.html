@@ -1,5 +1,6 @@
 <template component>
   <inject-host>
+    <link rel="stylesheet" href="../statics/css/hljs-dark.css" />
     <style>
       simp-block a {
         box-sizing: border-box;
@@ -27,6 +28,35 @@
 
       simp-block:nth-child(2n + 1) {
         background-color: var(--simp-block-bg);
+      }
+      simp-block pre {
+        position: relative;
+      }
+      simp-block pre code {
+        display: block;
+        margin: 8px;
+        padding: 8px 16px !important;
+        font-size: 16px;
+        border-radius: 5px;
+        background-color: #181b20;
+        color: #fff;
+      }
+
+      /* @media (prefers-color-scheme: dark) {
+        simp-block pre code {
+          background-color: #666;
+        }
+      }
+       */
+      simp-block .copy-btn {
+        position: absolute;
+        right: 0;
+        top: 0;
+        opacity: 0;
+        transition: opacity ease 0.3s;
+      }
+      simp-block pre:hover .copy-btn {
+        opacity: 1;
       }
     </style>
   </inject-host>
@@ -65,6 +95,8 @@
     }
 
     ::slotted(p) {
+      margin-top: 8px;
+      margin-bottom: 8px;
       font-size: 20px;
     }
 
@@ -97,4 +129,44 @@
       <slot></slot>
     </div>
   </div>
+  <script>
+    import hljs from "https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.8.0/build/es/highlight.min.js";
+
+    export default {
+      attached() {
+        this.forEach((e) => {
+          if (e.tag === "pre") {
+            hljs.highlightElement(e.$("code").ele);
+            const btn = $(`<button class="copy-btn">Copy</button>`);
+            btn.on("click", () => {
+              copyToClipboard(e.$("code").text.trim());
+              btn.text = "Copy Succeed";
+              setTimeout(() => {
+                btn.text = "Copy";
+              }, 2000);
+            });
+            e.push(btn);
+          }
+        });
+
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", (event) => {
+            console.log("change mode");
+          });
+      },
+    };
+
+    export function copyToClipboard(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+
+      document.body.appendChild(textarea);
+
+      textarea.select();
+      document.execCommand("copy");
+
+      document.body.removeChild(textarea);
+    }
+  </script>
 </template>
