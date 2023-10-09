@@ -5,6 +5,13 @@
     $("html").classList.remove("dark");
   }
 
+  lm.config({
+    alias: {
+      "@obook": "https://cdn.jsdelivr.net/npm/obook@2.1.24",
+      // "@obook": "http://127.0.0.1:5512",
+    },
+  });
+
   const url = import.meta.url;
   function resolvePath(path) {
     return new URL(path, url).href;
