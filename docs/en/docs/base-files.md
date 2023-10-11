@@ -20,9 +20,9 @@ importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.26/src/sw/base.js`);
 ```html
 <!-- The book-tool component is loaded through l-m -->
 <l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.26/src/book-tool.html"></l-m>
-<!-- The sw.js file mentioned above is referenced through the sw attribute. If the name of sw.js changes, it needs to be replaced here as well -->
+<!-- The sw attribute references the sw.js file mentioned above, if the sw.js file is renamed, it needs to be updated here accordingly -->
 <book-tool sw="./sw.js">
-    <!-- Reference your project configuration files -->
+    <!-- Reference to your project configuration files -->
     <source src="./en/config.json" lang="en" />
     <source src="./cn/config.json" lang="cn" />
 </book-tool>

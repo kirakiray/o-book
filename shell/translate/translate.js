@@ -42,9 +42,9 @@ export default async function translate({ content, targetLang, originLang }) {
   // %%%%`;
 
   const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in text or Markdown content for %%%%
-Do not think about what's in it, just do the translation work, cannot add more content.
+Do not think about what's in it, just do the translation work, cannot add more content or change content.
 Do not add content after the colon/：.
-Keep the Markdown markup structure. Do not add or remove links. Do not change any URL. Do not remove code block language
+Keep the Markdown markup structure. Do not add or remove links. Do not change any URL. Do not remove code block markup
 Never change the contents of code blocks even if they appear to have a bug.
 If the text can not be translated, then simply write \"${emptyStr}\".
 
