@@ -8,6 +8,10 @@ export default async (PATH, [{ query, load }]) => {
           e.attr("olink", "");
         }
       });
+
+      try {
+        $("#header-layout").shadow.$("doc-footer").css.display = "";
+      } catch (err) {}
     },
     loaded() {
       $("body").emit("page-ready");

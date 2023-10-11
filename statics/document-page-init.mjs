@@ -31,6 +31,16 @@ export default async (PATH, [{ query, load }]) => {
           e.attr("olink", "");
         }
       });
+
+      const hasFooter = !!this.shadow.$("exm-article");
+
+      try {
+        if (hasFooter) {
+          $("#header-layout").shadow.$("doc-footer").css.display = "none";
+        } else {
+          $("#header-layout").shadow.$("doc-footer").css.display = "";
+        }
+      } catch (err) {}
     },
     loaded() {
       $("body").emit("page-ready");
