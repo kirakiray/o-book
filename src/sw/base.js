@@ -6,6 +6,8 @@
 //   host = "https://cdn.jsdelivr.net/npm/obook@2.1.24";
 // }
 
+// const host = "http://127.0.0.1:5512";
+
 const host = "https://cdn.jsdelivr.net/npm/obook@2.1.24";
 
 importScripts(
