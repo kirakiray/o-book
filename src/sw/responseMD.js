@@ -194,8 +194,19 @@ const responseMD = (() => {
       redirectTo
     );
 
+    const originConfigs = await storage.getItem("config-url");
+
+    const langsDir = {};
+
+    originConfigs.forEach((e) => {
+      langsDir[e.lang] = e.src
+        .replace(/^\.\//, "")
+        .replace(/(.+)\/.+.json/, "$1");
+    });
+
     const data = {
       host,
+      langsDir: JSON.stringify(langsDir),
       redirectTo: relatePath.replace(/\.md$/, ".html"),
     };
 
