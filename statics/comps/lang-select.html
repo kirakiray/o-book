@@ -1,4 +1,5 @@
 <template component>
+  <l-m src="./doc-bubble.html"></l-m>
   <link rel="stylesheet" href="../font/iconfont.css" />
   <style>
     :host {
@@ -49,6 +50,18 @@
         </x-fill>
       </template>
     </select>
+    <x-if :value="userLocalLang">
+      <div style="position: relative">
+        <doc-bubble style="margin: 50px 0 0 0px">
+          {{langLocals.desc}}
+          <br />
+          <button on:click="clickSwitch">{{langLocals.btn}}</button>
+          <button on:click="clickCancel">
+            {{langLocals.neverRemind}}(Close)
+          </button>
+        </doc-bubble>
+      </div>
+    </x-if>
   </div>
   <script>
     import { getLang, configData } from "../data.mjs";
@@ -60,10 +73,35 @@
       es: "española",
     };
 
+    const locals = {
+      en: {
+        desc: "The current document has an English version, is it switched to English?",
+        neverRemind: "Never remind",
+        btn: "Switch to English",
+      },
+      cn: {
+        desc: "当前文档有简体中文的版本，是否切换到简体中文？",
+        neverRemind: "不再提醒",
+        btn: "切换到简体中文",
+      },
+      "t-cn": {
+        desc: "當前文檔有繁體中文的版本，是否切換到繁體中文？",
+        neverRemind: "不再提醒",
+        btn: "切換到繁體中文",
+      },
+      es: {
+        desc: "El documento actual está disponible en español, ¿se pasa al español?",
+        neverRemind: "recordatorio eterno",
+        btn: "Cambiar al español",
+      },
+    };
+
     export default {
       data: {
         lang: "",
         options: [],
+        userLocalLang: null,
+        langLocals: {},
       },
       watch: {
         options(opts) {
@@ -75,6 +113,45 @@
         },
       },
       proto: {
+        clickSwitch() {
+          this.changeLang({
+            target: { value: this.userLocalLang },
+          });
+          this.userLocalLang = null;
+          localStorage._click_switch_lang = 1;
+        },
+        clickCancel() {
+          this.userLocalLang = null;
+          localStorage._click_switch_lang = 1;
+        },
+        checkLang() {
+          if (localStorage._click_switch_lang) {
+            return;
+          }
+
+          let localLang = "";
+
+          if (/^zh-/.test(navigator.language)) {
+            if (navigator.language === "zh-CN" || navigator.language === "zh") {
+              localLang = "cn";
+            } else {
+              localLang = "t-cn";
+            }
+          } else if (/^es-/.test(navigator.language)) {
+            localLang = "es";
+          } else {
+            localLang = "en";
+          }
+
+          if (
+            localLang !== this.lang &&
+            this.options.find((e) => e.value === localLang)
+          ) {
+            this.userLocalLang = localLang;
+          }
+
+          this.langLocals = locals[localLang];
+        },
         changeLang(e) {
           const val = e.target.value;
 
@@ -115,6 +192,8 @@
             langroot,
           };
         });
+
+        this.checkLang();
       },
     };
   </script>

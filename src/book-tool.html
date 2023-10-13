@@ -80,6 +80,7 @@
         sw: "",
         noswinit: null,
         filename: "obook.zip",
+        sitemapRoot: null,
       },
       data: {
         locals: /^zh\-/.test(userLanguage) ? locals.cn : locals.en,
@@ -308,6 +309,12 @@
             })
           );
 
+          if (this.sitemapRoot) {
+            await addWaitlist(
+              location.href.replace(/(.+\/).+/, "$1") + "@/sitemap.xml"
+            );
+          }
+
           if (publics.length) {
             await Promise.all(
               publics.map(async (e) => {
@@ -372,6 +379,12 @@
             await storage.setItem("inject-head", injectHead.html);
           } else {
             await storage.setItem("inject-head", "");
+          }
+
+          if (this.sitemapRoot) {
+            await storage.setItem("sitemap-root", this.sitemapRoot);
+          } else {
+            await storage.setItem("sitemap-root", "");
           }
 
           await new Promise((res) => setTimeout(res), 100);
