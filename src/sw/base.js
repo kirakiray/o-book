@@ -47,6 +47,79 @@ const responseConfig = async (cdata, relateUrl) => {
   });
 };
 
+const responseSitemap = async ({ realUrl }) => {
+  const originConfigs = await storage.getItem("config-url");
+  const sitemapRoot = await storage.getItem("sitemap-root");
+
+  const urls = [];
+
+  const root = realUrl.replace(/@\/.+$/, "");
+
+  const addUrl = (item, relativeUrl) => {
+    if (item.childs) {
+      item.childs.forEach((e) => addUrl(e, relativeUrl));
+    } else if (item.href) {
+      urls.push(new URL(item.href, relativeUrl).href);
+    }
+  };
+
+  await Promise.all(
+    originConfigs.map(async (e) => {
+      const jsonurl = new URL(e.src, root).href;
+
+      const data = await wrapFetch(jsonurl, "json");
+
+      const { navs, pages } = data;
+
+      await Promise.all(
+        navs.map(async (e) => {
+          const summaryUrl = new URL(e.summary, jsonurl).href;
+
+          const sumaryData = await getSummary(summaryUrl);
+
+          sumaryData.forEach((item) => addUrl(item, summaryUrl));
+        })
+      );
+
+      await Promise.all(
+        pages.map(async (e) => {
+          const pageUrl = new URL(e, jsonurl).href;
+
+          urls.push(pageUrl);
+        })
+      );
+    })
+  );
+
+  let sitemapStr = "";
+
+  urls.forEach((e) => {
+    const path = e.replace(root, "").replace(/\.md/, ".html");
+    let priority = 0.6;
+
+    if (/index.html$/.test(path)) {
+      priority = 1;
+    }
+
+    sitemapStr += `
+  <url>
+    <loc>${new URL(path, sitemapRoot).href}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>${priority}</priority>
+  </url>`;
+  });
+
+  return new Response(
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapStr}\n</urlset>`,
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "text/xml; charset=utf-8",
+      },
+    }
+  );
+};
+
 self.addEventListener("fetch", async (event) => {
   const { request } = event;
 
@@ -91,6 +164,10 @@ self.addEventListener("fetch", async (event) => {
             targetConfig = e;
           }
         });
+
+        if (/@\/sitemap.xml$/.test(realUrl)) {
+          return responseSitemap({ realUrl });
+        }
 
         if (/\.html$/.test(realUrl)) {
           return responseMD(
