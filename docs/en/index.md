@@ -1,6 +1,8 @@
 # obook: The easiest document building tool
 
-<!--desc: A very easiest and easy-to-use document site generation tool, you can even use it without reading the documentation.--><l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.29/blocks/simp-block.html"></l-m>
+<!--desc: A very easiest and easy-to-use document site generation tool, you can even use it without reading the documentation.-->
+
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.29/blocks/simp-block.html"></l-m>
 
 <simp-block>
 
