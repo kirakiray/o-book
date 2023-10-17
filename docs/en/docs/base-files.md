@@ -18,11 +18,11 @@ importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.28/src/sw/base.js`);
 `_preview.html` is the file that initializes the project preview. The main code is as follows:
 
 ```html
-<!-- The book-tool component is loaded through l-m -->
+<!-- Loaded the book-tool component using l-m -->
 <l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.28/src/book-tool.html"></l-m>
-<!-- The sw attribute references the sw.js file mentioned above, if the sw.js file is renamed, it needs to be updated here accordingly -->
+<!-- Referenced the sw.js file mentioned above using sw attribute. If sw.js is renamed, it needs to be changed here as well -->
 <book-tool sw="./sw.js">
-    <!-- Reference to your project configuration files -->
+    <!-- Refer to your project configuration file -->
     <source src="./en/config.json" lang="en" />
     <source src="./cn/config.json" lang="cn" />
 </book-tool>
