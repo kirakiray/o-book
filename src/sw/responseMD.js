@@ -1,4 +1,18 @@
 const responseMD = (() => {
+  const getDesc = (tokens) => {
+    let desc;
+    tokens.some((e) => {
+      if (e.type === "html" && /^\x3C\!-- *desc:.+ *-->$/.test(e.text.trim())) {
+        desc = e.text
+          .trim()
+          .replace(/\x3C\!-- *desc:(.+) *-->/, "$1")
+          .trim();
+        return true;
+      }
+    });
+    return desc;
+  };
+
   const returnDocuments = async ({ url, configUrl, tokens, configData }) => {
     let tempText = await fetch(`${host}/src/temps/article.html`).then((e) =>
       e.text()
@@ -30,9 +44,13 @@ const responseMD = (() => {
 
     const injectHead = (await storage.getItem("inject-head")) || "";
 
+    // 查找到描述字段
+    const desc = getDesc(tokens);
+
     const data = {
       host,
-      title: firstHeading.text,
+      title: firstHeading?.text || "",
+      desc: desc || firstHeading?.text || "",
       url,
       article,
       configUrl,
@@ -45,6 +63,11 @@ const responseMD = (() => {
       const reg = new RegExp(`\<%${name}%\>`, "g");
       tempText = tempText.replace(reg, data[name]);
     });
+
+    if (!desc) {
+      // remove description
+      tempText = tempText.replace(/<meta name="description"[\d\D]+?>\n*/, "");
+    }
 
     return new Response(tempText, {
       status: 200,
@@ -160,9 +183,13 @@ const responseMD = (() => {
 
     const injectHead = (await storage.getItem("inject-head")) || "";
 
+    // 查找到描述字段
+    const desc = getDesc(tokens);
+
     const data = {
       host,
-      title: firstHeading.text,
+      title: firstHeading?.text || "",
+      desc: desc || firstHeading?.text || "",
       url,
       article,
       configUrl,
