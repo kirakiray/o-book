@@ -1,6 +1,8 @@
 # obook：最簡單的文檔建站工具
 
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.28/blocks/simp-block.html"></l-m>
+<!--desc: 一個極其簡單易用的文檔站生成工具，你甚至可以不看文檔直接使用-->
+
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.29/blocks/simp-block.html"></l-m>
 
 <simp-block>
 
