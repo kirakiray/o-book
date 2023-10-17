@@ -9,6 +9,7 @@ In order to optimize search engine rankings, it is necessary to set the descript
 Once the above comments are added, the generated page will be included in the header of the target HTML file, as shown below: 
 
 ```html
+...
 <head>
 ...
   <meta name="description" content="Enter the description text for the current page here">
