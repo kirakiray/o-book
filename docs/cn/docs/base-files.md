@@ -10,7 +10,7 @@
 
 ```javascript
 // sw.js
-importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.30/src/sw/base.js`);
+importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.31/src/sw/base.js`);
 ```
 
 ### _preview.html
@@ -19,7 +19,7 @@ importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.30/src/sw/base.js`);
 
 ```html
 <!-- 通过 l-m 加载了 book-tool 组件 -->
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.30/src/book-tool.html"></l-m>
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.31/src/book-tool.html"></l-m>
 <!-- 通过 sw 属性引用上面提到的 sw.js 文件，如果 sw.js 更换了命名，这里就需要对应着更换 -->
 <book-tool sw="./sw.js">
     <!-- 引用到你的项目配置文件 -->
