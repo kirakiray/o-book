@@ -376,6 +376,38 @@ importScripts('${selfWokerPath}');`;
               if (!results.length) {
                 this.isNoResult = true;
               }
+
+              // 优先级排序
+              // 越是标题，越靠前
+              // 文字越少，越靠前
+              if (results.length) {
+                results.forEach((e) => {
+                  let count = 0;
+                  if (e.matchs) {
+                    e.matchs.forEach((item) => {
+                      if (/^h/.test(item.type)) {
+                        const spid = 7 - parseInt(item.type.replace("h", ""));
+
+                        // 标题加分
+                        count += spid * 1000;
+
+                        // 直接等于标题，最优先
+                        if (item.snippets.trim() === text) {
+                          count += 1000000;
+                        }
+                      } else {
+                        count += 1;
+                      }
+                    });
+                  }
+                  e.count = count;
+                });
+              }
+
+              results.sort((a, b) => b.count - a.count);
+
+              console.log(results);
+
               results.forEach((e) => {
                 e.matchs.forEach((item) => {
                   item.heading = wrapSubstringWithSpan(
