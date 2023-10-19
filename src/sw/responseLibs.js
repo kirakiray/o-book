@@ -77,7 +77,7 @@ const responseLibs = (() => {
 
           switch (e.type) {
             case "heading":
-              t = "h";
+              t = "h" + e.depth;
               break;
             case "list":
               t = "l";

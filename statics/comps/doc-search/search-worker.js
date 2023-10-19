@@ -36,8 +36,8 @@ function search(searchText, data, path) {
         return;
       }
 
-      if (e.t === "h") {
-        if (index === 0) {
+      if (/^h/.test(e.t)) {
+        if (e.t === "h1") {
           title = e.c;
         }
         heading = e.c;
