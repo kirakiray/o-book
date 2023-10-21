@@ -10,6 +10,10 @@ isDark.watch(() => {
 });
 
 export const getLang = async () => {
+  if (!window.configUrl) {
+    return;
+  }
+
   const cdata = await configData;
 
   const currentConfigUrl = new URL(configUrl, location.href).href;
@@ -38,6 +42,11 @@ export const getLang = async () => {
 };
 
 export const configData = new Promise(async (resolve) => {
+  if (!window.configUrl) {
+    resolve();
+    return;
+  }
+
   const configPath = new URL(configUrl, location.href).href;
   let cdata = await fetch(configPath).then((e) => e.json());
 
