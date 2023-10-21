@@ -10,7 +10,7 @@ isDark.watch(() => {
 });
 
 export const getLang = async () => {
-  if (!window.configUrl) {
+  if (typeof configUrl === "undefined") {
     return;
   }
 
@@ -42,7 +42,7 @@ export const getLang = async () => {
 };
 
 export const configData = new Promise(async (resolve) => {
-  if (!window.configUrl) {
+  if (typeof configUrl === "undefined") {
     resolve();
     return;
   }

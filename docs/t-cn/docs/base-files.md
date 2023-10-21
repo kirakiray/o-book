@@ -10,7 +10,7 @@
 
 ```javascript
 // sw.js
-importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.33/src/sw/base.js`);
+importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.34/src/sw/base.js`);
 ```
 
 ### _preview.html
@@ -19,7 +19,7 @@ importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.33/src/sw/base.js`);
 
 ```html
 <!-- 通過 l-m 加載了 book-tool 組件 -->
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.33/src/book-tool.html"></l-m>
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.34/src/book-tool.html"></l-m>
 <!-- 通過 sw 屬性引用上面提到的 sw.js 文件，如果 sw.js 更換了命名，這裏就需要對應著更換 -->
 <book-tool sw="./sw.js">
     <!-- 引用到你的項目配置文件 -->
