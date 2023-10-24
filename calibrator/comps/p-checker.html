@@ -1,0 +1,80 @@
+<template component>
+  <style>
+    :host {
+      display: block;
+    }
+    .line {
+      display: flex;
+      margin: 8px;
+      border-radius: 5px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0 0 5px;
+    }
+    .block {
+      position: relative;
+      flex: 1;
+    }
+    pre {
+      width: calc(49vw - 160px);
+      overflow-x: auto;
+      border: #aaa solid 1px;
+      border-radius: 5px;
+      margin: 8px;
+      padding: 8px;
+      font-size: 12px;
+      line-height: 18px;
+    }
+    h4 {
+      margin: 0;
+      padding: 8px 0 0 10px;
+    }
+  </style>
+  <x-if :value="type === 1">
+    <div class="line">
+      <div class="block">不存在这个段落的翻译：{{key}}</div>
+    </div>
+  </x-if>
+  <x-else-if :value="type === 2 || type === 3">
+    <div class="line">
+      <div class="block">
+        <h4>t-cn 回车数:{{mainNum}}</h4>
+
+        <pre><div class="content" contenteditable="plaintext-only">{{main}}</div></pre>
+      </div>
+      <div class="block">
+        <h4>en 回车数:{{rightNum}} 错误: {{desc}}</h4>
+
+        <pre><div class="content" id="editor" contenteditable="plaintext-only">{{right}}</div></pre>
+        <div style="font-size: 12px">
+          {{key}} <button on:click="saveCode">保存</button>
+        </div>
+      </div>
+    </div>
+  </x-else-if>
+  <script>
+    export default {
+      data: {
+        type: 0,
+        key: "",
+        main: "",
+        right: "",
+        _handler: {},
+      },
+      proto: {
+        async saveCode() {
+          const writable = await this._handler.createWritable();
+          await writable.write(this.shadow.$("#editor").text);
+          await writable.close();
+        },
+        get desc() {
+          return this.type === 2 ? "换行符数量不一致" : "出现了中文";
+        },
+        get mainNum() {
+          return /\n/.exec(this.main)?.length || 0;
+        },
+        get rightNum() {
+          return /\n/.exec(this.right)?.length || 0;
+        },
+      },
+    };
+  </script>
+</template>

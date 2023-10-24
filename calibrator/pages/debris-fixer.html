@@ -1,0 +1,111 @@
+<template page>
+  <l-m src="../comps/p-checker.html"></l-m>
+  <x-if :value="!ok"> 请先在首页选择一个目录 </x-if>
+  <div>
+    当前对比的语言：<select :value="lang" on:change="changeSelect">
+      <template is="replace-temp">
+        <x-fill :value="options">
+          <option>{{$data}}</option>
+        </x-fill>
+      </template>
+    </select>
+  </div>
+
+  <x-fill :value="maybeError">
+    <p-checker
+      :main="$data.main"
+      :right="$data.right"
+      :type="$data.type"
+      :key="$data.key"
+      :_handler="$data._handler"
+    ></p-checker>
+  </x-fill>
+
+  <script>
+    import { caches, main } from "../data.js";
+
+    export default {
+      parent: "../layout/main.html",
+      data: {
+        ok: false,
+        // 可能有问题的对象集合
+        maybeError: [],
+        options: [],
+        lang: "en",
+      },
+      proto: {
+        changeSelect(e) {
+          this.lang = e.target.value;
+          this.maybeError = [];
+        },
+        // 检查t-cn和其他语言段落，对比那些行数会有不一样
+        async check() {
+          // 和繁体中文作对比
+          const tcn = caches.get("t-cn");
+          // const en = caches.get("en");
+          const en = caches.get(this.lang);
+
+          const maybeError = [];
+
+          for await (let [key, e] of tcn.entries()) {
+            let enFileHandler;
+            try {
+              enFileHandler = await en.getFileHandle(key);
+            } catch (err) {
+              maybeError.push({
+                type: 1,
+                key,
+                // desc: "en中不存在这个段落的翻译",
+              });
+              continue;
+            }
+            const tcnContent = await e.getFile().then((e) => e.text());
+            const enContent = await enFileHandler
+              .getFile()
+              .then((e) => e.text());
+
+            if (
+              enContent.split(/\n/g).length !== tcnContent.split(/\n/g).length
+            ) {
+              maybeError.push({
+                type: 2,
+                key,
+                main: tcnContent,
+                right: enContent,
+                _handler: enFileHandler,
+                // desc: "en中的换行数不一样",
+              });
+              continue;
+            }
+
+            if (/[\u4e00-\u9fa5]+/.test(enContent)) {
+              maybeError.push({
+                type: 3,
+                key,
+                main: tcnContent,
+                right: enContent,
+                _handler: enFileHandler,
+                // desc: "转换的代码出现中文",
+              });
+            }
+          }
+
+          console.log("maybeError:", maybeError);
+
+          this.maybeError = maybeError;
+        },
+      },
+      ready() {
+        this.ok = !!main.value;
+        if (!main.value) {
+          this.back();
+          return;
+        }
+
+        this.options = Array.from(caches.keys()).filter((e) => e !== "t-cn");
+
+        this.check();
+      },
+    };
+  </script>
+</template>
