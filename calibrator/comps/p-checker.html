@@ -15,7 +15,8 @@
     }
     pre {
       width: calc(49vw - 160px);
-      overflow-x: auto;
+    }
+    .content {
       border: #aaa solid 1px;
       border-radius: 5px;
       margin: 8px;
@@ -80,12 +81,7 @@
           this.refresh();
         },
         refresh() {
-          const itemError = getBlockError(
-            this.main,
-            this.right,
-            this.key,
-            this._handler
-          );
+          const itemError = getBlockError(this.main, this.right);
 
           if (itemError) {
             Object.assign(this, itemError);

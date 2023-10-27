@@ -63,12 +63,7 @@
               .getFile()
               .then((e) => e.text());
 
-            const itemError = getBlockError(
-              tcnContent,
-              enContent,
-              key,
-              enFileHandler
-            );
+            const itemError = getBlockError(tcnContent, enContent);
 
             if (itemError) {
               maybeError.push({

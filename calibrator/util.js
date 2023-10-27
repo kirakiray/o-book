@@ -1,12 +1,22 @@
-export const getBlockError = (
-  beforeContent,
-  afterContent,
-  key,
-  fileHandler
-) => {
+export const getBlockError = (beforeContent, afterContent) => {
+  if (beforeContent.match(/```.+/g)) {
+    let error;
+    beforeContent.match(/```.+/g).forEach((str) => {
+      if (!afterContent.includes(str)) {
+        error = {
+          type: 2,
+          desc: "代码块语言错误",
+        };
+      }
+    });
+    if (error) {
+      return error;
+    }
+  }
+
   // 判断特殊字符是否一致
   let charError = "";
-  ["\\n", "#", "<", ">", "`", "\\[", "\\]"].forEach((char, index) => {
+  ["\\n", "#", "<", ">", "\\[", "\\]"].forEach((char, index) => {
     const reg = new RegExp(char, "g");
     const leftLen = beforeContent.match(reg)?.length || 0;
     const rightLen = afterContent.match(reg)?.length || 0;
@@ -23,10 +33,6 @@ export const getBlockError = (
   if (charError) {
     return {
       type: 4,
-      // key,
-      // main: beforeContent,
-      // right: afterContent,
-      // _handler: fileHandler,
       desc: charError,
     };
   }
@@ -35,10 +41,6 @@ export const getBlockError = (
   if (/[\u4e00-\u9fa5]+/.test(afterContent)) {
     return {
       type: 3,
-      // key,
-      // main: beforeContent,
-      // right: afterContent,
-      // _handler: fileHandler,
       desc: "转换的代码出现中文",
     };
   }
