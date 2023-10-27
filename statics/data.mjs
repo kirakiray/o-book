@@ -33,6 +33,8 @@ export const getLang = async () => {
     case "t-cn":
     case "en":
     case "es":
+    case "ja":
+    case "ko":
       break;
     default:
       selectedLang = "";

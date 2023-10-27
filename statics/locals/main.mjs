@@ -64,6 +64,38 @@ const es = {
   hideunimportcode: "Ocultar código no importante",
 };
 
+const ja = {
+  search: "検索",
+  recent: "最近",
+  norecent: "検索履歴なし",
+  noresult: "「{{stext}}」に関する結果が見つかりません",
+  inpreview: "プレビュー中",
+  preview: "ウェブページのプレビュー",
+  tabopen: "新しいタブで開く",
+  refresh: "ページをリフレッシュ",
+  previous: "前のページ",
+  next: "次のページ",
+  morelang: "他の言語",
+  showallcode: "すべてのコードを表示",
+  hideunimportcode: "重要でないコードを非表示",
+};
+
+const ko = {
+  search: "검색",
+  recent: "최근",
+  norecent: "검색 기록 없음",
+  noresult: '"{{stext}}"에 대한 결과가 없습니다',
+  inpreview: "미리보기 중",
+  preview: "웹 페이지 미리보기",
+  tabopen: "새 탭에서 열기",
+  refresh: "페이지 새로고침",
+  previous: "이전",
+  next: "다음",
+  morelang: "다른 언어",
+  showallcode: "모든 코드 표시",
+  hideunimportcode: "중요하지 않은 코드 숨기기",
+};
+
 const locals = $.stanz(en);
 
 locals._t = (key, data) => {
@@ -87,6 +119,12 @@ getLang().then((lang) => {
       break;
     case "es":
       Object.assign(locals, es);
+      break;
+    case "ja":
+      Object.assign(locals, ja);
+      break;
+    case "ko":
+      Object.assign(locals, ko);
       break;
   }
 });

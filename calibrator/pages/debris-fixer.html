@@ -1,0 +1,101 @@
+<template page>
+  <l-m src="../comps/p-checker.html"></l-m>
+  <x-if :value="!ok"> 请先在首页选择一个目录 </x-if>
+  <div>
+    当前对比的语言：<select :value="lang" on:change="changeSelect">
+      <template is="replace-temp">
+        <x-fill :value="options">
+          <option>{{$data}}</option>
+        </x-fill>
+      </template>
+    </select>
+  </div>
+
+  <x-fill :value="maybeError">
+    <p-checker
+      :main="$data.main"
+      sync:right="$data.right"
+      :_handler="$data._handler"
+      :key="$data.key"
+      :_onclose="()=>$host.closeItem($index)"
+    ></p-checker>
+  </x-fill>
+
+  <x-if :value="ok && !maybeError.length">未发现错误</x-if>
+
+  <script>
+    import { caches, main } from "../data.js";
+    import { getBlockError } from "../util.js";
+
+    export default {
+      parent: "../layout/main.html",
+      data: {
+        ok: false,
+        // 可能有问题的对象集合
+        maybeError: [],
+        options: [],
+        lang: "en",
+      },
+      proto: {
+        closeItem(index) {
+          this.maybeError.splice(index, 1);
+        },
+        changeSelect(e) {
+          this.lang = e.target.value;
+          this.maybeError = [];
+          this.check();
+        },
+        // 检查t-cn和其他语言段落，对比那些行数会有不一样
+        async check() {
+          // 和繁体中文作对比
+          const tcn = caches.get("t-cn");
+          // const en = caches.get("en");
+          const en = caches.get(this.lang);
+
+          const maybeError = [];
+
+          for await (let [key, e] of tcn.entries()) {
+            let enFileHandler;
+            try {
+              enFileHandler = await en.getFileHandle(key);
+            } catch (err) {
+              maybeError.push({
+                key,
+                // desc: "en中不存在这个段落的翻译",
+              });
+              continue;
+            }
+            const tcnContent = await e.getFile().then((e) => e.text());
+            const enContent = await enFileHandler
+              .getFile()
+              .then((e) => e.text());
+
+            const itemError = getBlockError(tcnContent, enContent);
+
+            if (itemError) {
+              maybeError.push({
+                main: tcnContent,
+                right: enContent,
+                _handler: enFileHandler,
+                key,
+              });
+            }
+          }
+
+          this.maybeError = maybeError;
+        },
+      },
+      ready() {
+        this.ok = !!main.value;
+        if (!main.value) {
+          this.back();
+          return;
+        }
+
+        this.options = Array.from(caches.keys()).filter((e) => e !== "t-cn");
+
+        this.check();
+      },
+    };
+  </script>
+</template>

@@ -7,7 +7,8 @@ const langMap = {
   "t-cn": "traditional Chinese",
   en: "English",
   es: "Spanish",
-  jp: "Japanese",
+  ja: "Japanese",
+  ko: "Korean",
 };
 
 const emptyStr = `n${Math.random().toString(32).slice(2)}`;
@@ -23,6 +24,11 @@ export default async function translate({ content, targetLang, originLang }) {
     return chn.t2s(content);
   }
 
+  // 如果来源是中文，且要翻译的内容不包含中文，直接返回原文
+  if (originLang === "cn" && !/[\u4e00-\u9fa5]/.test(content)) {
+    return content;
+  }
+
   if (!langMap[targetLang]) {
     throw new Error(`${targetLang} not supported`);
   }
@@ -31,70 +37,62 @@ export default async function translate({ content, targetLang, originLang }) {
     throw new Error(`${originLang} not supported`);
   }
 
-  // const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in Markdown content for %%%%
-  // Do not think about what's in it, just do the translation work
-  // Keep the Markdown markup structure. Do not add or remove links. Do not change any URL.
-  // Never change the contents of code blocks even if they appear to have a bug.
+  // const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in text or Markdown content for %%%%
+  // Do not think about what's in it, just do the translation work, cannot add more content or change content.
+  // Do not add content after the colon/：.
+  // Keep the Markdown markup structure. Do not add or remove links. Do not change any URL. Do not remove code block markup
+  // Never change the contents of code even if they appear to have a bug.
   // If the text can not be translated, then simply write \"${emptyStr}\".
-  
+
   // %%%%
-  // ${content}
-  // %%%%`;
+  // ${content}%%%%`;
+  // rubish gpt
+  let result = "";
+  let count = 0;
 
-  const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in text or Markdown content for %%%%
-Do not think about what's in it, just do the translation work, cannot add more content or change content.
-Do not add content after the colon/：.
-Keep the Markdown markup structure. Do not add or remove links. Do not change any URL. Do not remove code block markup
-Never change the contents of code blocks even if they appear to have a bug.
-If the text can not be translated, then simply write \"${emptyStr}\".
+  while (count < 2) {
+    const prompt = `Translate ${langMap[originLang]} to ${langMap[targetLang]} in text or Markdown content delimited by %%%%
+    If the text can not be translated, then simply write \"${emptyStr}\".
+    
+    %%%%
+    ${content}%%%%`;
 
-%%%%
-${content}%%%%`;
+    result = await chat(prompt).catch(() => {
+      // 再试一次
+      return chat(prompt);
+    });
 
-  let result = await chat(prompt).catch(() => {
-    // 再试一次
-    return chat(prompt);
-  });
+    // chatgpt 可能会不认识某些语言，如果识别不了，这时候抽取内容
+    if (/%%%%[\s\S]+%%%%/.test(result)) {
+      result = result.replace(/[\s\S]*%%%%\n?([\s\S]+?)\n?%%%%[\s\S]*/, "$1");
+    }
 
-  // console.log(content);
-  // console.log(result);
-  // debugger;
+    // 去除干扰字段
+    result = result.replace(/\n*%+%\n*/g, "");
 
-  // chatgpt 可能会不认识某些语言，如果识别不了，这时候抽取内容
-  if (/%%%%[\s\S]+%%%%/.test(result)) {
-    const c = result.replace(/[\s\S]*%%%%\n?([\s\S]+?)\n?%%%%[\s\S]*/, "$1");
-    // debugger;
-    return c;
+    // 以下情况进行充实
+    // 1空白 2带有空白标识 3和原文一样
+    if (!result.trim() || result.includes(emptyStr) || result === content) {
+      count++;
+    } else {
+      count = 4;
+    }
   }
 
-  // 去除干扰字段
-  result = result.replace(/\n*%+%\n*/g, "");
-
   if (!result.trim() || result.includes(emptyStr)) {
-    // debugger;
     return content;
   }
 
-  // 保证末尾的回车数不变
-  let lastLength = content.match(/\n+$/) ? content.match(/\n+$/)[0].length : 0;
-  if (lastLength) {
-    // 保证返回的值也保留对应的回车
-    let i = result.match(/\n+$/) ? result.match(/\n+$/)[0].length : 0;
-    for (; i < lastLength; i++) {
-      result += "\n";
-    }
-  }
+  return fixNewlines(content, result);
+}
 
-  // 保证开头的回车数不变
-  let beginLength = content.match(/^\n+/) ? content.match(/^\n+/)[0].length : 0;
-  if (beginLength) {
-    let i = result.match(/^\n+/) ? result.match(/^\n+/)[0].length : 0;
-    for (; i < beginLength; i++) {
-      result = "\n" + result;
-    }
-  }
+function fixNewlines(a, b) {
+  const leadingNewlines = a.match(/^\n*/)[0]; // 匹配 a 字符串开头的换行符
+  const trailingNewlines = a.match(/\n*$/)[0]; // 匹配 a 字符串结尾的换行符
 
-  return result;
+  const fixedB = leadingNewlines + b.trim() + trailingNewlines; // 修正 b 字符串的前后换行符，并去除首尾空白
+
+  return fixedB;
 }
 
 export async function chat(prompt) {

@@ -1,0 +1,101 @@
+<template component>
+  <style>
+    :host {
+      display: block;
+    }
+    .line {
+      display: flex;
+      margin: 8px;
+      border-radius: 5px;
+      box-shadow: rgba(0, 0, 0, 0.3) 0 0 5px;
+    }
+    .block {
+      position: relative;
+      flex: 1;
+    }
+    pre {
+      width: calc(49vw - 160px);
+    }
+    .content {
+      border: #aaa solid 1px;
+      border-radius: 5px;
+      margin: 8px;
+      padding: 8px;
+      font-size: 12px;
+      line-height: 18px;
+      white-space: wrap;
+    }
+    h4 {
+      margin: 0;
+      padding: 8px 0 0 10px;
+    }
+    .bottom {
+      font-size: 12px;
+      padding: 0 0 8px 8px;
+    }
+  </style>
+  <x-if :value="type === 1">
+    <div class="line">
+      <div class="block">不存在这个段落的翻译：{{key}}</div>
+    </div>
+  </x-if>
+  <!-- <x-else-if :value="type === 2 || type === 3 || type === 4"> </x-else-if> -->
+  <div class="line">
+    <div class="block">
+      <h4>原文</h4>
+      <pre><div class="content" contenteditable="plaintext-only">{{main}}</div></pre>
+      <div class="bottom">{{key}}</div>
+    </div>
+    <div class="block">
+      <h4>{{desc}}</h4>
+      <pre><div class="content" id="editor" contenteditable="plaintext-only" on:input="changeContent" :text="right"></div></pre>
+      <div class="bottom">
+        <button on:click="saveCode">保存</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    import { getBlockError } from "../util.js";
+
+    export default {
+      data: {
+        type: 0,
+        key: "",
+        main: "",
+        right: "",
+        desc: "",
+        _handler: {},
+        _onclose: null,
+      },
+      proto: {
+        async saveCode() {
+          const writable = await this._handler.createWritable();
+          await writable.write(this.shadow.$("#editor").text);
+          await writable.close();
+          if (this._ok) {
+            // this.remove();
+            this._onclose && this._onclose();
+          }
+        },
+        changeContent(e) {
+          this.right = $(e.target).text;
+          this.refresh();
+        },
+        refresh() {
+          const itemError = getBlockError(this.main, this.right);
+
+          if (itemError) {
+            Object.assign(this, itemError);
+            this._ok = null;
+          } else {
+            this.desc = "调整完毕";
+            this._ok = 1;
+          }
+        },
+      },
+      attached() {
+        this.refresh();
+      },
+    };
+  </script>
+</template>
