@@ -20,6 +20,8 @@
     ></p-checker>
   </x-fill>
 
+  <x-if :value="ok && !maybeError.length">未发现错误</x-if>
+
   <script>
     import { caches, main } from "../data.js";
     import { getBlockError } from "../util.js";
