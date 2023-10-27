@@ -37,8 +37,14 @@ export const getBlockError = (beforeContent, afterContent) => {
     };
   }
 
+  const japaneseRegex =
+    /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ー々〆〤]+/gu;
+
   // 带有中文
-  if (/[\u4e00-\u9fa5]+/.test(afterContent)) {
+  if (
+    /[\u4e00-\u9fa5]+/.test(afterContent) &&
+    !japaneseRegex.test(afterContent)
+  ) {
     return {
       type: 3,
       desc: "转换的代码出现中文",

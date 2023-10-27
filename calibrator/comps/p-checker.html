@@ -39,22 +39,21 @@
       <div class="block">不存在这个段落的翻译：{{key}}</div>
     </div>
   </x-if>
-  <x-else-if :value="type === 2 || type === 3 || type === 4">
-    <div class="line">
-      <div class="block">
-        <h4>原文</h4>
-        <pre><div class="content" contenteditable="plaintext-only">{{main}}</div></pre>
-        <div class="bottom">{{key}}</div>
-      </div>
-      <div class="block">
-        <h4>{{desc}}</h4>
-        <pre><div class="content" id="editor" contenteditable="plaintext-only" on:input="changeContent" :text="right"></div></pre>
-        <div class="bottom">
-          <button on:click="saveCode">保存</button>
-        </div>
+  <!-- <x-else-if :value="type === 2 || type === 3 || type === 4"> </x-else-if> -->
+  <div class="line">
+    <div class="block">
+      <h4>原文</h4>
+      <pre><div class="content" contenteditable="plaintext-only">{{main}}</div></pre>
+      <div class="bottom">{{key}}</div>
+    </div>
+    <div class="block">
+      <h4>{{desc}}</h4>
+      <pre><div class="content" id="editor" contenteditable="plaintext-only" on:input="changeContent" :text="right"></div></pre>
+      <div class="bottom">
+        <button on:click="saveCode">保存</button>
       </div>
     </div>
-  </x-else-if>
+  </div>
   <script>
     import { getBlockError } from "../util.js";
 
@@ -66,6 +65,7 @@
         right: "",
         desc: "",
         _handler: {},
+        _onclose: null,
       },
       proto: {
         async saveCode() {
@@ -73,7 +73,8 @@
           await writable.write(this.shadow.$("#editor").text);
           await writable.close();
           if (this._ok) {
-            this.remove();
+            // this.remove();
+            this._onclose && this._onclose();
           }
         },
         changeContent(e) {

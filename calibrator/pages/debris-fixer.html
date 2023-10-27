@@ -17,6 +17,7 @@
       sync:right="$data.right"
       :_handler="$data._handler"
       :key="$data.key"
+      :_onclose="()=>$host.closeItem($index)"
     ></p-checker>
   </x-fill>
 
@@ -36,9 +37,13 @@
         lang: "en",
       },
       proto: {
+        closeItem(index) {
+          this.maybeError.splice(index, 1);
+        },
         changeSelect(e) {
           this.lang = e.target.value;
           this.maybeError = [];
+          this.check();
         },
         // 检查t-cn和其他语言段落，对比那些行数会有不一样
         async check() {

@@ -71,6 +71,8 @@
       cn: "简体中文",
       "t-cn": "繁体中文",
       es: "española",
+      ja: "日本語",
+      ko: "한국어",
     };
 
     const locals = {
@@ -93,6 +95,16 @@
         desc: "El documento actual está disponible en español, ¿se pasa al español?",
         neverRemind: "recordatorio eterno",
         btn: "Cambiar al español",
+      },
+      ja: {
+        desc: "現在の文書には日本語版がありますが、日本語に切り替わりますか？",
+        neverRemind: "リマインドしない",
+        btn: "日本語に切り替える",
+      },
+      ko: {
+        desc: "현재 문서에 한국어 버전이 있는데 한국어로 전환되나요?",
+        neverRemind: "다시 리마인드하지 마세요",
+        btn: "한국어로 전환",
       },
     };
 
@@ -139,6 +151,10 @@
             }
           } else if (/^es-/.test(navigator.language)) {
             localLang = "es";
+          } else if (/^ja-/.test(navigator.language)) {
+            localLang = "ja";
+          } else if (/^ko-/.test(navigator.language)) {
+            localLang = "ko";
           } else {
             localLang = "en";
           }

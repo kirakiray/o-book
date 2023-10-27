@@ -7,7 +7,8 @@ const langMap = {
   "t-cn": "traditional Chinese",
   en: "English",
   es: "Spanish",
-  jp: "Japanese",
+  ja: "Japanese",
+  ko: "Korean",
 };
 
 const emptyStr = `n${Math.random().toString(32).slice(2)}`;
