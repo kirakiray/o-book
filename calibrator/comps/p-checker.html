@@ -22,10 +22,15 @@
       padding: 8px;
       font-size: 12px;
       line-height: 18px;
+      white-space: wrap;
     }
     h4 {
       margin: 0;
       padding: 8px 0 0 10px;
+    }
+    .bottom {
+      font-size: 12px;
+      padding: 0 0 8px 8px;
     }
   </style>
   <x-if :value="type === 1">
@@ -33,30 +38,32 @@
       <div class="block">不存在这个段落的翻译：{{key}}</div>
     </div>
   </x-if>
-  <x-else-if :value="type === 2 || type === 3">
+  <x-else-if :value="type === 2 || type === 3 || type === 4">
     <div class="line">
       <div class="block">
-        <h4>t-cn 回车数:{{mainNum}}</h4>
-
+        <h4>原文</h4>
         <pre><div class="content" contenteditable="plaintext-only">{{main}}</div></pre>
+        <div class="bottom">{{key}}</div>
       </div>
       <div class="block">
-        <h4>en 回车数:{{rightNum}} 错误: {{desc}}</h4>
-
-        <pre><div class="content" id="editor" contenteditable="plaintext-only">{{right}}</div></pre>
-        <div style="font-size: 12px">
-          {{key}} <button on:click="saveCode">保存</button>
+        <h4>{{desc}}</h4>
+        <pre><div class="content" id="editor" contenteditable="plaintext-only" on:input="changeContent" :text="right"></div></pre>
+        <div class="bottom">
+          <button on:click="saveCode">保存</button>
         </div>
       </div>
     </div>
   </x-else-if>
   <script>
+    import { getBlockError } from "../util.js";
+
     export default {
       data: {
         type: 0,
         key: "",
         main: "",
         right: "",
+        desc: "",
         _handler: {},
       },
       proto: {
@@ -64,16 +71,33 @@
           const writable = await this._handler.createWritable();
           await writable.write(this.shadow.$("#editor").text);
           await writable.close();
+          if (this._ok) {
+            this.remove();
+          }
         },
-        get desc() {
-          return this.type === 2 ? "换行符数量不一致" : "出现了中文";
+        changeContent(e) {
+          this.right = $(e.target).text;
+          this.refresh();
         },
-        get mainNum() {
-          return /\n/.exec(this.main)?.length || 0;
+        refresh() {
+          const itemError = getBlockError(
+            this.main,
+            this.right,
+            this.key,
+            this._handler
+          );
+
+          if (itemError) {
+            Object.assign(this, itemError);
+            this._ok = null;
+          } else {
+            this.desc = "调整完毕";
+            this._ok = 1;
+          }
         },
-        get rightNum() {
-          return /\n/.exec(this.right)?.length || 0;
-        },
+      },
+      attached() {
+        this.refresh();
       },
     };
   </script>

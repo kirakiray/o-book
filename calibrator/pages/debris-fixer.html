@@ -14,15 +14,15 @@
   <x-fill :value="maybeError">
     <p-checker
       :main="$data.main"
-      :right="$data.right"
-      :type="$data.type"
-      :key="$data.key"
+      sync:right="$data.right"
       :_handler="$data._handler"
+      :key="$data.key"
     ></p-checker>
   </x-fill>
 
   <script>
     import { caches, main } from "../data.js";
+    import { getBlockError } from "../util.js";
 
     export default {
       parent: "../layout/main.html",
@@ -53,7 +53,6 @@
               enFileHandler = await en.getFileHandle(key);
             } catch (err) {
               maybeError.push({
-                type: 1,
                 key,
                 // desc: "en中不存在这个段落的翻译",
               });
@@ -64,33 +63,22 @@
               .getFile()
               .then((e) => e.text());
 
-            if (
-              enContent.split(/\n/g).length !== tcnContent.split(/\n/g).length
-            ) {
-              maybeError.push({
-                type: 2,
-                key,
-                main: tcnContent,
-                right: enContent,
-                _handler: enFileHandler,
-                // desc: "en中的换行数不一样",
-              });
-              continue;
-            }
+            const itemError = getBlockError(
+              tcnContent,
+              enContent,
+              key,
+              enFileHandler
+            );
 
-            if (/[\u4e00-\u9fa5]+/.test(enContent)) {
+            if (itemError) {
               maybeError.push({
-                type: 3,
-                key,
                 main: tcnContent,
                 right: enContent,
                 _handler: enFileHandler,
-                // desc: "转换的代码出现中文",
+                key,
               });
             }
           }
-
-          console.log("maybeError:", maybeError);
 
           this.maybeError = maybeError;
         },
