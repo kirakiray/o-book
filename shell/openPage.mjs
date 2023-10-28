@@ -12,3 +12,4 @@ export const openPage = async (url) => {
   // 在这里可以执行更多的浏览器操作
   // await browser.close();
 };
+
