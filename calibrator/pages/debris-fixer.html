@@ -9,6 +9,7 @@
         </x-fill>
       </template>
     </select>
+    <button on:click="fixAll">一键自动修复</button>
   </div>
 
   <x-fill :value="maybeError">
@@ -37,6 +38,9 @@
         lang: "en",
       },
       proto: {
+        fixAll() {
+          this.shadow.all("p-checker").forEach((e) => e.autoFix());
+        },
         closeItem(index) {
           this.maybeError.splice(index, 1);
         },
