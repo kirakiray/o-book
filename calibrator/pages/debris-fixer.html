@@ -57,6 +57,13 @@
           });
 
           this.collections = [];
+
+          setTimeout(() => {
+            this.shadow.all("p-checker").forEach((e) => {
+              e.refresh();
+              e.saveCode();
+            });
+          }, 100);
         },
         collect() {
           const collections = [];
