@@ -37,7 +37,8 @@ export const getBlockError = (beforeContent, afterContent) => {
     };
   }
 
-  const japaneseRegex = /[\u0800-\u4e00]/;
+  // const japaneseRegex = /[\u0800-\u4e00]/;
+  const japaneseRegex = /[\u3040-\u309F\u30A0-\u30FF]/;
 
   // 带有中文
   if (

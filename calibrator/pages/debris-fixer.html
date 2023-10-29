@@ -47,8 +47,13 @@
           const { data } = e;
           const newcollections = data.collections;
 
-          this.maybeError.forEach((e, i) => {
-            e.right = newcollections[i].content;
+          const matchs = [];
+          this.maybeError.forEach((e) => {
+            const target = newcollections.find((e2) => e2.key === e.key);
+
+            if (target) {
+              e.right = target.content;
+            }
           });
 
           this.collections = [];
