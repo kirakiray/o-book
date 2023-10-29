@@ -12,6 +12,7 @@
     <button on:click="fixAll">一键自动修复</button>
   </div>
 
+  <div>错误个数：{{maybeError.length}}</div>
   <x-fill :value="maybeError">
     <p-checker
       :main="$data.main"

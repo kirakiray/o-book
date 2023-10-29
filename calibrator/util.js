@@ -37,8 +37,7 @@ export const getBlockError = (beforeContent, afterContent) => {
     };
   }
 
-  const japaneseRegex =
-    /[\p{Script=Hiragana}\p{Script=Katakana}\p{Script=Han}ー々〆〤]+/gu;
+  const japaneseRegex = /[\u0800-\u4e00]/;
 
   // 带有中文
   if (
