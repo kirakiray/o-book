@@ -38,7 +38,7 @@ if (argv.includes("update")) {
   argv.includes("--version")
 ) {
   // 打包时，这个字符串会被替换版本号
-  console.log("obook@2.1.38".replace("obook@", ""));
+  console.log("obook@2.1.39".replace("obook@", ""));
 } else {
   console.log(`
 Please select the command you want to execute:
