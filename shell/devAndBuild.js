@@ -4,7 +4,7 @@ import st from "koa-static";
 import open from "open";
 import AdmZip from "adm-zip";
 import { rimraf } from "rimraf";
-// import { openPage } from "./openPage.mjs";
+import { openPage } from "./openPage.mjs";
 
 export default async function dev({ obook }) {
   const targetHtml = path.resolve(process.env.PWD, obook.input);
@@ -98,8 +98,8 @@ export default async function dev({ obook }) {
   if (process.argv.includes("build")) {
     console.log("The project is being packaged");
 
-    // client = await openPage(`http://localhost:${port}/${inputName}#upload-zip`);
-    await open(`http://localhost:${port}/${inputName}#upload-zip`);
+    client = await openPage(`http://localhost:${port}/${inputName}#upload-zip`);
+    // await open(`http://localhost:${port}/${inputName}#upload-zip`);
   }
 
   if (process.argv.includes("dev")) {
