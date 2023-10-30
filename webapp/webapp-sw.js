@@ -126,7 +126,7 @@ importScripts(`../src/sw/base.js`);
               )
             );
             agentReady = false;
-          }, 5000);
+          }, 300000);
         })
       );
     }
