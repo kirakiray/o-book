@@ -1,5 +1,7 @@
 <template page>
   <l-m src="../comps/p-checker.html"></l-m>
+  <l-m src="../comps/p-collect.html"></l-m>
+  <p-collect :collections="collections" on:submit="collectSubmit"></p-collect>
   <x-if :value="!ok"> 请先在首页选择一个目录 </x-if>
   <div>
     当前对比的语言：<select :value="lang" on:change="changeSelect">
@@ -9,8 +11,11 @@
         </x-fill>
       </template>
     </select>
+    <button on:click="fixAll">一键自动修复</button>
+    <button on:click="collect">收集器</button>
   </div>
 
+  <div>错误个数：{{maybeError.length}}</div>
   <x-fill :value="maybeError">
     <p-checker
       :main="$data.main"
@@ -35,8 +40,53 @@
         maybeError: [],
         options: [],
         lang: "en",
+        collections: [],
       },
       proto: {
+        collectSubmit(e) {
+          const { data } = e;
+          const newcollections = data.collections;
+
+          const matchs = [];
+          this.maybeError.forEach((e) => {
+            const target = newcollections.find((e2) => e2.key === e.key);
+
+            if (target) {
+              e.right = target.content;
+            }
+          });
+
+          this.collections = [];
+
+          setTimeout(() => {
+            this.shadow.all("p-checker").forEach((e) => {
+              e.refresh();
+              e.saveCode();
+            });
+          }, 100);
+        },
+        collect() {
+          const collections = [];
+
+          this.maybeError.forEach((item) => {
+            const { key, main } = item;
+
+            const content = main.trim();
+
+            if (!content.match(/\n/)) {
+              collections.push({
+                main,
+                key,
+                content,
+              });
+            }
+          });
+
+          this.collections = collections;
+        },
+        fixAll() {
+          this.shadow.all("p-checker").forEach((e) => e.autoFix());
+        },
         closeItem(index) {
           this.maybeError.splice(index, 1);
         },
