@@ -7,7 +7,7 @@
 
   lm.config({
     alias: {
-      "@obook": "https://cdn.jsdelivr.net/npm/obook@2.1.39",
+      "@obook": "https://cdn.jsdelivr.net/npm/obook@2.1.40",
       // "@obook": "http://127.0.0.1:5512",
     },
   });

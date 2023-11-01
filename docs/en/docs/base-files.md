@@ -10,7 +10,7 @@ The basic files are equivalent to the scaffold for `o-book`, which is necessary 
 
 ```javascript
 // sw.js
-importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.39/src/sw/base.js`);
+importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.40/src/sw/base.js`);
 ```
 
 ### _preview.html
@@ -19,7 +19,7 @@ importScripts(`https://cdn.jsdelivr.net/npm/obook@2.1.39/src/sw/base.js`);
 
 ```html
 <!-- The book-tool component is loaded through l-m -->
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.39/src/book-tool.html"></l-m>
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.40/src/book-tool.html"></l-m>
 <!-- The sw attribute refers to the sw.js file mentioned above. If sw.js is renamed, it needs to be updated here as well -->
 <book-tool sw="./sw.js">
     <!-- Refer to your project configuration file -->
