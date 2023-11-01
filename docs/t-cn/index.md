@@ -2,7 +2,7 @@
 
 <!--desc: 一個極其簡單易用的文檔站生成工具，你甚至可以不看文檔直接使用-->
 
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.39/blocks/simp-block.html"></l-m>
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.40/blocks/simp-block.html"></l-m>
 
 <simp-block>
 
@@ -50,7 +50,7 @@
 
 ### 網站原生組件提供多語言支持
 
-目前支持**英語**，**簡體中文**，**繁體中文**，**西班牙語**
+目前支持 **英語**，**簡體中文**，**繁體中文**，**西班牙語**，**日語**，**韓語**
 
 </simp-block>
 

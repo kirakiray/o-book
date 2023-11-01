@@ -26,7 +26,6 @@ Similar to the content in `SUMMARY.md`, the `footer.md` file includes a list of 
   - [Creating Components](https://ofajs.com/en/cases/simple-component.html)
 ```
 
-
 If your document supports multiple languages, the bottom content will also include entry links for the different language versions for user selection.
 
 In the `footer.md` file, you can also add images that will be displayed as icons at the bottom. This way, you can easily add custom footer content to your documentation site.

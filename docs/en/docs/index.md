@@ -10,8 +10,6 @@ Before using o-book, you need to master the basic syntax of [Markdown](https://w
 
 Before writing the document, you need to prepare the basic files of the project locally. For your convenience, we have provided the initial files of the project for you. Just click on the following link to download and unzip them to your local machine:
 
-
-
 [Download project files](../../publics/stand-up.zip)
 
 Later, we will explain the meanings of several key files;

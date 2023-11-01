@@ -7,7 +7,7 @@
 
   lm.config({
     alias: {
-      "@obook": "https://cdn.jsdelivr.net/npm/obook@2.1.39",
+      "@obook": "https://cdn.jsdelivr.net/npm/obook@2.1.40",
       // "@obook": "http://127.0.0.1:5512",
     },
   });
@@ -46,6 +46,7 @@
     load("./layouts/header-layout.html"),
     load("./comps/viewer/html-viewer.html"),
     load("./comps/viewer/comp-viewer.html"),
+    load("./comps/viewer/files-viewer.html"),
     fetch(resolvePath("./css/github-markdown.css")),
     fetch(resolvePath("./css/public.css")),
     fetch(resolvePath("./comps/article-nav/article-nav-host.css")),

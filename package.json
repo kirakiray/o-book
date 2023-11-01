@@ -1,6 +1,6 @@
 {
   "name": "obook",
-  "version": "2.1.39",
+  "version": "2.1.40",
   "type": "module",
   "description": "A document system built on ofa.js (like gitbook)",
   "main": "shell/index.js",
@@ -40,7 +40,7 @@
   "obook-translate": {
     "caches": "./docs/.trans-caches",
     "main": "cn",
-    "concurrent": 2,
+    "concurrent": 5,
     "dirs": {
       "cn": "./docs/cn",
       "t-cn": "./docs/t-cn",
