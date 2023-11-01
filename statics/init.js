@@ -46,6 +46,7 @@
     load("./layouts/header-layout.html"),
     load("./comps/viewer/html-viewer.html"),
     load("./comps/viewer/comp-viewer.html"),
+    load("./comps/viewer/files-viewer.html"),
     fetch(resolvePath("./css/github-markdown.css")),
     fetch(resolvePath("./css/public.css")),
     fetch(resolvePath("./comps/article-nav/article-nav-host.css")),
