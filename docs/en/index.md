@@ -50,7 +50,7 @@ Using other document generators may require purchasing a search microservice.
 
 ### Website native components provide multilingual support
 
-Currently supported languages are **English**, **Simplified Chinese**, **Traditional Chinese**, and **Spanish**.
+Currently supports **English**, **Simplified Chinese**, **Traditional Chinese**, **Spanish**, **Japanese**, **Korean**.
 
 </simp-block>
 

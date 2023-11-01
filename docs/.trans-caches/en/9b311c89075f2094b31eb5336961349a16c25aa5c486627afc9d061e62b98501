@@ -1,0 +1,6 @@
+```html
+<comp-viewer comp-name="component-name">
+   <!-- Component code block -->
+   ...
+</comp-viewer>
+```

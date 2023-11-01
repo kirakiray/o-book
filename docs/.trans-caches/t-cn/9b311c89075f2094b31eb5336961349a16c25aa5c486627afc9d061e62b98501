@@ -1,0 +1,6 @@
+```html
+<comp-viewer comp-name="component-name">
+   <!-- 組件代碼塊 -->
+   ...
+</comp-viewer>
+```
