@@ -2,7 +2,7 @@
 
 <!--desc: 一个极其简单易用的文档站生成工具，你甚至可以不看文档直接使用-->
 
-<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.40/blocks/simp-block.html"></l-m>
+<l-m src="https://cdn.jsdelivr.net/npm/obook@2.1.41/blocks/simp-block.html"></l-m>
 
 <simp-block>
 
