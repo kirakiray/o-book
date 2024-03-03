@@ -8,6 +8,39 @@
       src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.7/dist/ofa.min.js"
       debug
     ></script>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      o-app {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <script type="http://localhost:5559/os/core/init.js"></script>
   </head>
-  <body></body>
+  <body>
+    <o-app src="./src/app-config.js"> </o-app>
+    <script>
+      navigator.serviceWorker
+        .register("/sw.js", {
+          scope: "/",
+        })
+        .then((reg) => {
+          // reg.update();
+          setTimeout(() => {
+            reg.update();
+          }, 60 * 60 * 1000);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    </script>
+  </body>
 </html>

@@ -11,7 +11,7 @@ export const fail = ({ src, error }) => {
       </div>`;
 };
 
-export const home = "./pages/home.html";
+export const home = "../pages/home.html";
 
 export const loading = () => {
   const loadingEl = $({
