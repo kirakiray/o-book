@@ -1,5 +1,3 @@
-# o-book 2
+# o-book 3
 
-A document system built on ofa.js v4 (like gitbook)
-
-https://obook.ofajs.com/
+Change to mainly using webapps and abandon script-based development thinking

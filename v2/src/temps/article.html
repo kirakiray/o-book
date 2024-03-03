@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%title%></title>
-    <meta name="description" content="<%desc%>">
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.37/dist/ofa.min.js"></script>
+    <meta name="description" content="<%desc%>" />
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.0.3/dist/ofa.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.37/libs/scsr/scsr.mjs"
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.0.3/libs/scsr/scsr.mjs"
       type="module"
     ></script>
     <link rel="stylesheet" href="<%host%>/statics/css/public.css" />
@@ -37,10 +37,9 @@
           .markdown-body::after {
             height: 32px;
           }
-
-          p {
-            margin: 0;
-            padding: 0;
+          .markdown-body > * {
+            margin-top: 1em;
+            margin-bottom: 1em;
           }
         </style>
         <link
@@ -49,9 +48,9 @@
         />
         <%article%>
         <script>
-          export const parent = "<%host%>/statics/layouts/header-layout.html";
+          export const parent = "<%host%>/statics/layouts/article-layout.html";
 
-          import pageInit from "<%host%>/statics/page-init.mjs";
+          import pageInit from "<%host%>/statics/document-page-init.mjs";
 
           export default async (...args) => {
             return await pageInit(PATH, args);
@@ -59,8 +58,8 @@
         </script>
       </template>
     </o-app>
-    <div class="body-important other-link"><%crawlerCode%></div>
     <div id="loading"></div>
+    <div class="body-important other-link"><%crawlerCode%></div>
     <script src="<%host%>/statics/init.js" type="module"></script>
   </body>
 </html>
