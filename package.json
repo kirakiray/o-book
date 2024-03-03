@@ -1,0 +1,17 @@
+{
+  "name": "o-book",
+  "version": "3.0.0",
+  "description": "Web application that quickly generates static document sites",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "static": "node scripts/static-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "YAO",
+  "license": "MIT",
+  "devDependencies": {
+    "koa": "^2.14.1",
+    "koa-static": "^5.0.0"
+  }
+}
