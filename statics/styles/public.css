@@ -1,0 +1,6 @@
+.main-size {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 1700px;
+  padding: 0 16px;
+}

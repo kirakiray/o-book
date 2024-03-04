@@ -1,0 +1,44 @@
+<template component>
+  <l-m src="@pui/tabs/tabs.html"></l-m>
+  <link rel="stylesheet" href="../styles/public.css" />
+
+  <style>
+    :host {
+      display: block;
+      box-shadow: rgba(128, 128, 128, 0.5) 0 0 5px;
+    }
+    .logo {
+      max-height: 35px;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      height: 50px;
+    }
+    h1 {
+      margin-left: 4px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .tabs {
+      margin-left: 24px;
+      font-size: 16px;
+      border-bottom: none;
+    }
+  </style>
+  <div class="container main-size">
+    <img class="logo" src="https://ofajs.com/publics/logo.svg" alt="ofa.js" />
+    <h1 class="logo-text">ofa.js</h1>
+    <p-tabs active-id="2" class="tabs">
+      <p-tab>案例教程</p-tab>
+      <p-tab>文档</p-tab>
+      <p-tab>API</p-tab>
+    </p-tabs>
+  </div>
+  <script>
+    export default {
+      tag: "book-nav",
+      loaded() {},
+    };
+  </script>
+</template>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.7/dist/ofa.min.js"
+      debug
+    ></script>
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/gh/ofajs/Punch-UI@0.1.6/init.js"
+    ></script>
+  </head>
+  <body>
+    <script>
+      setTimeout(() => {
+        // 使用 fetch 发送 POST 请求
+        const url = "http://localhost:11434/api/generate";
+        const data = {
+          model: "gemma:7b",
+          prompt: "你会翻译什么人类的语言?",
+        };
+
+        fetch(url, {
+          method: "POST",
+          body: JSON.stringify(data),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            const reader = response.body.getReader();
+            // let allStr = "";
+            return new ReadableStream({
+              async start(controller) {
+                while (true) {
+                  const { done, value } = await reader.read();
+                  if (done) {
+                    controller.close();
+                    break;
+                  }
+
+                  const data = JSON.parse(
+                    new TextDecoder("utf-8").decode(value)
+                  );
+
+                  // allStr += data.response;
+
+                  // 处理实时数据
+                  console.log(data);
+                }
+              },
+            });
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }, 1000);
+    </script>
+  </body>
+</html>
