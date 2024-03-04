@@ -1,7 +1,7 @@
 <template page>
+  <link rel="stylesheet" href="../styles/public.css" />
   <l-m src="@pui/list/list.html"></l-m>
   <l-m src="../comps/book-nav.html"></l-m>
-  <l-m src=""></l-m>
   <style>
     :host {
       display: contents;
@@ -14,6 +14,7 @@
     .main {
       position: relative;
       flex: 1;
+      margin: inherit;
     }
     .main-inner {
       display: flex;
@@ -31,11 +32,13 @@
       /* background-color: #eee; */
     }
     .left-inner {
+      box-sizing: border-box;
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
+      padding-right: 16px;
       overflow: auto;
     }
     .left-inner:after {
@@ -58,7 +61,7 @@
       margin: 2px 0;
     }
     p-list-item p-list {
-      margin-left: 8px;
+      margin-left: 12px;
     }
 
     .article {
@@ -67,7 +70,7 @@
   </style>
   <div class="container">
     <book-nav></book-nav>
-    <div class="main">
+    <div class="main-size main">
       <div class="main-inner">
         <div class="left">
           <div class="left-inner">
@@ -122,9 +125,7 @@
           </div>
         </div>
         <div class="article">
-          <div style="margin: 24px; height: 2000px; background-color: #aaa">
-            article
-          </div>
+          <div style="height: 2000px; background-color: #aaa">article</div>
           <div class="footer" style="height: 400px; background-color: #7d5252">
             footer
           </div>
