@@ -8,6 +8,7 @@
   <l-m src="@pui/dialog/dialog.html"></l-m>
   <l-m src="@pui/text-field/text-field.html"></l-m>
   <l-m src="@pui/list/list.html"></l-m>
+  <l-m src="@pui/menu/menu-bind.html"></l-m>
   <link rel="stylesheet" href="../styles/public.css" />
 
   <style>
@@ -44,6 +45,11 @@
     .hide-ele {
       display: none;
     }
+
+    .active-item {
+      color: var(--md-ref-palette-primary50);
+      font-weight: bold;
+    }
   </style>
   <div class="container main-size">
     <img class="logo" src="https://ofajs.com/publics/logo.svg" alt="ofa.js" />
@@ -73,9 +79,6 @@
         <p-icon name="light-mode"></p-icon>
       </p-button>
       <p-button icon variant="text" color="normal">
-        <p-icon name="language-outlined"></p-icon>
-      </p-button>
-      <p-button icon variant="text" color="normal">
         <p-svg-icon size="normal">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -98,6 +101,19 @@
       >
         <p-icon name="search"></p-icon>
       </p-button>
+
+      <p-menu-bind event="click" placement="bottom-end">
+        <p-button icon variant="text" color="normal" slot="anchor">
+          <p-icon name="language-outlined"></p-icon>
+        </p-button>
+        <p-menu>
+          <p-menu-item id="targetItem" class="active-item">
+            简体中文
+          </p-menu-item>
+          <p-menu-item id="targetItem"> 繁体中文 </p-menu-item>
+          <p-menu-item id="targetItem"> 英语 </p-menu-item>
+        </p-menu>
+      </p-menu-bind>
     </div>
   </div>
 
@@ -163,7 +179,7 @@
       return {
         tag: "book-nav",
         data: {
-          searchDialog: true,
+          searchDialog: false,
           isDark: {},
           historys: [],
         },
