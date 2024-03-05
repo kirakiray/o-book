@@ -4,3 +4,14 @@
   max-width: 1700px;
   padding: 0 16px;
 }
+
+@media screen and (max-width: 600px) {
+  .hide-phone {
+    display: none;
+  }
+}
+@media screen and (min-width: 601px) {
+  .hide-pc {
+    display: none;
+  }
+}

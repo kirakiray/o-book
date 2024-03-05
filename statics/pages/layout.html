@@ -1,8 +1,10 @@
 <template page>
   <link rel="stylesheet" href="../styles/public.css" />
-  <l-m src="@pui/list/list.html"></l-m>
   <l-m src="@pui/tabs/tabs.html"></l-m>
+  <l-m src="@pui/drawer/drawer.html"></l-m>
   <l-m src="../comps/book-nav.html"></l-m>
+  <l-m src="../comps/left-list.html"></l-m>
+  <l-m src="../comps/top-tabs.html"></l-m>
   <style>
     :host {
       display: contents;
@@ -15,7 +17,7 @@
     .main {
       position: relative;
       flex: 1;
-      margin: inherit;
+      width: 100%;
     }
     .main-inner {
       display: flex;
@@ -30,14 +32,12 @@
       position: relative;
       width: 250px;
       margin: 4px 0 0 8px;
-      /* background-color: #eee; */
     }
     .left-inner {
       box-sizing: border-box;
       position: absolute;
       left: 0;
       top: 0;
-      /* width: 100%; */
       width: 250px;
       height: 100%;
       padding-right: 16px;
@@ -52,101 +52,36 @@
       flex: 1;
       overflow: auto;
     }
-
-    .left p-list-item::part(container) {
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-
-    .left p-list-item {
-      font-size: 16px;
-      margin: 2px 0;
-    }
-    p-list-item p-list {
-      margin-left: 12px;
-    }
-
-    .article {
-      /* overflow: auto; */
-    }
-    .tabs {
-      margin-left: 24px;
-      font-size: 16px;
-      border-bottom: none;
-    }
-    p-tab {
-      border-radius: 30px;
-    }
   </style>
   <div class="container">
-    <book-nav>
-      <p-tabs active-id="2" class="tabs">
-        <p-tab>案例教程</p-tab>
-        <p-tab>文档</p-tab>
-        <p-tab>API</p-tab>
-      </p-tabs>
+    <book-nav on:click-drawer="openDrawer = true">
+      <top-tabs class="hide-phone"></top-tabs>
     </book-nav>
+    <p-drawer sync:open="openDrawer" auto-close>
+      <top-tabs></top-tabs>
+      <left-list></left-list>
+    </p-drawer>
     <div class="main-size main">
       <div class="main-inner">
-        <div class="left">
+        <div class="left hide-phone">
           <div class="left-inner">
-            <p-list>
-              <p-list-item button radius> 介绍 </p-list-item>
-              <p-list-item button radius active-item> 使用 ofa.js</p-list-item>
-              <p-list-item button="suffix" radius collapse-childs="open">
-                如何使用 ofajs
-                <i collapse-triangle slot="suffix"></i>
-                <p-list slot="childs">
-                  <p-list-item button radius>第一个案例</p-list-item>
-                  <p-list-item button radius>选择元素和事件相关</p-list-item>
-                  <p-list-item button radius> 实例的基础概念</p-list-item>
-                  <p-list-item button radius> 常用属性和方法</p-list-item>
-                </p-list>
-              </p-list-item>
-              <p-list-item button radius> 组件的创建和使用</p-list-item>
-              <p-list-item button="suffix" radius collapse-childs="open">
-                如何使用 ofajs
-                <i collapse-triangle slot="suffix"></i>
-                <p-list slot="childs">
-                  <p-list-item button radius>第一个案例</p-list-item>
-                  <p-list-item button radius>选择元素和事件相关</p-list-item>
-                  <p-list-item button radius> 实例的基础概念</p-list-item>
-                  <p-list-item button radius> 常用属性和方法</p-list-item>
-                </p-list>
-              </p-list-item>
-              <p-list-item button radius> 组件的创建和使用</p-list-item>
-              <p-list-item button="suffix" radius collapse-childs="open">
-                如何使用 ofajs
-                <i collapse-triangle slot="suffix"></i>
-                <p-list slot="childs">
-                  <p-list-item button radius>第一个案例</p-list-item>
-                  <p-list-item button radius>选择元素和事件相关</p-list-item>
-                  <p-list-item button radius> 实例的基础概念</p-list-item>
-                  <p-list-item button radius> 常用属性和方法</p-list-item>
-                </p-list>
-              </p-list-item>
-              <p-list-item button radius> 组件的创建和使用</p-list-item>
-              <p-list-item button="suffix" radius collapse-childs="open">
-                如何使用 ofajs
-                <i collapse-triangle slot="suffix"></i>
-                <p-list slot="childs">
-                  <p-list-item button radius>第一个案例</p-list-item>
-                  <p-list-item button radius>选择元素和事件相关</p-list-item>
-                  <p-list-item button radius> 实例的基础概念</p-list-item>
-                  <p-list-item button radius> 常用属性和方法</p-list-item>
-                </p-list>
-              </p-list-item>
-              <p-list-item button radius> 组件的创建和使用</p-list-item>
-            </p-list>
+            <left-list></left-list>
           </div>
         </div>
         <div class="article">
-          <div style="height: 2000px; background-color: #aaa">article</div>
-          <div class="footer" style="height: 400px; background-color: #7d5252">
+          <slot></slot>
+          <div class="footer" style="height: 300px; background-color: #7d5252">
             footer
           </div>
         </div>
       </div>
     </div>
   </div>
+  <script>
+    export default {
+      data: {
+        openDrawer: false,
+      },
+    };
+  </script>
 </template>

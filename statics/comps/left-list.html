@@ -1,0 +1,66 @@
+<template component>
+  <l-m src="@pui/list/list.html"></l-m>
+  <style>
+    p-list-item::part(container) {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    p-list-item {
+      font-size: 16px;
+      margin: 2px 0;
+    }
+
+    p-list-item p-list {
+      margin-left: 12px;
+    }
+  </style>
+  <p-list>
+    <p-list-item button radius> 介绍 </p-list-item>
+    <p-list-item button radius active-item> 使用 ofa.js</p-list-item>
+    <p-list-item button="suffix" radius collapse-childs="open">
+      如何使用 ofajs
+      <i collapse-triangle slot="suffix"></i>
+      <p-list slot="childs">
+        <p-list-item button radius>第一个案例</p-list-item>
+        <p-list-item button radius>选择元素和事件相关</p-list-item>
+        <p-list-item button radius> 实例的基础概念</p-list-item>
+        <p-list-item button radius> 常用属性和方法</p-list-item>
+      </p-list>
+    </p-list-item>
+    <p-list-item button radius> 组件的创建和使用</p-list-item>
+    <p-list-item button="suffix" radius collapse-childs="open">
+      如何使用 ofajs
+      <i collapse-triangle slot="suffix"></i>
+      <p-list slot="childs">
+        <p-list-item button radius>第一个案例</p-list-item>
+        <p-list-item button radius>选择元素和事件相关</p-list-item>
+        <p-list-item button radius> 实例的基础概念</p-list-item>
+        <p-list-item button radius> 常用属性和方法</p-list-item>
+      </p-list>
+    </p-list-item>
+    <p-list-item button radius> 组件的创建和使用</p-list-item>
+    <p-list-item button="suffix" radius collapse-childs="open">
+      如何使用 ofajs
+      <i collapse-triangle slot="suffix"></i>
+      <p-list slot="childs">
+        <p-list-item button radius>第一个案例</p-list-item>
+        <p-list-item button radius>选择元素和事件相关</p-list-item>
+        <p-list-item button radius> 实例的基础概念</p-list-item>
+        <p-list-item button radius> 常用属性和方法</p-list-item>
+      </p-list>
+    </p-list-item>
+    <p-list-item button radius> 组件的创建和使用</p-list-item>
+    <p-list-item button="suffix" radius collapse-childs="open">
+      如何使用 ofajs
+      <i collapse-triangle slot="suffix"></i>
+      <p-list slot="childs">
+        <p-list-item button radius>第一个案例</p-list-item>
+        <p-list-item button radius>选择元素和事件相关</p-list-item>
+        <p-list-item button radius> 实例的基础概念</p-list-item>
+        <p-list-item button radius> 常用属性和方法</p-list-item>
+      </p-list>
+    </p-list-item>
+    <p-list-item button radius> 组件的创建和使用</p-list-item>
+  </p-list>
+</template>

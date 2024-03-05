@@ -1,0 +1,23 @@
+<template component>
+  <style>
+    :host {
+      display: contents;
+    }
+  </style>
+  <l-m src="@pui/tabs/tabs.html"></l-m>
+  <style>
+    p-tabs {
+      margin-left: 24px;
+      font-size: 16px;
+      border-bottom: none;
+    }
+    p-tab {
+      border-radius: 30px;
+    }
+  </style>
+  <p-tabs active-id="2">
+    <p-tab>案例教程</p-tab>
+    <p-tab>文档</p-tab>
+    <p-tab>API</p-tab>
+  </p-tabs>
+</template>

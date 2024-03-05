@@ -44,7 +44,13 @@
   </style>
 
   <div class="container main-size">
-    <p-button icon variant="text" style="margin-right: 4px">
+    <p-button
+      icon
+      variant="text"
+      on:click="emit('click-drawer')"
+      style="margin-right: 4px"
+      class="hide-pc"
+    >
       <p-icon name="menu"></p-icon>
     </p-button>
     <img class="logo" src="https://ofajs.com/publics/logo.svg" alt="ofa.js" />
