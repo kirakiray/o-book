@@ -30,8 +30,18 @@
     }
     .left {
       position: relative;
+      /* width: 250px; */
+      width: 0;
+      /* margin: 4px 0 0 8px; */
+      margin: 4px 0 0 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: all ease 0.3s;
+    }
+    .container.show-left .left {
       width: 250px;
-      margin: 4px 0 0 8px;
+      margin-left: 8px;
+      opacity: 1;
     }
     .left-inner {
       box-sizing: border-box;
@@ -52,8 +62,11 @@
       flex: 1;
       overflow: auto;
     }
+    p-drawer::part(main) {
+      padding: 8px 16px 8px 8px;
+    }
   </style>
-  <div class="container">
+  <div class="container" class:show-left="showLeft.value">
     <book-nav on:click-drawer="openDrawer = true">
       <top-tabs class="hide-phone"></top-tabs>
     </book-nav>
@@ -78,9 +91,18 @@
     </div>
   </div>
   <script>
+    import { showLeft } from "../data.js";
+
     export default {
       data: {
-        openDrawer: true,
+        openDrawer: false,
+        showLeft: {},
+      },
+      attached() {
+        this.showLeft = showLeft;
+      },
+      detached() {
+        this.showLeft = {};
       },
     };
   </script>
