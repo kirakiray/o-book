@@ -1,6 +1,7 @@
 <template page>
   <link rel="stylesheet" href="../styles/public.css" />
   <l-m src="@pui/list/list.html"></l-m>
+  <l-m src="@pui/tabs/tabs.html"></l-m>
   <l-m src="../comps/book-nav.html"></l-m>
   <style>
     :host {
@@ -28,7 +29,7 @@
     .left {
       position: relative;
       width: 250px;
-      margin: 5px 8px 0 8px;
+      margin: 4px 0 0 8px;
       /* background-color: #eee; */
     }
     .left-inner {
@@ -36,7 +37,8 @@
       position: absolute;
       left: 0;
       top: 0;
-      width: 100%;
+      /* width: 100%; */
+      width: 250px;
       height: 100%;
       padding-right: 16px;
       overflow: auto;
@@ -67,9 +69,23 @@
     .article {
       /* overflow: auto; */
     }
+    .tabs {
+      margin-left: 24px;
+      font-size: 16px;
+      border-bottom: none;
+    }
+    p-tab {
+      border-radius: 30px;
+    }
   </style>
   <div class="container">
-    <book-nav></book-nav>
+    <book-nav>
+      <p-tabs active-id="2" class="tabs">
+        <p-tab>案例教程</p-tab>
+        <p-tab>文档</p-tab>
+        <p-tab>API</p-tab>
+      </p-tabs>
+    </book-nav>
     <div class="main-size main">
       <div class="main-inner">
         <div class="left">

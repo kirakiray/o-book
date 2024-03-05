@@ -4,7 +4,6 @@
     src="https://cdn.jsdelivr.net/gh/ofajs/p-icons@0.0.5/p-svg-icon.html"
   ></l-m>
   <l-m src="@pui/button/button.html"></l-m>
-  <l-m src="@pui/tabs/tabs.html"></l-m>
   <l-m src="@pui/dialog/dialog.html"></l-m>
   <l-m src="@pui/text-field/text-field.html"></l-m>
   <l-m src="@pui/list/list.html"></l-m>
@@ -31,14 +30,6 @@
       font-weight: 600;
       cursor: pointer;
     }
-    .tabs {
-      margin-left: 24px;
-      font-size: 16px;
-      border-bottom: none;
-    }
-    p-tab {
-      border-radius: 30px;
-    }
     .right {
       margin-left: auto;
     }
@@ -51,14 +42,14 @@
       font-weight: bold;
     }
   </style>
+
   <div class="container main-size">
+    <p-button icon variant="text" style="margin-right: 4px">
+      <p-icon name="menu"></p-icon>
+    </p-button>
     <img class="logo" src="https://ofajs.com/publics/logo.svg" alt="ofa.js" />
     <h1 class="logo-text">ofa.js</h1>
-    <p-tabs active-id="2" class="tabs">
-      <p-tab>案例教程</p-tab>
-      <p-tab>文档</p-tab>
-      <p-tab>API</p-tab>
-    </p-tabs>
+    <slot></slot>
     <div class="right">
       <p-button
         icon
@@ -112,7 +103,7 @@
             简体中文
           </p-menu-item>
           <p-menu-item id="targetItem"> 繁体中文 </p-menu-item>
-          <p-menu-item id="targetItem"> 英语 </p-menu-item>
+          <p-menu-item id="targetItem"> English </p-menu-item>
         </p-menu>
       </p-menu-bind>
     </div>
@@ -134,6 +125,7 @@
       padding-top: 8px;
     }
   </style>
+
   <p-dialog :open="searchDialog" on:click-mask="searchDialog = false">
     <div class="search-dialog">
       <p-text-field style="width: 100%">
@@ -173,6 +165,7 @@
       </div>
     </div>
   </p-dialog>
+
   <script>
     export default async ({ load }) => {
       const { isDark } = await load("@pui/commons/data.js");
