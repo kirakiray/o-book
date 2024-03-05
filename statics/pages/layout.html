@@ -58,7 +58,7 @@
       <top-tabs class="hide-phone"></top-tabs>
     </book-nav>
     <p-drawer sync:open="openDrawer" auto-close>
-      <top-tabs></top-tabs>
+      <top-tabs type="mobile"></top-tabs>
       <left-list></left-list>
     </p-drawer>
     <div class="main-size main">
@@ -80,7 +80,7 @@
   <script>
     export default {
       data: {
-        openDrawer: false,
+        openDrawer: true,
       },
     };
   </script>

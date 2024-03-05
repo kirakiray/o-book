@@ -14,10 +14,30 @@
     p-tab {
       border-radius: 30px;
     }
+
+    .mobile-tabs {
+      width: 300px;
+    }
   </style>
-  <p-tabs active-id="2">
+  <p-tabs
+    active-id="2"
+    class:mobile-tabs="type === 'mobile'"
+    attr:scroll-buttons="type === 'mobile' ? '' : null"
+    s
+  >
     <p-tab>案例教程</p-tab>
     <p-tab>文档</p-tab>
     <p-tab>API</p-tab>
+    <p-tab>API</p-tab>
+    <p-tab>API</p-tab>
+    <p-tab>API</p-tab>
   </p-tabs>
+
+  <script>
+    export default {
+      attrs: {
+        type: null,
+      },
+    };
+  </script>
 </template>
