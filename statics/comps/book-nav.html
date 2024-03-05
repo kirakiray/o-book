@@ -64,19 +64,9 @@
         icon
         variant="text"
         color="normal"
-        on:click="switchMode"
-        class:hide-ele="isDark.value"
+        on:click="searchDialog = true"
       >
-        <p-icon name="dark-mode"></p-icon>
-      </p-button>
-      <p-button
-        icon
-        variant="text"
-        color="normal"
-        on:click="switchMode"
-        class:hide-ele="!isDark.value"
-      >
-        <p-icon name="light-mode"></p-icon>
+        <p-icon name="search"></p-icon>
       </p-button>
       <p-button icon variant="text" color="normal">
         <p-svg-icon size="normal">
@@ -93,13 +83,24 @@
           </svg>
         </p-svg-icon>
       </p-button>
+
       <p-button
         icon
         variant="text"
         color="normal"
-        on:click="searchDialog = true"
+        on:click="switchMode"
+        class:hide-ele="isDark.value"
       >
-        <p-icon name="search"></p-icon>
+        <p-icon name="dark-mode"></p-icon>
+      </p-button>
+      <p-button
+        icon
+        variant="text"
+        color="normal"
+        on:click="switchMode"
+        class:hide-ele="!isDark.value"
+      >
+        <p-icon name="light-mode"></p-icon>
       </p-button>
 
       <p-menu-bind event="click" placement="bottom-end">
