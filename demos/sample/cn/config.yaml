@@ -4,5 +4,5 @@ logo:
 navs:
   - name: nav1
     src: ./test1
-  - name: nav2
+  - name: 导航2
     src: ./test2

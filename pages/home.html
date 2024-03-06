@@ -1,59 +1,90 @@
 <template page>
   <l-m src="@pui/button/button.html"></l-m>
   <style>
+    :host {
+      display: contents;
+    }
     .container {
       padding: 20px;
+      height: 100%;
+      /* background-color: red; */
     }
   </style>
   <div class="container">
-    I am home
-    <br />
-    <p-button on:click="selectDir">选择文件夹</p-button>
+    <p>
+      这个webapp的所有操作只会在浏览器本地执行，不会上传到服务端。借助这个webapp，你不需要学习和使用什么命令行代码，不需要安装软件到你的系统上，就能生成好看好用的文档静态站。
+    </p>
+    <p-button on:click="selectDir" attr:disabled="entryLink ? '' : null">
+      选择文件夹
+    </p-button>
+    <x-if :value="entryLink">
+      <p>
+        <a attr:href="entryLink" target="_blank">Entry</a>
+        <br>
+        <a attr:href="entryLink + '_statics/'" target="_blank">Static</a>
+      </p>
+    </x-if>
   </div>
 
   <script>
+    import staticsTask from "../src/statics-task.js";
+    export const parent = "./layout.html";
+
     export default async ({ load }) => {
       const { open } = await load("@nos/core/fs/system/main.js");
       const { createApi } = await load("@nos/core/virtual.js");
 
       return {
-        data: {},
+        data: {
+          entryLink: null,
+          _handle: null,
+        },
         proto: {
           async selectDir() {
-            const handle = await open();
+            const handle = (this._handle = await open());
 
             for await (let item of handle.entries()) {
               console.log("sub", item);
             }
 
             console.log("handle: ", handle);
+
+            this.initServer();
           },
           async initServer() {
-            // const server = createApi({
-            //   name: "test",
-            //   async callback({
-            //     request,
-            //     search,
-            //     pathname,
-            //     searchParams,
-            //     hash,
-            //   }) {
-            //     console.log(request, search, pathname, searchParams, hash);
+            const server = createApi({
+              name: this._handle.name,
+              async callback({
+                request,
+                search,
+                pathname,
+                searchParams,
+                hash,
+              }) {
+                console.log(request, search, pathname, searchParams, hash);
 
-            //     return {
-            //       body: "ok la haha",
-            //     };
-            //   },
-            //   created() {
-            //     setTimeout(() => {
-            //       window.open(`${server.path}/d?a=aaaaa`);
-            //     }, 1000);
-            //   },
-            // });
+                const path = pathname.replace(/^\//, "");
+
+                let result = null;
+
+                result = await staticsTask({ path });
+
+                if (result) {
+                  return result;
+                }
+
+                return {
+                  body: "ok la -- " + path,
+                };
+              },
+              created: () => {
+                this.entryLink = `${server.path}/`;
+              },
+            });
           },
         },
         ready() {
-          this.initServer();
+          // this.initServer();
         },
       };
     };

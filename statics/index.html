@@ -4,21 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Static Article</title>
-    <script
-      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.7/dist/ofa.min.js"
-      debug
-    ></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.7/dist/ofa.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.7/libs/scsr/dist/scsr.min.js"></script>
     <!-- <script
       type="module"
       src="https://cdn.jsdelivr.net/gh/ofajs/Punch-UI@0.1.7/init.js"
     ></script> -->
     <script type="module" src="http://127.0.0.1:5548/init.js"></script>
-
     <link rel="stylesheet" href="./styles/index.css" />
   </head>
   <body>
-    <o-page src="./pages/layout.html">
-      <div style="height: 2000px; background-color: #aaa">article</div>
-    </o-page>
+    <o-app src="./app-config.js">
+      <template page>
+        <style>
+          :host {
+            display: block;
+            flex-shrink: 0;
+          }
+        </style>
+        <div style="height: 100px; background-color: #aaa">article</div>
+        <script>
+          export const parent = "./pages/layout.html";
+
+          export default async ({ load }) => {
+            return {
+              data: {},
+            };
+          };
+        </script>
+      </template>
+    </o-app>
   </body>
 </html>

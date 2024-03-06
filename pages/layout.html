@@ -1,0 +1,59 @@
+<template page>
+  <l-m src="@pui/navigation/nav-layout.html"></l-m>
+  <l-m src="@pui/navigation/nav-bar.html"></l-m>
+  <style>
+    :host {
+      display: contents;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <div class="container">
+    <p-nav-layout>
+      <p-nav-bar slot="nav">
+        <p-nav-item
+          attr:active-item="pathname === '/pages/home.html' ? '' : null"
+        >
+          首页
+          <iconify-icon icon="material-symbols:home" slot="icon"></iconify-icon>
+        </p-nav-item>
+        <p-nav-item disabled>
+          <iconify-icon icon="ph:translate-fill" slot="icon"></iconify-icon>
+          AI翻译
+        </p-nav-item>
+        <p-nav-item disabled>
+          <iconify-icon icon="mdi:magic" slot="icon"></iconify-icon>
+          AI润色
+        </p-nav-item>
+        <p-nav-item>
+          <iconify-icon icon="carbon:document" slot="icon"></iconify-icon>
+          文档
+        </p-nav-item>
+      </p-nav-bar>
+      <slot></slot>
+    </p-nav-layout>
+  </div>
+  <script>
+    export default async ({ load }) => {
+      return {
+        data: {
+          pathname: "",
+        },
+        proto: {
+          fixNav() {
+            const { pathname } = new URL(this.app.current.src);
+            this.pathname = pathname;
+          },
+        },
+        routerChange() {
+          this.fixNav();
+        },
+        loaded() {
+          this.fixNav();
+        },
+      };
+    };
+  </script>
+</template>
