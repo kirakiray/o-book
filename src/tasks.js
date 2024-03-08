@@ -1,4 +1,4 @@
-export default async ({ path }) => {
+export const statics = async ({ path }) => {
   if (/^_statics\//.test(path)) {
     const repath = path.replace(/^_statics\//, "statics/");
 
@@ -15,6 +15,14 @@ export default async ({ path }) => {
     return {
       body,
       headers,
+    };
+  }
+};
+
+export const config = async ({ path, all }) => {
+  if (/^[a-z]+\/config.json/.test(path)) {
+    return {
+      body: JSON.stringify(all),
     };
   }
 };

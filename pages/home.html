@@ -20,14 +20,20 @@
     <x-if :value="entryLink">
       <p>
         <a attr:href="entryLink" target="_blank">Entry</a>
-        <br>
+        <br />
         <a attr:href="entryLink + '_statics/'" target="_blank">Static</a>
+        <br />
+        <a attr:href="entryLink + 'cn/config.json'" target="_blank"
+          >Config.json</a
+        >
       </p>
     </x-if>
   </div>
 
   <script>
-    import staticsTask from "../src/statics-task.js";
+    import yaml from "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.mjs";
+    import { statics, config as configTask } from "../src/tasks.js";
+    import { getAllArticles } from "../src/util.js";
     export const parent = "./layout.html";
 
     export default async ({ load }) => {
@@ -38,20 +44,49 @@
         data: {
           entryLink: null,
           _handle: null,
+          mainLang: "cn",
+          _allDatas: [],
         },
         proto: {
           async selectDir() {
             const handle = (this._handle = await open());
 
-            for await (let item of handle.entries()) {
-              console.log("sub", item);
+            const allDatas = [];
+
+            for await (let [name, subHandle] of handle.entries()) {
+              if (subHandle.kind === "directory" && !/^_/.test(name)) {
+                const navData = await this.getNavData(subHandle);
+                allDatas.push({
+                  lang: name,
+                  data: navData,
+                });
+              }
             }
 
-            console.log("handle: ", handle);
+            this._allDatas = allDatas;
+
+            console.log("all: ", allDatas);
 
             this.initServer();
           },
+          async getNavData(handle) {
+            // const handle = await this._handle.get(lang);
+
+            const articleData = await getAllArticles(handle);
+
+            let configData = await handle
+              .get("config.yaml")
+              .then((e) => e.text());
+
+            configData = yaml.load(configData);
+
+            return {
+              articleData,
+              configData,
+            };
+          },
           async initServer() {
+            const _this = this;
             const server = createApi({
               name: this._handle.name,
               async callback({
@@ -65,12 +100,12 @@
 
                 const path = pathname.replace(/^\//, "");
 
-                let result = null;
+                for (let task of [statics, configTask]) {
+                  const result = await task({ path, all: _this._allDatas });
 
-                result = await staticsTask({ path });
-
-                if (result) {
-                  return result;
+                  if (result) {
+                    return result;
+                  }
                 }
 
                 return {
