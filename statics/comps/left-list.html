@@ -16,51 +16,40 @@
     }
   </style>
   <p-list>
-    <p-list-item button radius> 介绍 </p-list-item>
-    <p-list-item button radius active-item> 使用 ofa.js</p-list-item>
-    <p-list-item button="suffix" radius collapse-childs="open">
-      如何使用 ofajs
-      <i collapse-triangle slot="suffix"></i>
-      <p-list slot="childs">
-        <p-list-item button radius>第一个案例</p-list-item>
-        <p-list-item button radius>选择元素和事件相关</p-list-item>
-        <p-list-item button radius> 实例的基础概念</p-list-item>
-        <p-list-item button radius> 常用属性和方法</p-list-item>
-      </p-list>
-    </p-list-item>
-    <p-list-item button radius> 组件的创建和使用</p-list-item>
-    <p-list-item button="suffix" radius collapse-childs="open">
-      如何使用 ofajs
-      <i collapse-triangle slot="suffix"></i>
-      <p-list slot="childs">
-        <p-list-item button radius>第一个案例</p-list-item>
-        <p-list-item button radius>选择元素和事件相关</p-list-item>
-        <p-list-item button radius> 实例的基础概念</p-list-item>
-        <p-list-item button radius> 常用属性和方法</p-list-item>
-      </p-list>
-    </p-list-item>
-    <p-list-item button radius> 组件的创建和使用</p-list-item>
-    <p-list-item button="suffix" radius collapse-childs="open">
-      如何使用 ofajs
-      <i collapse-triangle slot="suffix"></i>
-      <p-list slot="childs">
-        <p-list-item button radius>第一个案例</p-list-item>
-        <p-list-item button radius>选择元素和事件相关</p-list-item>
-        <p-list-item button radius> 实例的基础概念</p-list-item>
-        <p-list-item button radius> 常用属性和方法</p-list-item>
-      </p-list>
-    </p-list-item>
-    <p-list-item button radius> 组件的创建和使用</p-list-item>
-    <p-list-item button="suffix" radius collapse-childs="open">
-      如何使用 ofajs
-      <i collapse-triangle slot="suffix"></i>
-      <p-list slot="childs">
-        <p-list-item button radius>第一个案例</p-list-item>
-        <p-list-item button radius>选择元素和事件相关</p-list-item>
-        <p-list-item button radius> 实例的基础概念</p-list-item>
-        <p-list-item button radius> 常用属性和方法</p-list-item>
-      </p-list>
-    </p-list-item>
-    <p-list-item button radius> 组件的创建和使用</p-list-item>
+    <x-fill :value="articlesList" name="item"></x-fill>
   </p-list>
+  <template name="item">
+    <p-list-item
+      attr:button="$data.childs ? 'suffix' : ''"
+      radius
+      collapse-childs="open"
+    >
+      {{$data.name}}
+      <x-if :value="$data.childs">
+        <i collapse-triangle slot="suffix"></i>
+        <p-list slot="childs">
+          <x-fill :value="$data.childs" name="item"> </x-fill>
+        </p-list>
+      </x-if>
+    </p-list-item>
+  </template>
+
+  <script>
+    export default async ({ load }) => {
+      const { navs, articlesList } = await load("../data.js");
+
+      return {
+        tag: "left-list",
+        data: {
+          articlesList: {},
+        },
+        attached() {
+          this.articlesList = articlesList;
+        },
+        detached() {
+          this.articlesList = {};
+        },
+      };
+    };
+  </script>
 </template>

@@ -101,7 +101,10 @@
                 const path = pathname.replace(/^\//, "");
 
                 for (let task of [statics, configTask]) {
-                  const result = await task({ path, all: _this._allDatas });
+                  const result = await task({
+                    path,
+                    all: _this._allDatas,
+                  });
 
                   if (result) {
                     return result;

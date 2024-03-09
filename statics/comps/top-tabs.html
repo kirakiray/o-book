@@ -25,16 +25,23 @@
     class:mobile-tabs="type === 'mobile'"
     attr:scroll-buttons="type === 'mobile' ? '' : null"
   >
-    <p-tab>案例教程</p-tab>
-    <p-tab>文档</p-tab>
-    <p-tab>API</p-tab>
+    <x-fill :value="tabs">
+      <p-tab>{{$data.name}}</p-tab>
+    </x-fill>
   </p-tabs>
 
   <script>
-    export default {
-      attrs: {
-        type: null,
-      },
+    export default async ({ load }) => {
+      const { navs, articlesList } = await load("../data.js");
+
+      return {
+        attrs: {
+          type: null,
+        },
+        data: {
+          tabs: navs,
+        },
+      };
     };
   </script>
 </template>
