@@ -91,6 +91,11 @@ export const respPage = async ({ path, handle, temp }) => {
   );
 
   content = content.replace(
+    `await load("../_statics/data.js")`,
+    `await load("${getRelativeURL(path, "_statics/data.js")}");`
+  );
+
+  content = content.replace(
     'export const parent = "./pages/layout.html";',
     `export const parent = "${getRelativeURL(
       path,
