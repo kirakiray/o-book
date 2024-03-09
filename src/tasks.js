@@ -1,4 +1,5 @@
 import { getRelativeURL } from "./util.js";
+import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
 export const statics = async ({ path }) => {
   if (/^_statics\//.test(path)) {
@@ -51,6 +52,10 @@ export const respPage = async ({ path, handle, temp }) => {
   // 替换资源地址和模板内容
   let content = await fileHandle.text();
 
+  if (/\.md/.test(fileHandle.name)) {
+    content = marked.parse(content);
+  }
+
   // 替换link的链接
   // md 后缀改为html 后缀
   // 链接本机的页面，都带上 olink 属性
@@ -62,6 +67,7 @@ export const respPage = async ({ path, handle, temp }) => {
         href = href.replace(/\.md/, ".html");
       }
       el.attr("href", href);
+      el.attr("olink", "");
     });
     content = articleTempEl.html;
   }
@@ -88,6 +94,13 @@ export const respPage = async ({ path, handle, temp }) => {
   content = content.replace(
     "const selfPath = null;",
     `const selfPath = "${paths.slice(1).join("/")}";`
+  );
+  content = content.replace(
+    `<link rel="stylesheet" href="./styles/github-markdown.css">`,
+    `<link rel="stylesheet" href="${getRelativeURL(
+      path,
+      "_statics/styles/github-markdown.css"
+    )}">`
   );
 
   content = content.replace(

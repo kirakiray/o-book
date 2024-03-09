@@ -1,4 +1,5 @@
 @import url(./public.css);
+@import url(./github-markdown.css);
 html,
 body {
   padding: 0;

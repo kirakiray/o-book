@@ -46,7 +46,7 @@ if (typeof configUrl === "string") {
 }
 
 export const resetData = (path) => {
-  // debugger;
+  console.log("resetData", path);
 };
 
 window.showLeft = showLeft;
