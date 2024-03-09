@@ -30,11 +30,21 @@
 
         <script>
           export const parent = "./pages/layout.html";
+          const selfPath = null;
 
           export default async ({ load }) => {
+            let resetData;
+            try {
+              const d = await load("../_statics/data.js");
+              resetData = d.resetData;
+            } catch (err) {}
+
             return {
               data: {},
               proto: {},
+              attached() {
+                resetData && resetData(selfPath);
+              },
             };
           };
         </script>

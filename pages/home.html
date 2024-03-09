@@ -126,11 +126,20 @@
         },
         ready() {
           // this.initServer();
+
           fetch("/statics/index.html")
             .then((e) => e.text())
             .then((text) => {
               this.articleTemp = text;
             });
+
+          setInterval(() => {
+            fetch("/statics/index.html")
+              .then((e) => e.text())
+              .then((text) => {
+                this.articleTemp = text;
+              });
+          }, 3000);
         },
       };
     };

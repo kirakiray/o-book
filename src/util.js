@@ -8,14 +8,16 @@ export const getAllArticles = async (handle) => {
 
     if (subHandle.kind === "file") {
       if (/\.html$/.test(name) || /\.md$/.test(name)) {
+        const repath = path.replace(/\.md/, ".html");
+
         flats.push({
-          path,
+          path: repath,
         });
 
         childs.push({
           name,
           type: subHandle.kind,
-          path,
+          path: repath,
         });
       }
     } else if (subHandle.kind === "directory") {

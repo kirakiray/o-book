@@ -23,8 +23,10 @@ export const statics = async ({ path }) => {
 
 export const config = async ({ path, all }) => {
   if (/^[a-z]+\/config.json/.test(path)) {
+    const lang = path.split("/")[0];
+    const target = all.find((e) => e.lang === lang);
     return {
-      body: JSON.stringify(all),
+      body: JSON.stringify(target.data),
     };
   }
 };
@@ -42,12 +44,29 @@ export const respPage = async ({ path, handle, temp }) => {
   try {
     fileHandle = await handle.get(path1).catch(() => handle.get(path2));
   } catch (err) {
-    console.error("open file error: ", err);
+    console.warn("open file error: ", err, path);
     return null;
   }
 
   // 替换资源地址和模板内容
-  let content = temp.replace("{[content]}", await fileHandle.text());
+  let content = await fileHandle.text();
+
+  // 替换link的链接
+  // md 后缀改为html 后缀
+  // 链接本机的页面，都带上 olink 属性
+  {
+    const articleTempEl = $(`<template>${content}</template>`);
+    articleTempEl.all("a").forEach((el) => {
+      let href = el.attr("href");
+      if (!/^http:/.test(href)) {
+        href = href.replace(/\.md/, ".html");
+      }
+      el.attr("href", href);
+    });
+    content = articleTempEl.html;
+  }
+
+  content = temp.replace("{[content]}", content);
   content = content.replace(
     '<link rel="stylesheet" href="./styles/index.css" />',
     `<link rel="stylesheet" href="${getRelativeURL(
@@ -63,9 +82,14 @@ export const respPage = async ({ path, handle, temp }) => {
     )}";`
   );
   content = content.replace(
-    ' <o-app src="./app-config.js">',
-    ` <o-app src="${getRelativeURL(path, "_statics/app-config.js")}">`
+    '<o-app src="./app-config.js">',
+    `<o-app src="${getRelativeURL(path, "_statics/app-config.js")}">`
   );
+  content = content.replace(
+    "const selfPath = null;",
+    `const selfPath = "${paths.slice(1).join("/")}";`
+  );
+
   content = content.replace(
     'export const parent = "./pages/layout.html";',
     `export const parent = "${getRelativeURL(

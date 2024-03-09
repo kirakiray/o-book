@@ -35,12 +35,18 @@ export const articlesList = $.stanz([
 if (typeof configUrl === "string") {
   // 加载数据
   (async () => {
-    const data = await fetch(configUrl).then((e) => {
-      return e.text();
+    const { articleData, configData } = await fetch(configUrl).then((e) => {
+      return e.json();
     });
 
-    console.log(new URL(configUrl, location.href + "/").pathname, data);
+    navs.splice(0, 1000, ...configData.navs);
+
+    console.log(articleData, configData);
   })();
 }
+
+export const resetData = (path) => {
+  // debugger;
+};
 
 window.showLeft = showLeft;
