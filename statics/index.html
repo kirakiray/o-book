@@ -12,6 +12,9 @@
     ></script> -->
     <script type="module" src="http://127.0.0.1:5548/init.js"></script>
     <link rel="stylesheet" href="./styles/index.css" />
+    <script>
+      const configUrl = null;
+    </script>
   </head>
   <body>
     <o-app src="./app-config.js">
@@ -25,13 +28,13 @@
 
         {[content]}
 
-        <!-- <div style="height: 100px; background-color: #aaa">article</div> -->
         <script>
           export const parent = "./pages/layout.html";
 
           export default async ({ load }) => {
             return {
               data: {},
+              proto: {},
             };
           };
         </script>

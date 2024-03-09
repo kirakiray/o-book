@@ -19,7 +19,7 @@
     </p-button>
     <x-if :value="entryLink">
       <p>
-        <a attr:href="entryLink" target="_blank">Entry</a>
+        <a attr:href="entryLink + 'cn/index.html'" target="_blank">Entry</a>
         <br />
         <a attr:href="entryLink + '_statics/'" target="_blank">Static</a>
         <br />
@@ -32,7 +32,7 @@
 
   <script>
     import yaml from "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.mjs";
-    import { statics, config as configTask } from "../src/tasks.js";
+    import { statics, config as configTask, respPage } from "../src/tasks.js";
     import { getAllArticles } from "../src/util.js";
     export const parent = "./layout.html";
 
@@ -46,6 +46,7 @@
           _handle: null,
           mainLang: "cn",
           _allDatas: [],
+          articleTemp: "", // 正文模板内容
         },
         proto: {
           async selectDir() {
@@ -100,10 +101,12 @@
 
                 const path = pathname.replace(/^\//, "");
 
-                for (let task of [statics, configTask]) {
+                for (let task of [statics, configTask, respPage]) {
                   const result = await task({
                     path,
                     all: _this._allDatas,
+                    handle: _this._handle,
+                    temp: _this.articleTemp,
                   });
 
                   if (result) {
@@ -123,6 +126,11 @@
         },
         ready() {
           // this.initServer();
+          fetch("/statics/index.html")
+            .then((e) => e.text())
+            .then((text) => {
+              this.articleTemp = text;
+            });
         },
       };
     };

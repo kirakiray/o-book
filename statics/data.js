@@ -16,20 +16,31 @@ export const navs = $.stanz([
 
 export const articlesList = $.stanz([
   {
-    name: "介绍",
+    name: "test1",
     link: "",
   },
   {
-    name: "使用 ofa.js",
+    name: "test2",
     childs: [
       {
-        name: "aaaaa",
+        name: "test 2 sub 1",
       },
       {
-        name: "aaaaa2",
+        name: "test 2 sub 2",
       },
     ],
   },
 ]);
+
+if (typeof configUrl === "string") {
+  // 加载数据
+  (async () => {
+    const data = await fetch(configUrl).then((e) => {
+      return e.text();
+    });
+
+    console.log(new URL(configUrl, location.href + "/").pathname, data);
+  })();
+}
 
 window.showLeft = showLeft;
