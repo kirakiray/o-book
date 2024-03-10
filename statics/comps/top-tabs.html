@@ -25,7 +25,7 @@
     attr:scroll-buttons="type === 'mobile' ? '' : null"
   >
     <x-fill :value="tabs">
-      <p-tab>{{$data.name}}</p-tab>
+      <p-tab :active-item="$data.active">{{$data.name}}</p-tab>
     </x-fill>
   </p-tabs>
 
@@ -38,7 +38,13 @@
           type: null,
         },
         data: {
-          tabs: navs,
+          tabs: [],
+        },
+        attached() {
+          this.tabs = navs;
+        },
+        detached() {
+          this.navs = {};
         },
       };
     };

@@ -89,8 +89,24 @@ export const initPath = (path) => {
     // 不在导航内，隐藏左侧菜单
     showLeft.value = false;
   }
+
+  fixTopNavActive(path);
 };
 
+// 修正顶部导航的激活状态
+const fixTopNavActive = (path) => {
+  const firstMatch = path.split("/")[0];
+
+  navs.forEach((e) => {
+    if (e.src === firstMatch) {
+      e.active = 1;
+    } else {
+      e.active = null;
+    }
+  });
+};
+
+// 修正左侧导航的激活状态数据
 const fixLeftNavActive = (list, activePath) => {
   let hasActive = false;
   list.forEach((e) => {
@@ -115,7 +131,7 @@ const fixLeftNavActive = (list, activePath) => {
   return hasActive;
 };
 
-// 修复左侧导航栏的地址
+// 修复左侧导航栏的访问地址
 const fixLeftNavItem = (item) => {
   if (item.childs) {
     return {
