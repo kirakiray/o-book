@@ -24,13 +24,14 @@
       radius
       collapse-childs="open"
     >
-      {{$data.name}}
       <x-if :value="$data.childs">
+        {{$data.name}}
         <i collapse-triangle slot="suffix"></i>
         <p-list slot="childs">
           <x-fill :value="$data.childs" name="item"> </x-fill>
         </p-list>
       </x-if>
+      <x-else> <a attr:href="$data.path">{{$data.name}}</a> </x-else>
     </p-list-item>
   </template>
 

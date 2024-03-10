@@ -25,28 +25,26 @@
             flex-shrink: 0;
           }
         </style>
-        <link rel="stylesheet" href="./styles/github-markdown.css">
+        <link rel="stylesheet" href="./styles/github-markdown.css" />
 
-        <article class="markdown-body">
-          {[content]}
-        </article>
+        <article class="markdown-body">{[content]}</article>
 
         <script>
           export const parent = "./pages/layout.html";
           const selfPath = null;
 
           export default async ({ load }) => {
-            let resetData;
+            let initPath;
             try {
               const d = await load("../_statics/data.js");
-              resetData = d.resetData;
+              initPath = d.initPath;
             } catch (err) {}
 
             return {
               data: {},
               proto: {},
               attached() {
-                resetData && resetData(selfPath);
+                initPath && initPath(selfPath);
               },
             };
           };
