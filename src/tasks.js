@@ -87,6 +87,13 @@ export const respPage = async ({ path, handle, temp }) => {
       ""
     )}";`
   );
+  //
+
+  content = content.replace(
+    "const DOCROOT = null;",
+    `const DOCROOT = "${getRelativeURL(path, "/").replace("../", "") || "./"}";`
+  );
+
   content = content.replace(
     '<o-app src="./app-config.js">',
     `<o-app src="${getRelativeURL(path, "_statics/app-config.js")}">`
@@ -96,11 +103,8 @@ export const respPage = async ({ path, handle, temp }) => {
     `const selfPath = "${paths.slice(1).join("/")}";`
   );
   content = content.replace(
-    `<link rel="stylesheet" href="./styles/github-markdown.css">`,
-    `<link rel="stylesheet" href="${getRelativeURL(
-      path,
-      "_statics/styles/github-markdown.css"
-    )}">`
+    `href="./styles/github-markdown.css"`,
+    `href="${getRelativeURL(path, "_statics/styles/github-markdown.css")}"`
   );
 
   content = content.replace(

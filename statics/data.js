@@ -50,6 +50,8 @@ if (typeof configUrl === "string") {
   })();
 }
 
+let _oldNavDir = null;
+
 export const initPath = (path) => {
   const {
     configData: { navs },
@@ -75,13 +77,48 @@ export const initPath = (path) => {
 
     const targetDir = dirs.find((e) => e.name === firstDirName);
 
-    if (targetDir) {
-      articlesList.splice(0, 1000, ...targetDir.childs);
+    if (_oldNavDir !== targetDir) {
+      if (targetDir) {
+        articlesList.splice(0, 1000, ...fixLeftNavItem(targetDir).childs);
+      }
     }
+    fixLeftNavActive(articlesList, path);
+
+    _oldNavDir = targetDir;
   } else {
     // 不在导航内，隐藏左侧菜单
     showLeft.value = false;
   }
+};
+
+const fixLeftNavActive = (list, activePath) => {
+  list.forEach((e) => {
+    if (e.path) {
+      if (e.path === activePath) {
+        e.active = 1;
+      } else {
+        e.active = null;
+      }
+    } else {
+      fixLeftNavActive(e.childs, activePath);
+    }
+  });
+};
+
+// 修复左侧导航栏的地址
+const fixLeftNavItem = (item) => {
+  if (item.childs) {
+    return {
+      name: item.name,
+      childs: item.childs.map((e) => fixLeftNavItem(e)),
+    };
+  }
+
+  return {
+    path: item.path,
+    name: item.name,
+    href: new URL(item.path, langRoot).href,
+  };
 };
 
 window.showLeft = showLeft;

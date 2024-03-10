@@ -14,15 +14,21 @@
     p-list-item p-list {
       margin-left: 12px;
     }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   </style>
   <p-list>
-    <x-fill :value="articlesList" name="item"></x-fill>
+    <x-fill :value="articlesList" name="item" fill-key="name"></x-fill>
   </p-list>
   <template name="item">
     <p-list-item
       attr:button="$data.childs ? 'suffix' : ''"
       radius
       collapse-childs="open"
+      attr:active-item="$data.active ? 1 : null"
     >
       <x-if :value="$data.childs">
         {{$data.name}}
@@ -31,7 +37,7 @@
           <x-fill :value="$data.childs" name="item"> </x-fill>
         </p-list>
       </x-if>
-      <x-else> <a attr:href="$data.path">{{$data.name}}</a> </x-else>
+      <x-else> <a attr:href="$data.href" olink>{{$data.name}}</a> </x-else>
     </p-list-item>
   </template>
 
