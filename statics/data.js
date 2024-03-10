@@ -92,17 +92,27 @@ export const initPath = (path) => {
 };
 
 const fixLeftNavActive = (list, activePath) => {
+  let hasActive = false;
   list.forEach((e) => {
     if (e.path) {
       if (e.path === activePath) {
         e.active = 1;
+        hasActive = true;
       } else {
         e.active = null;
       }
     } else {
-      fixLeftNavActive(e.childs, activePath);
+      const result = fixLeftNavActive(e.childs, activePath);
+      if (result) {
+        hasActive = true;
+        e.parentActive = 1;
+      } else {
+        e.parentActive = null;
+      }
     }
   });
+
+  return hasActive;
 };
 
 // 修复左侧导航栏的地址

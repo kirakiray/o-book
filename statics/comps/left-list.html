@@ -9,10 +9,21 @@
     p-list-item {
       font-size: 16px;
       margin: 2px 0;
+      font-weight: normal;
     }
 
     p-list-item p-list {
       margin-left: 12px;
+    }
+
+    p-list-item[active-item] {
+      color: var(--md-sys-color-primary);
+      font-weight: 500;
+    }
+
+    .parent-active {
+      color: var(--md-sys-color-primary);
+      font-weight: 500;
     }
 
     a {
@@ -29,6 +40,7 @@
       radius
       collapse-childs="open"
       attr:active-item="$data.active ? 1 : null"
+      class:parent-active="$data.parentActive"
     >
       <x-if :value="$data.childs">
         {{$data.name}}
