@@ -1,0 +1,12 @@
+name: 测tab2
+list:
+  - name: 首页2
+    path: index.html
+  - name: 测试文章2
+    path: article-test.html
+  - name: 测试sub
+    list:
+      - name: 文章1
+        path: sub/article-one.md
+      - name: wenzhang2
+        path: article-two.md

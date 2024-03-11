@@ -1,0 +1,6 @@
+name: 测试1
+list:
+  - name: 首页
+    path: index.md
+  - name: 测试文章
+    path: article-test.md
