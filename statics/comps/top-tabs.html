@@ -19,13 +19,19 @@
       width: 280px;
       margin-left: 0;
     }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
   </style>
   <p-tabs
     class:mobile-tabs="type === 'mobile'"
     attr:scroll-buttons="type === 'mobile' ? '' : null"
   >
     <x-fill :value="tabs">
-      <p-tab :active-item="$data.active">{{$data.name}}</p-tab>
+      <p-tab :active-item="$data.active">
+        <a attr:href="$data.href" olink>{{$data.name}}</a>
+      </p-tab>
     </x-fill>
   </p-tabs>
 

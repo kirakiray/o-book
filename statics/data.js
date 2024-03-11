@@ -4,13 +4,10 @@ export const showLeft = $.stanz({
 
 export const navs = $.stanz([
   {
-    name: "案例教程",
+    name: "nav1",
   },
   {
-    name: "文档",
-  },
-  {
-    name: "API",
+    name: "nav2",
   },
 ]);
 
@@ -63,9 +60,12 @@ if (typeof configUrl === "string") {
       0,
       1000,
       ...summarysData.map((e) => {
+        const indexItem = e.list.find((item) => /index\.html/.test(item.path));
+
         return {
           name: e.name,
           src: e.dirName,
+          href: new URL(indexItem.path, langRoot).href,
         };
       })
     );
