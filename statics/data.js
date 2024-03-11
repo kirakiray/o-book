@@ -32,35 +32,48 @@ export const articlesList = $.stanz([
   },
 ]);
 
-const gloData = {};
+let summarysData = null;
 
 if (typeof configUrl === "string") {
   // 加载数据
   (async () => {
-    const { articleData, configData } = await fetch(configUrl).then((e) => {
-      return e.json();
+    const { configData, summarys } = await fetch(configUrl).then((e) =>
+      e.json()
+    );
+
+    // 给所有地址前添加dirName，转为相对地址
+    const fixSummarysPath = (list, dirName) => {
+      list.forEach((e) => {
+        if (e.list) {
+          fixSummarysPath(e.list, dirName);
+        } else if (e.path) {
+          e.path = `${dirName}/${e.path}`;
+        }
+      });
+    };
+
+    summarys.forEach((e) => {
+      fixSummarysPath(e.list, e.dirName);
     });
 
+    summarysData = summarys;
+
     // 初始化顶部
-    navs.splice(0, 1000, ...configData.navs);
-
-    Object.assign(gloData, { articleData, configData });
-
-    console.log(articleData, configData);
+    navs.splice(
+      0,
+      1000,
+      ...summarysData.map((e) => {
+        return {
+          name: e.name,
+          src: e.dirName,
+        };
+      })
+    );
   })();
 }
 
-let _oldNavDir = null;
-
+let _oldSummary = null;
 export const initPath = (path) => {
-  const {
-    configData: { navs },
-    articleData: { childs: dirs },
-  } = gloData;
-
-  console.log("initPath", path);
-
-  // 修正左侧导航的内容
   // 先判断在哪个导航上，修正为那个导航上的内容
   const targetNav = navs.find((e) => {
     const reg = new RegExp("^" + e.src + "/");
@@ -70,21 +83,17 @@ export const initPath = (path) => {
   });
 
   if (targetNav) {
-    // 存在导航地址内，修正顶部导航的激活
     showLeft.value = true;
 
-    const firstDirName = targetNav.src.split("/")[0];
+    const targetSummary = summarysData.find((e) => e.dirName === targetNav.src);
 
-    const targetDir = dirs.find((e) => e.name === firstDirName);
-
-    if (_oldNavDir !== targetDir) {
-      if (targetDir) {
-        articlesList.splice(0, 1000, ...fixLeftNavItem(targetDir).childs);
-      }
+    if (targetSummary !== _oldSummary) {
+      articlesList.splice(0, 1000, ...fixLeftNavItem(targetSummary).childs);
     }
+
     fixLeftNavActive(articlesList, path);
 
-    _oldNavDir = targetDir;
+    _oldSummary = targetSummary;
   } else {
     // 不在导航内，隐藏左侧菜单
     showLeft.value = false;
@@ -93,17 +102,20 @@ export const initPath = (path) => {
   fixTopNavActive(path);
 };
 
-// 修正顶部导航的激活状态
-const fixTopNavActive = (path) => {
-  const firstMatch = path.split("/")[0];
+// 修复左侧导航栏的访问地址
+const fixLeftNavItem = (item) => {
+  if (item.list) {
+    return {
+      name: item.name,
+      childs: item.list.map((e) => fixLeftNavItem(e)),
+    };
+  }
 
-  navs.forEach((e) => {
-    if (e.src === firstMatch) {
-      e.active = 1;
-    } else {
-      e.active = null;
-    }
-  });
+  return {
+    path: item.path,
+    name: item.name,
+    href: new URL(item.path, langRoot).href,
+  };
 };
 
 // 修正左侧导航的激活状态数据
@@ -131,20 +143,17 @@ const fixLeftNavActive = (list, activePath) => {
   return hasActive;
 };
 
-// 修复左侧导航栏的访问地址
-const fixLeftNavItem = (item) => {
-  if (item.childs) {
-    return {
-      name: item.name,
-      childs: item.childs.map((e) => fixLeftNavItem(e)),
-    };
-  }
+// 修正顶部导航的激活状态
+const fixTopNavActive = (path) => {
+  const firstMatch = path.split("/")[0];
 
-  return {
-    path: item.path,
-    name: item.name,
-    href: new URL(item.path, langRoot).href,
-  };
+  navs.forEach((e) => {
+    if (e.src === firstMatch) {
+      e.active = 1;
+    } else {
+      e.active = null;
+    }
+  });
 };
 
 window.showLeft = showLeft;

@@ -47,6 +47,15 @@ export const getSummarys = async (handle) => {
       if (summaryHandle) {
         const summary = yaml.load(await summaryHandle.text());
         summary.dirName = name;
+        const fixSuffix = (item) => {
+          if (item.list) {
+            item.list.forEach((e) => fixSuffix(e));
+            return;
+          }
+
+          item.path = item.path.replace(/\.md/, ".html");
+        };
+        fixSuffix(summary);
         summarys.push(summary);
       }
     }
