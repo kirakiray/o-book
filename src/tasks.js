@@ -63,11 +63,11 @@ export const respPage = async ({ path, handle, temp }) => {
     const articleTempEl = $(`<template>${content}</template>`);
     articleTempEl.all("a").forEach((el) => {
       let href = el.attr("href");
-      if (!/^http:/.test(href)) {
+      if (!/^http[s]?:/.test(href)) {
         href = href.replace(/\.md/, ".html");
+        el.attr("olink", "");
       }
       el.attr("href", href);
-      el.attr("olink", "");
     });
     content = articleTempEl.html;
   }
