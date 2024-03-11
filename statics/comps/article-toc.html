@@ -15,6 +15,8 @@
     .toc-inner {
       position: sticky;
       top: 16px;
+      height: calc(100vh - 100px);
+      overflow-y: auto;
       /* border-left: var(--md-sys-color-primary-container) solid 1px; */
     }
     p-list-item::part(container) {
@@ -70,6 +72,7 @@
                 button
                 attr:active-item="$index === 1 ? '' : null"
                 attr:oritag="$data.t"
+                attr:data-mark="$data.mark"
               >
                 <div>{{$data.val}}</div>
               </p-list-item>
@@ -88,18 +91,60 @@
         },
         proto: {
           init() {
-            this.heads = this.$("article")
-              .all("h1,h2,h3,h4,h5")
-              .map((e) => {
-                return {
-                  t: e.tag,
-                  val: e.text,
-                };
+            if (this._obs) {
+              this._obs.disconnect();
+            }
+
+            const observer = (this._obs = new IntersectionObserver(function (
+              entries
+            ) {
+              const cansees = [];
+              const disps = [];
+              // 如果目标元素在可视区域内
+              entries.forEach((ioe) => {
+                if (ioe.isIntersecting) {
+                  cansees.push(ioe.target);
+                } else {
+                  disps.push(ioe.target);
+                }
               });
+
+              console.log(cansees, disps);
+            }));
+
+            const heads = [];
+
+            let prevHeadMark = "";
+            // 逐段扫描，赋予所有段落所归属的标题，并拿出标题
+            this.$("article").forEach((lineEl, index) => {
+              if (lineEl.is("h1,h2,h3,h4,h5")) {
+                const headMark = `${lineEl.text}-${this._mid}-${index}`;
+                heads.push({
+                  val: lineEl.text,
+                  t: lineEl.tag,
+                  mark: headMark,
+                });
+
+                prevHeadMark = headMark;
+              }
+
+              lineEl.attr("belong", prevHeadMark);
+
+              // 开始观察目标元素
+              observer.observe(lineEl.ele);
+            });
+
+            this.heads = heads;
           },
         },
         attached() {
+          this._mid = Math.random().toString(32).slice(8);
           this.init();
+        },
+        detached() {
+          if (this._obs) {
+            this._obs.disconnect();
+          }
         },
       };
     };
