@@ -1,0 +1,90 @@
+<template component>
+  <l-m src="@pui/list/list.html"></l-m>
+  <style>
+    :host {
+      display: block;
+    }
+    .container {
+      display: flex;
+    }
+    .toc {
+      flex: 0 0 250px;
+      margin-left: auto;
+      padding: 16px 8px;
+    }
+    .toc-inner {
+      position: sticky;
+      top: 16px;
+      /* border-left: var(--md-sys-color-primary-container) solid 1px; */
+    }
+    p-list-item::part(container) {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    p-list-item {
+      position: relative;
+      font-size: 14px;
+      margin: 0;
+      font-weight: 500;
+      border-left: var(--md-sys-color-primary-container) solid 1px;
+    }
+
+    p-list-item[active-item] {
+      color: var(--md-sys-color-primary);
+    }
+    p-list-item[active-item]:before {
+      position: absolute;
+      left: -1px;
+      top: 0;
+      width: 1px;
+      height: 100%;
+      content: "";
+      background-color: var(--md-sys-color-primary);
+    }
+    ::slotted(article) {
+      flex: 1;
+    }
+  </style>
+  <div class="container">
+    <slot></slot>
+    <x-if :value="heads.length">
+      <div class="toc">
+        <div class="toc-inner">
+          <p-list>
+            <x-fill :value="heads">
+              <p-list-item button attr:active-item="$index === 1 ? '' : null">
+                {{$data.val}}
+              </p-list-item>
+            </x-fill>
+          </p-list>
+        </div>
+      </div>
+    </x-if>
+  </div>
+  <script>
+    export default async ({ load }) => {
+      return {
+        tag: "article-toc",
+        data: {
+          heads: [],
+        },
+        proto: {
+          init() {
+            this.heads = this.$("article")
+              .all("h1,h2,h3,h4,h5")
+              .map((e) => {
+                return {
+                  tag: e.tag,
+                  val: e.text,
+                };
+              });
+          },
+        },
+        attached() {
+          this.init();
+        },
+      };
+    };
+  </script>
+</template>

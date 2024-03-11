@@ -99,6 +99,13 @@ export const respPage = async ({ path, handle, temp }) => {
     `<o-app src="${getRelativeURL(path, "_statics/app-config.js")}">`
   );
   content = content.replace(
+    '<l-m src="./comps/article-toc.html"></l-m>',
+    `<l-m src="${getRelativeURL(
+      path,
+      "_statics/comps/article-toc.html"
+    )}"></l-m>`
+  );
+  content = content.replace(
     "const selfPath = null;",
     `const selfPath = "${paths.slice(1).join("/")}";`
   );
