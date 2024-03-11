@@ -34,7 +34,7 @@
   </p-list>
   <template name="item">
     <p-list-item
-      attr:button="$data.childs ? 'suffix' : ''"
+      attr:button="$data.childs ? 'suffix' : $data.active ? null : 1"
       radius
       collapse-childs="open"
       attr:active-item="$data.active ? 1 : null"
@@ -47,6 +47,7 @@
           <x-fill :value="$data.childs" name="item"> </x-fill>
         </p-list>
       </x-if>
+      <x-else-if :value="$data.active"> {{$data.name}} </x-else-if>
       <x-else> <a attr:href="$data.href" olink>{{$data.name}}</a> </x-else>
     </p-list-item>
   </template>

@@ -20,11 +20,12 @@
       cursor: pointer;
     }
     .container {
+      width: 100%;
       display: flex;
       align-items: center;
       /* height: 50px; */
     }
-    h1 {
+    h2 {
       margin-left: 4px;
       font-size: 18px;
       font-weight: 600;
@@ -57,9 +58,22 @@
     >
       <p-icon name="menu"></p-icon>
     </p-button>
-    <img class="logo" attr:src="configData.logo.pic" />
-    <h1 class="logo-text">{{configData.logo.text}}</h1>
-    <slot></slot>
+    <a
+      attr:href="langRoot + 'index.html'"
+      olink
+      style="
+        flex: 1 0 auto;
+        display: inline-flex;
+        align-items: center;
+        margin-right: 16px;
+      "
+    >
+      <img class="logo" attr:src="configData.logo.pic" />
+      <h2 class="logo-text">{{configData.logo.text}}</h2>
+    </a>
+    <div style="flex: 100 0 auto; display: inline-flex; align-items: center">
+      <slot></slot>
+    </div>
     <div class="right">
       <p-button
         icon
