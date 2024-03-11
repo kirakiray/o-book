@@ -33,7 +33,7 @@
   <script>
     import yaml from "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.mjs";
     import { statics, config as configTask, respPage } from "../src/tasks.js";
-    import { getAllArticles } from "../src/util.js";
+    import { getAllArticles, getSummarys } from "../src/util.js";
     export const parent = "./layout.html";
 
     export default async ({ load }) => {
@@ -74,6 +74,7 @@
             // const handle = await this._handle.get(lang);
 
             const articleData = await getAllArticles(handle);
+            const summarys = await getSummarys(handle);
 
             let configData = await handle
               .get("config.yaml")
@@ -84,6 +85,7 @@
             return {
               articleData,
               configData,
+              summarys,
             };
           },
           async initServer() {

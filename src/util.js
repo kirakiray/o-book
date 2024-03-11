@@ -1,3 +1,5 @@
+import yaml from "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.mjs";
+
 // 获取所有文章和相关信息
 export const getAllArticles = async (handle) => {
   const flats = [];
@@ -32,6 +34,24 @@ export const getAllArticles = async (handle) => {
   }
 
   return { flats, childs };
+};
+
+export const getSummarys = async (handle) => {
+  const summarys = [];
+  for await (let [name, subHandle] of handle.entries()) {
+    if (subHandle.kind === "directory") {
+      const summaryHandle = await subHandle
+        .get("summary.yaml")
+        .catch(() => null);
+
+      if (summaryHandle) {
+        const summary = yaml.load(await summaryHandle.text());
+        summary.dirName = name;
+        summarys.push(summary);
+      }
+    }
+  }
+  return summarys;
 };
 
 export function getRelativeURL(base, target) {
