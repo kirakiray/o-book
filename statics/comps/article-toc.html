@@ -24,7 +24,7 @@
 
     p-list-item {
       position: relative;
-      font-size: 14px;
+      font-size: 15px;
       margin: 0;
       font-weight: 500;
       border-left: var(--md-sys-color-primary-container) solid 1px;
@@ -42,6 +42,19 @@
       content: "";
       background-color: var(--md-sys-color-primary);
     }
+    [oritag="h2"] div {
+      font-size: 14px;
+      padding-left: 4px;
+    }
+    [oritag="h3"] div {
+      font-size: 14px;
+      padding-left: 8px;
+    }
+    [oritag="h4"] div,
+    [oritag="h5"] div {
+      font-size: 13px;
+      padding-left: 12px;
+    }
     ::slotted(article) {
       flex: 1;
     }
@@ -53,8 +66,12 @@
         <div class="toc-inner">
           <p-list>
             <x-fill :value="heads">
-              <p-list-item button attr:active-item="$index === 1 ? '' : null">
-                {{$data.val}}
+              <p-list-item
+                button
+                attr:active-item="$index === 1 ? '' : null"
+                attr:oritag="$data.t"
+              >
+                <div>{{$data.val}}</div>
               </p-list-item>
             </x-fill>
           </p-list>
@@ -75,7 +92,7 @@
               .all("h1,h2,h3,h4,h5")
               .map((e) => {
                 return {
-                  tag: e.tag,
+                  t: e.tag,
                   val: e.text,
                 };
               });

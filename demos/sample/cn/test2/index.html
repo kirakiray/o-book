@@ -1,1 +1,142 @@
-<h1>我是测试2</h1>
+<h1>API 介绍</h1>
+<p>
+  以下是 ofa.js API 的概览，你可以先浏览一遍，以备将来需要时再来查阅详细文档：
+</p>
+<h2>实例相关</h2>
+<ul>
+  <li><a href="./instance/dollar.html">$</a>：主要用于获取实例的方法</li>
+  <li><a href="./instance/all.html">all</a>：获取所有相关实例</li>
+  <li><a href="./instance/prev.html">prev</a>：获取目标元素的前一个实例</li>
+  <li><a href="./instance/prevs.html">prevs</a>：获取目标元素前面的所有实例</li>
+  <li><a href="./instance/next.html">next</a>：获取目标元素的后一个实例</li>
+  <li><a href="./instance/nexts.html">nexts</a>：获取目标元素后面的所有实例</li>
+  <li>
+    <a href="./instance/siblings.html">siblings</a
+    >：获取目标元素的所有相邻元素实例
+  </li>
+  <li><a href="./instance/parent.html">parent</a>：获取父元素实例</li>
+  <li><a href="./instance/parents.html">parents</a>：获取所有父元素的实例集</li>
+  <li><a href="./instance/clone.html">clone</a>：克隆实例的方法</li>
+  <li><a href="./instance/ele.html">ele</a>：获取实例的实际原生元素</li>
+  <li>
+    <a href="./instance/shadow.html">shadow</a>：获取自定义组件的影子根节点
+  </li>
+  <li><a href="./instance/root.html">root</a>：获取目标实例的根节点</li>
+  <li><a href="./instance/children.html">子元素</a>：通过数字直接获取子元素</li>
+  <li><a href="./instance/host.html">host</a>：获取目标的 app 元素实例</li>
+</ul>
+<h2>节点操作</h2>
+<ul>
+  <li><a href="./operation/array-like.html">添加或删除子节点</a></li>
+  <li>
+    <a href="./operation/before.html">before</a>：在目标实例的前面添加元素
+  </li>
+  <li><a href="./operation/after.html">after</a>：在目标实例的后面添加元素</li>
+  <li><a href="./operation/remove.html">remove</a>：删除目标元素</li>
+  <li><a href="./operation/wrap.html">wrap</a>：将目标元素上包裹一层元素</li>
+  <li>
+    <a href="./operation/unwrap.html">unwrap</a>：将目标元素去除包裹的元素
+  </li>
+</ul>
+<h2>属性操作</h2>
+<ul>
+  <li><a href="./props/text.html">text</a>：获取或设置目标元素的文本</li>
+  <li><a href="./props/html.html">html</a>：获取或设置目标元素的 HTML 代码</li>
+  <li>
+    <a href="./props/attr.html">attr</a>：获取或设置目标元素的
+    <a
+      href="https://developer.mozilla.org/en-US/docs/Web/API/Element/attributes"
+      >attributes</a
+    >
+  </li>
+  <li><a href="./props/css.html">css</a>：获取或设置目标元素的样式</li>
+  <li><a href="./props/style.html">style</a>：获取目标元素的原生样式</li>
+  <li>
+    <a href="./props/class-list.html">classList</a>：获取目标元素的原生 class
+    列表
+  </li>
+  <li><a href="./props/data.html">data</a>：获取目标元素的原生数据集</li>
+</ul>
+<h2>事件相关</h2>
+<ul>
+  <li><a href="./event/on.html">on</a>：绑定事件到目标元素</li>
+  <li><a href="./event/one.html">one</a>：一次性绑定事件到目标元素</li>
+  <li><a href="./event/emit.html">emit</a>：主动触发事件</li>
+  <li><a href="./event/off.html">off</a>：解除绑定的事件</li>
+</ul>
+<h2>模板语法</h2>
+<ul>
+  <li>
+    <a href="./temp-syntax/text-render.html">文本渲染</a
+    >：快速在模板文件上渲染文本
+  </li>
+  <li>
+    <a href="./temp-syntax/class.html">class</a>：快速在模板文件上渲染类名
+  </li>
+  <li><a href="./temp-syntax/sync.html">sync</a>：快速同步数据到模板文件</li>
+  <li>
+    <a href="./temp-syntax/condition.html">条件渲染</a
+    >：按需在模板文件上渲染内容
+  </li>
+  <li>
+    <a href="./temp-syntax/fill.html">列表渲染</a>：在模板文件上快速渲染数组数据
+  </li>
+</ul>
+<h2>生命周期</h2>
+<ul>
+  <li>
+    <a href="./life-cycle/created.html">created</a
+    >：组件被创建，但未渲染内容时触发
+  </li>
+  <li>
+    <a href="./life-cycle/ready.html">ready</a>：组件被创建，内容被渲染后触发
+  </li>
+  <li>
+    <a href="./life-cycle/watch.html">watch</a
+    >：组件初始化完成后和值被改变后触发
+  </li>
+  <li>
+    <a href="./life-cycle/loaded.html">loaded</a>：组件内嵌资源被加载完成后触发
+  </li>
+  <li>
+    <a href="./life-cycle/attached.html">attached</a>：组件被添加到 document
+    后触发
+  </li>
+  <li>
+    <a href="./life-cycle/detached.html">detached</a>： 组件从 document
+    被移除后触发
+  </li>
+  <li>
+    <a href="./life-cycle/router-change.html">routerChange</a
+    >：内嵌的父页面在应用路由改变时触发
+  </li>
+</ul>
+<h2>其他</h2>
+<ul>
+  <li>
+    <a href="./others/box.html">盒模型</a>：获取目标元素的所有尺寸相关的数据
+  </li>
+  <li>
+    <a href="./others/form-data.html">formData</a>：方便地绑定和获取表单数据
+  </li>
+  <li><a href="./others/tag.html">tag</a>：获取目标的标签名</li>
+  <li>
+    <a href="./others/index.html">index</a>：获取目标元素在其父元素下的排序
+  </li>
+  <li>
+    <a href="./others/is.html">is</a>：判断目标元素是否匹配 CSS 选择器表达式
+  </li>
+  <li><a href="./others/refresh.html">refresh</a>：主动刷新组件的界面</li>
+  <li><a href="./others/path.html">PATH</a>：获取组件或页面的注册文件地址</li>
+  <li>
+    <a href="./others/extend.html">extend</a>：扩展实例的数据或方法；扩展 ofa.js
+    底层的数据或方法；
+  </li>
+  <li>
+    <a href="./others/version.html">version</a>：获取当前引入的 ofa.js 的版本号
+  </li>
+  <li>
+    <a href="./others/stanz.html">实例数据特征</a
+    >：介绍实例数据的子对象数据特性，如何监听数据的变动
+  </li>
+</ul>
