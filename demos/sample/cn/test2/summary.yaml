@@ -9,4 +9,4 @@ list:
       - name: 文章1
         path: sub/article-one.md
       - name: wenzhang2
-        path: article-two.md
+        path: sub/article-two.md

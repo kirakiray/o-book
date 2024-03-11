@@ -29,6 +29,13 @@ export const articlesList = $.stanz([
   },
 ]);
 
+export const configs = $.stanz({
+  logo: {
+    text: "obook",
+    pic: "https://obook.ofajs.com/publics/logo.svg",
+  },
+});
+
 let summarysData = null;
 
 if (typeof configUrl === "string") {
@@ -37,6 +44,8 @@ if (typeof configUrl === "string") {
     const { configData, summarys } = await fetch(configUrl).then((e) =>
       e.json()
     );
+
+    Object.assign(configs, configData);
 
     // 给所有地址前添加dirName，转为相对地址
     const fixSummarysPath = (list, dirName) => {
