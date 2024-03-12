@@ -90,23 +90,37 @@
         </div>
         <div class="article">
           <slot></slot>
-          <div class="footer" style="height: 300px; background-color: #7d5252">
-            footer
-          </div>
+          <footer></footer>
         </div>
       </div>
     </div>
   </div>
   <script>
-    import { showLeft } from "../data.js";
+    import { showLeft, configs } from "../data.js";
 
     export default {
       data: {
         openDrawer: false,
         showLeft: {},
       },
-      attached() {
+      async attached() {
         this.showLeft = showLeft;
+
+        const configHref = new URL(configUrl, location).href;
+
+        if (configs.footer) {
+          const footerHref = new URL(configs.footer, configHref).href;
+          const footerContent = await fetch(footerHref).then((e) => e.text());
+          const tempArticle = $(`<template>${footerContent}</template>`)
+            .$("o-app template[page]")
+            .$(".markdown-body");
+
+          const shadow = this.shadow
+            .$("footer")
+            .ele.attachShadow({ mode: "open" });
+
+          shadow.innerHTML = tempArticle.html;
+        }
       },
       detached() {
         this.showLeft = {};
