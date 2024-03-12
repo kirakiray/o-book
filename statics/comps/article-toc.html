@@ -70,9 +70,9 @@
             <x-fill :value="heads">
               <p-list-item
                 button
-                attr:active-item="$index === 1 ? '' : null"
                 attr:oritag="$data.t"
                 attr:data-mark="$data.mark"
+                on:click="$host.clickTocItem($data)"
               >
                 <div>{{$data.val}}</div>
               </p-list-item>
@@ -88,29 +88,64 @@
         tag: "article-toc",
         data: {
           heads: [],
+          shows: [], // 在屏幕中显示的对应 head 的元素
         },
         proto: {
+          clickTocItem(data) {
+            const target = this.$(`[belong="${data.mark}"]`);
+
+            if (target) {
+              target.ele.scrollIntoView();
+            }
+          },
           init() {
             if (this._obs) {
               this._obs.disconnect();
             }
 
-            const observer = (this._obs = new IntersectionObserver(function (
-              entries
-            ) {
-              const cansees = [];
-              const disps = [];
-              // 如果目标元素在可视区域内
-              entries.forEach((ioe) => {
-                if (ioe.isIntersecting) {
-                  cansees.push(ioe.target);
-                } else {
-                  disps.push(ioe.target);
-                }
-              });
+            const observer = (this._obs = new IntersectionObserver(
+              (entries) => {
+                const cansees = [];
+                const disps = [];
+                // 如果目标元素在可视区域内
+                entries.forEach((ioe) => {
+                  if (ioe.isIntersecting) {
+                    cansees.push(ioe.target);
+                  } else {
+                    disps.push(ioe.target);
+                  }
+                });
 
-              console.log(cansees, disps);
-            }));
+                if (this._showEls === undefined) {
+                  this._showEls = new Set(cansees);
+                } else {
+                  disps.forEach((e) => this._showEls.delete(e));
+                  cansees.forEach((e) => this._showEls.add(e));
+                }
+
+                this.shows = Array.from(
+                  new Set(
+                    Array.from(this._showEls).map((e) =>
+                      e.getAttribute("belong")
+                    )
+                  )
+                );
+
+                const item = this.shadow.$(
+                  `.toc [data-mark="${this.shows[0]}"]`
+                );
+
+                this.shadow.all(`.toc [active-item]`).forEach((e) => {
+                  e.attr("active-item", null);
+                });
+
+                if (item) {
+                  item.attr("active-item", "");
+                }
+
+                // console.log(this.shows.slice());
+              }
+            ));
 
             const heads = [];
 
