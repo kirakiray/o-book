@@ -74,6 +74,8 @@
                 attr:data-mark="$data.mark"
                 attr:active-item="$host.isAcitve($data)"
                 on:click="$host.clickTocItem($data)"
+                on:mouseenter="$host.enterItem($data)"
+                on:mouseout="$host.outItem($data)"
               >
                 <div>{{$data.val}}</div>
               </p-list-item>
@@ -83,6 +85,9 @@
       </div>
     </x-if>
   </div>
+  <inject-host>
+    <style :html="hoverStyle"></style>
+  </inject-host>
   <script>
     export default async ({ load }) => {
       return {
@@ -90,8 +95,15 @@
         data: {
           heads: [],
           shows: [], // 在屏幕中显示的对应 head 的元素
+          hoverStyle: "",
         },
         proto: {
+          enterItem(data) {
+            this.hoverStyle = `[belong="${data.mark}"]{background:var(--md-ref-palette-translucent-primary60);transition:all ease .3s}`;
+          },
+          outItem(data) {
+            this.hoverStyle = "";
+          },
           isAcitve(data) {
             return this.shows.includes(data.mark) ? "" : null;
           },
