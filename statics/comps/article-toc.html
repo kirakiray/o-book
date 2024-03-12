@@ -72,6 +72,7 @@
                 button
                 attr:oritag="$data.t"
                 attr:data-mark="$data.mark"
+                attr:active-item="$host.isAcitve($data)"
                 on:click="$host.clickTocItem($data)"
               >
                 <div>{{$data.val}}</div>
@@ -91,6 +92,9 @@
           shows: [], // 在屏幕中显示的对应 head 的元素
         },
         proto: {
+          isAcitve(data) {
+            return this.shows.includes(data.mark) ? "" : null;
+          },
           clickTocItem(data) {
             const target = this.$(`[belong="${data.mark}"]`);
 
@@ -129,21 +133,12 @@
                       e.getAttribute("belong")
                     )
                   )
-                );
-
-                const item = this.shadow.$(
-                  `.toc [data-mark="${this.shows[0]}"]`
-                );
-
-                this.shadow.all(`.toc [active-item]`).forEach((e) => {
-                  e.attr("active-item", null);
+                ).sort((a, b) => {
+                  return (
+                    Number(a.split("-").slice(-1)[0]) -
+                    Number(b.split("-").slice(-1)[0])
+                  );
                 });
-
-                if (item) {
-                  item.attr("active-item", "");
-                }
-
-                // console.log(this.shows.slice());
               }
             ));
 
