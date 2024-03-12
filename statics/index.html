@@ -57,6 +57,10 @@
               data: {},
               proto: {},
               attached() {
+                const mainInner = this.parent.shadow.$(".main-inner .article");
+                if (mainInner.ele.scrollTop > 0) {
+                  mainInner.ele.scrollTop = 0;
+                }
                 initPath && initPath(selfPath);
               },
             };
