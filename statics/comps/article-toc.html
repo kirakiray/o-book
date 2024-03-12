@@ -148,6 +148,11 @@
               this._obs.disconnect();
             }
 
+            if (this.$(`input[name="hide-toc"]`)) {
+              this.heads.splice(0, 1000);
+              return;
+            }
+
             const observer = (this._obs = new IntersectionObserver(
               (entries) => {
                 const cansees = [];
