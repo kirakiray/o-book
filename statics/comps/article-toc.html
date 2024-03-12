@@ -115,6 +115,34 @@
               target.ele.scrollIntoView();
             }
           },
+          fixRightTocScroll() {
+            clearTimeout(this._stimer);
+            this._stimer = setTimeout(() => {
+              const tocContainer = this.shadow.$(".toc-inner")?.ele;
+              const activeItemEls = this.shadow.all(".toc-inner [active-item]");
+
+              // 存在滚动条时才进行修正
+              if (
+                tocContainer.scrollHeight > tocContainer.clientHeight &&
+                activeItemEls.length
+              ) {
+                const firstActiveItem = activeItemEls[0].ele;
+                const lastActiveItem = activeItemEls.slice(-1)[0].ele;
+
+                if (
+                  lastActiveItem.offsetTop + lastActiveItem.offsetHeight >
+                  tocContainer.clientHeight
+                ) {
+                  // 向下滚动超出范围修正滚动
+                  tocContainer.scrollTop =
+                    lastActiveItem.offsetTop - tocContainer.clientHeight + 50;
+                } else if (tocContainer.scrollTop > firstActiveItem.offsetTop) {
+                  // 向上滚动超出范围
+                  tocContainer.scrollTop = firstActiveItem.offsetTop;
+                }
+              }
+            }, 50);
+          },
           init() {
             if (this._obs) {
               this._obs.disconnect();
@@ -152,6 +180,8 @@
                     Number(b.split("-").slice(-1)[0])
                   );
                 });
+
+                this.fixRightTocScroll();
               }
             ));
 
