@@ -32,6 +32,18 @@ export const config = async ({ path, all }) => {
   }
 };
 
+export const articleTask = async ({ path, all }) => {
+  if (/^[a-z]+\/_articles.json/.test(path)) {
+    const lang = path.split("/")[0];
+    const target = all.find((e) => e.lang === lang);
+
+    return {
+      body: JSON.stringify(target.articles),
+    };
+  }
+};
+
+// 修正并返回普通页面的内容
 export const respPage = async ({ path, handle, temp }) => {
   const paths = path.split("/");
   let path1, path2;

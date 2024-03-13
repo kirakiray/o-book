@@ -1,9 +1,9 @@
 import yaml from "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.mjs";
+import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
 // 获取所有文章和相关信息
 export const getAllArticles = async (handle) => {
   const flats = [];
-  const childs = [];
 
   for await (let [name, subHandle] of handle.entries()) {
     const path = subHandle.paths.slice(2).join("/");
@@ -12,28 +12,26 @@ export const getAllArticles = async (handle) => {
       if (/\.html$/.test(name) || /\.md$/.test(name)) {
         const repath = path.replace(/\.md/, ".html");
 
+        // 将文章内容转成纯文本内容，给后面全文搜索用
+        let content = await subHandle.text();
+        if (/\.md/.test(path)) {
+          content = marked.parse(content);
+        }
+        const tempEl = $(`<template>${content}</template>`);
+        content = tempEl.ele.content.textContent;
+
         flats.push({
           path: repath,
-        });
-
-        childs.push({
-          name,
-          type: subHandle.kind,
-          path: repath,
+          content,
         });
       }
     } else if (subHandle.kind === "directory") {
       const subData = await getAllArticles(subHandle);
-      flats.push(...subData.flats);
-      childs.push({
-        name,
-        type: subHandle.kind,
-        childs: subData.childs,
-      });
+      flats.push(...subData);
     }
   }
 
-  return { flats, childs };
+  return flats;
 };
 
 export const getSummarys = async (handle) => {
