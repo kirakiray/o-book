@@ -17,11 +17,19 @@ export const getAllArticles = async (handle) => {
         if (/\.md/.test(path)) {
           content = marked.parse(content);
         }
-        const tempEl = $(`<template>${content}</template>`);
-        content = tempEl.ele.content.textContent;
+        let tempEl = $(`<template>${content}</template>`);
+        tempEl = $(tempEl.ele.content);
+        content = tempEl.map((e) => {
+          return {
+            t: e.tag,
+            c: e.text.trim(),
+          };
+        });
+        // content = tempEl.ele.content.textContent;
 
         flats.push({
           path: repath,
+          title: tempEl.$("h1,h2,h3,h4,h5")?.text,
           content,
         });
       }

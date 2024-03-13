@@ -4,10 +4,8 @@
     src="https://cdn.jsdelivr.net/gh/ofajs/p-icons@0.0.5/p-svg-icon.html"
   ></l-m>
   <l-m src="@pui/button/button.html"></l-m>
-  <l-m src="@pui/dialog/dialog.html"></l-m>
-  <l-m src="@pui/text-field/text-field.html"></l-m>
-  <l-m src="@pui/list/list.html"></l-m>
   <l-m src="@pui/menu/menu-bind.html"></l-m>
+  <l-m src="./search-dialog.html"></l-m>
   <link rel="stylesheet" href="../styles/public.css" />
 
   <style>
@@ -137,62 +135,7 @@
     </div>
   </div>
 
-  <style>
-    .search-dialog {
-      display: flex;
-      flex-direction: column;
-      padding-top: 10px;
-      width: 40vw;
-      height: 70vh;
-    }
-    .list-main {
-      flex: 1;
-      overflow-y: auto;
-    }
-    .list-main p-list {
-      padding-top: 8px;
-    }
-  </style>
-
-  <p-dialog :open="searchDialog" on:click-mask="searchDialog = false">
-    <div class="search-dialog">
-      <p-text-field style="width: 100%">
-        <p-icon name="search" slot="prefix"></p-icon>
-      </p-text-field>
-      <div class="list-main">
-        <x-if :value="!historys.length">
-          <div
-            style="
-              height: 100px;
-              line-height: 100px;
-              text-align: center;
-              user-select: none;
-            "
-          >
-            没有搜索历史
-          </div>
-        </x-if>
-        <p-list>
-          <x-fill :value="historys">
-            <p-list-item button on:click="$host.clickHisItem">
-              <p-icon name="history" slot="prefix"></p-icon>
-              Headline {{$data.text}}
-              <span secondary>Supporting text {{$data.text}}</span>
-              <p-button
-                slot="suffix"
-                icon
-                variant="text"
-                on:click="$host.clickHisClose"
-                style="z-index: 3"
-              >
-                <p-icon name="close"></p-icon>
-              </p-button>
-            </p-list-item>
-          </x-fill>
-        </p-list>
-      </div>
-    </div>
-  </p-dialog>
+  <search-dialog sync:open="searchDialog"></search-dialog>
 
   <script>
     export default async ({ load }) => {
@@ -216,13 +159,6 @@
           },
         },
         proto: {
-          clickHisItem(e) {
-            console.log("click item", e);
-          },
-          clickHisClose(e) {
-            e.stopPropagation();
-            console.log("click close");
-          },
           switchMode() {
             this.isDark.value = !this.isDark.value;
           },

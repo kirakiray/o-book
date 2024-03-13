@@ -1,0 +1,172 @@
+<template component>
+  <l-m
+    src="https://cdn.jsdelivr.net/gh/ofajs/p-icons@0.0.5/p-svg-icon.html"
+  ></l-m>
+  <l-m src="@pui/dialog/dialog.html"></l-m>
+  <l-m src="@pui/progress/progress.html"></l-m>
+  <l-m src="@pui/text-field/text-field.html"></l-m>
+  <l-m src="@pui/list/list.html"></l-m>
+
+  <style>
+    .search-dialog {
+      display: flex;
+      flex-direction: column;
+      padding-top: 10px;
+      width: 40vw;
+      height: 70vh;
+    }
+    .list-main {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .list-main p-list {
+      padding-top: 8px;
+    }
+
+    .center-con {
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      user-select: none;
+    }
+
+    .search-highlight {
+      color: var(--md-sys-color-primary);
+      font-weight: 500;
+    }
+
+    .list-title {
+      font-size: 15px;
+      font-weight: bold;
+      margin: 16px 0 8px 4px;
+    }
+  </style>
+
+  <p-dialog :open="open" on:click-mask="open = false">
+    <div class="search-dialog">
+      <p-text-field
+        style="width: 100%"
+        sync:value="searchVal"
+        on:input="searchChange"
+      >
+        <p-icon name="search" slot="prefix"></p-icon>
+      </p-text-field>
+      <div class="list-main">
+        <x-if :value="!historys.length && !loading && !searchVal">
+          <div class="center-con">没有搜索历史</div>
+        </x-if>
+        <x-if :value="loading">
+          <div class="center-con">
+            <p-progress type="circle"></p-progress>
+          </div>
+        </x-if>
+
+        <p-list>
+          <x-fill :value="items">
+            <x-if :value="$data.type === 'title'">
+              <h4 class="list-title">{{$data.name}}</h4>
+            </x-if>
+            <x-else>
+              <p-list-item button on:click="$host.clickItem($data)">
+                <x-if :value="['h1','h2','h3','h4','h5'].includes($data.tag)">
+                  <div :html="$data.excerpt" style="font-weight: 500"></div>
+                </x-if>
+                <x-else>
+                  <div>{{ $data.head}}</div>
+                  <div secondary>
+                    <span :html="$data.excerpt"></span>
+                    <span>paragraph:{{$data.pId}}</span>
+                  </div>
+                </x-else>
+              </p-list-item>
+            </x-else>
+          </x-fill>
+        </p-list>
+
+        <p-list>
+          <x-fill :value="historys">
+            <p-list-item button on:click="$host.clickHisItem">
+              <p-icon name="history" slot="prefix"></p-icon>
+              {{$data.text}}
+              <p-button
+                slot="suffix"
+                icon
+                variant="text"
+                on:click="$host.clickHisClose"
+                style="z-index: 3"
+              >
+                <p-icon name="close"></p-icon>
+              </p-button>
+            </p-list-item>
+          </x-fill>
+        </p-list>
+      </div>
+    </div>
+  </p-dialog>
+
+  <script>
+    export default async ({ load }) => {
+      const { default: searchArticle } = await load(
+        "./search/search-article.js"
+      );
+
+      return {
+        tag: "search-dialog",
+        data: {
+          searchVal: "",
+          open: false,
+          loading: false,
+          historys: [],
+          items: [],
+        },
+        proto: {
+          clickHisItem(e) {
+            console.log("click item", e);
+          },
+          clickItem(item) {
+            this.app.goto(
+              `${langRoot + item.path}?pid=${item.pId}&search=${this.searchVal}`
+            );
+            this.open = false;
+          },
+          clickHisClose(e) {
+            e.stopPropagation();
+            console.log("click close");
+          },
+          searchChange(e) {
+            clearTimeout(this._searchTimer);
+            const content = $(e.target).value;
+            if (!content) {
+              this.items = [];
+              return;
+            }
+            this._searchTimer = setTimeout(async () => {
+              this.loading = true;
+              const results = await searchArticle({ content });
+
+              const newItems = [];
+
+              results.forEach((item) => {
+                newItems.push({
+                  type: "title",
+                  name: item.title + " - " + item.path,
+                });
+                item.datas.forEach((e) => {
+                  newItems.push({
+                    ...e,
+                    path: item.path,
+                  });
+                });
+              });
+
+              console.log(newItems);
+
+              this.items = newItems;
+              this.loading = false;
+            }, 300);
+          },
+        },
+      };
+    };
+  </script>
+</template>

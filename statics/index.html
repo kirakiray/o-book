@@ -4,16 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Static Article</title>
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.8/dist/ofa.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.8/libs/scsr/dist/scsr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.9/dist/ofa.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.9/libs/scsr/dist/scsr.min.js"></script>
     <!-- <script
       src="http://127.0.0.1:3348/packages/ofa/main.mjs"
       type="module"
-    ></script>
+    ></script> 
     <script
       src="http://127.0.0.1:3348/libs/scsr/scsr.mjs"
       type="module"
-    ></script> -->
+    ></script>-->
     <!-- <script
       type="module"
       src="https://cdn.jsdelivr.net/gh/ofajs/Punch-UI@0.1.8/init.js"
@@ -36,6 +36,11 @@
             display: block;
             flex-shrink: 0;
           }
+
+          .highlight-text {
+            color: var(--md-sys-color-primary);
+            font-weight: bold;
+          }
         </style>
         <link rel="stylesheet" href="./styles/github-markdown.css" />
 
@@ -47,7 +52,7 @@
           export const parent = "./pages/layout.html";
           const selfPath = null;
 
-          export default async ({ load }) => {
+          export default async ({ load, url }) => {
             let initPath;
             try {
               const d = await load("../_statics/data.js");
@@ -67,15 +72,52 @@
                 setTimeout(() => {
                   $("body").emit("page-loadend");
                 }, 300);
+
+                // 是否跳转到某个段落
+                {
+                  const params = new URL(url).searchParams;
+                  const pid = params.get("pid");
+                  const search = params.get("search");
+                  if (pid) {
+                    setTimeout(() => {
+                      const target = this.shadow.$(".markdown-body")[pid];
+                      target.ele.scrollIntoView();
+
+                      if (search) {
+                        wrapHighlight(target.ele, search);
+                      }
+                    }, 500);
+                  }
+                }
               },
             };
+          };
+
+          const wrapHighlight = (target, search) => {
+            Array.from(target.childNodes).forEach((e) => {
+              if (e instanceof Text) {
+                const { textContent } = e;
+                if (textContent.includes(search)) {
+                  // 将高亮代码替换原来的文本
+                  const frag = $("<span></span>");
+                  const sarr = textContent.split(search);
+                  frag.html = sarr.join(
+                    `<span class="highlight-text">${search}</span>`
+                  );
+                  e.parentNode.insertBefore(frag.ele, e);
+                  e.remove();
+                }
+              } else if (e.childNodes && e.childNodes.length) {
+                wrapHighlight(e, search);
+              }
+            });
           };
         </script>
       </template>
     </o-app>
 
-    <script>
-      $("body").on("page-loadend", () => {
+    <script type="module">
+      $("body").one("page-loadend", () => {
         $("[cover-loading]").classList.add("fadeout");
         setTimeout(() => {
           $("[cover-loading]").remove();
