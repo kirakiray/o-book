@@ -27,6 +27,7 @@
     </script>
   </head>
   <body>
+    <div cover-loading></div>
     <o-app src="./app-config.js">
       <template page>
         <l-m src="./comps/article-toc.html"></l-m>
@@ -62,11 +63,24 @@
                   mainInner.ele.scrollTop = 0;
                 }
                 initPath && initPath(selfPath);
+
+                setTimeout(() => {
+                  $("body").emit("page-loadend");
+                }, 300);
               },
             };
           };
         </script>
       </template>
     </o-app>
+
+    <script>
+      $("body").on("page-loadend", () => {
+        $("[cover-loading]").classList.add("fadeout");
+        setTimeout(() => {
+          $("[cover-loading]").remove();
+        }, 300);
+      });
+    </script>
   </body>
 </html>
