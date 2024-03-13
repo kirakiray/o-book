@@ -81,6 +81,14 @@
           $("[cover-loading]").remove();
         }, 300);
       });
+
+      if (!window.customElements) {
+        if (/zh\-/.test(navigator.language)) {
+          document.body.innerHTML = `你的浏览器太旧了，请更新或升级你的浏览器。`;
+        } else {
+          document.body.innerHTML = `Your browser is too old, please upgrade or change your browser.`;
+        }
+      }
     </script>
   </body>
 </html>
