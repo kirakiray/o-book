@@ -83,33 +83,35 @@
           </x-fill>
         </p-list>
 
-        <p-list>
-          <x-fill :value="historys">
-            <p-list-item button on:click="$host.clickHisItem($data)">
-              <p-icon name="history" slot="prefix"></p-icon>
+        <x-if :value="!searchVal">
+          <p-list>
+            <x-fill :value="historys">
+              <p-list-item button on:click="$host.gotoPage($data)">
+                <p-icon name="history" slot="prefix"></p-icon>
 
-              <div>
-                {{ $data.head}} -
-                <span style="font-size: 12px">
-                  {{new Date($data.time).toLocaleString()}}</span
+                <div>
+                  {{ $data.head}} -
+                  <span style="font-size: 12px">
+                    {{new Date($data.time).toLocaleString()}}</span
+                  >
+                </div>
+                <div secondary>
+                  <span :html="$data.excerpt"></span>
+                  <span>paragraph:{{$data.pId}}</span>
+                </div>
+                <p-button
+                  slot="suffix"
+                  icon
+                  variant="text"
+                  on:click="$host.clickHisClose($event,$index)"
+                  style="z-index: 3"
                 >
-              </div>
-              <div secondary>
-                <span :html="$data.excerpt"></span>
-                <span>paragraph:{{$data.pId}}</span>
-              </div>
-              <p-button
-                slot="suffix"
-                icon
-                variant="text"
-                on:click="$host.clickHisClose($event,$index)"
-                style="z-index: 3"
-              >
-                <p-icon name="close"></p-icon>
-              </p-button>
-            </p-list-item>
-          </x-fill>
-        </p-list>
+                  <p-icon name="close"></p-icon>
+                </p-button>
+              </p-list-item>
+            </x-fill>
+          </p-list>
+        </x-if>
       </div>
     </div>
   </p-dialog>
@@ -135,17 +137,16 @@
           },
         },
         proto: {
-          clickHisItem(item) {
+          gotoPage(item, search) {
             this.app.goto(
-              `${langRoot + item.path}?pid=${item.pId}&search=${item.search}`
+              `${langRoot + item.path}?pid=${item.pId}&search=${
+                search || item.search
+              }`
             );
             this.open = false;
           },
           clickItem(item) {
-            this.app.goto(
-              `${langRoot + item.path}?pid=${item.pId}&search=${this.searchVal}`
-            );
-            this.open = false;
+            this.gotoPage(item, this.searchVal);
             this.historys.unshift({
               ...item,
               time: Date.now(),
