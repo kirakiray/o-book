@@ -88,7 +88,12 @@
             <p-list-item button on:click="$host.clickHisItem($data)">
               <p-icon name="history" slot="prefix"></p-icon>
 
-              <div>{{ $data.head}}</div>
+              <div>
+                {{ $data.head}} -
+                <span style="font-size: 12px">
+                  {{new Date($data.time).toLocaleString()}}</span
+                >
+              </div>
               <div secondary>
                 <span :html="$data.excerpt"></span>
                 <span>paragraph:{{$data.pId}}</span>
@@ -141,8 +146,9 @@
               `${langRoot + item.path}?pid=${item.pId}&search=${this.searchVal}`
             );
             this.open = false;
-            this.historys.push({
+            this.historys.unshift({
               ...item,
+              time: Date.now(),
               search: this.searchVal,
             });
           },
