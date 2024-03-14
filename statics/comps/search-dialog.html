@@ -85,14 +85,19 @@
 
         <p-list>
           <x-fill :value="historys">
-            <p-list-item button on:click="$host.clickHisItem">
+            <p-list-item button on:click="$host.clickHisItem($data)">
               <p-icon name="history" slot="prefix"></p-icon>
-              {{$data.text}}
+
+              <div>{{ $data.head}}</div>
+              <div secondary>
+                <span :html="$data.excerpt"></span>
+                <span>paragraph:{{$data.pId}}</span>
+              </div>
               <p-button
                 slot="suffix"
                 icon
                 variant="text"
-                on:click="$host.clickHisClose"
+                on:click="$host.clickHisClose($event,$index)"
                 style="z-index: 3"
               >
                 <p-icon name="close"></p-icon>
@@ -116,22 +121,34 @@
           searchVal: "",
           open: false,
           loading: false,
-          historys: [],
+          historys: JSON.parse(localStorage.__historys || "[]"),
           items: [],
         },
+        watch: {
+          historys(historys) {
+            localStorage.setItem("__historys", JSON.stringify(historys));
+          },
+        },
         proto: {
-          clickHisItem(e) {
-            console.log("click item", e);
+          clickHisItem(item) {
+            this.app.goto(
+              `${langRoot + item.path}?pid=${item.pId}&search=${item.search}`
+            );
+            this.open = false;
           },
           clickItem(item) {
             this.app.goto(
               `${langRoot + item.path}?pid=${item.pId}&search=${this.searchVal}`
             );
             this.open = false;
+            this.historys.push({
+              ...item,
+              search: this.searchVal,
+            });
           },
-          clickHisClose(e) {
+          clickHisClose(e, index) {
             e.stopPropagation();
-            console.log("click close");
+            this.historys.splice(index, 1);
           },
           searchChange(e) {
             clearTimeout(this._searchTimer);
