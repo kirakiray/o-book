@@ -138,11 +138,21 @@
         },
         proto: {
           gotoPage(item, search) {
-            this.app.goto(
-              `${langRoot + item.path}?pid=${item.pId}&search=${
-                search || item.search
-              }`
-            );
+            const currentUrl = new URL(this.app.current.src);
+            if (
+              currentUrl.origin + currentUrl.pathname ===
+              langRoot + item.path
+            ) {
+              this.app.current.initSearch(
+                `${langRoot + item.path}?pid=${item.pId}&search=${item.search}`
+              );
+            } else {
+              this.app.goto(
+                `${langRoot + item.path}?pid=${item.pId}&search=${
+                  search || item.search
+                }`
+              );
+            }
             this.open = false;
           },
           clickItem(item) {

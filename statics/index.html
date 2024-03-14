@@ -61,7 +61,24 @@
 
             return {
               data: {},
-              proto: {},
+              proto: {
+                initSearch(oUrl) {
+                  // 是否跳转到某个段落
+                  const params = new URL(oUrl || url).searchParams;
+                  const pid = params.get("pid");
+                  const search = params.get("search");
+                  if (pid) {
+                    setTimeout(() => {
+                      const target = this.shadow.$(".markdown-body")[pid];
+                      target.ele.scrollIntoView();
+
+                      if (search) {
+                        wrapHighlight(target.ele, search);
+                      }
+                    }, 300);
+                  }
+                },
+              },
               attached() {
                 const mainInner = this.parent.shadow.$(".main-inner .article");
                 if (mainInner.ele.scrollTop > 0) {
@@ -73,22 +90,7 @@
                   $("body").emit("page-loadend");
                 }, 300);
 
-                // 是否跳转到某个段落
-                {
-                  const params = new URL(url).searchParams;
-                  const pid = params.get("pid");
-                  const search = params.get("search");
-                  if (pid) {
-                    setTimeout(() => {
-                      const target = this.shadow.$(".markdown-body")[pid];
-                      target.ele.scrollIntoView();
-
-                      if (search) {
-                        wrapHighlight(target.ele, search);
-                      }
-                    }, 500);
-                  }
-                }
+                this.initSearch();
               },
             };
           };
