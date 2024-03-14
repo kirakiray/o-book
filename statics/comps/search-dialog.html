@@ -137,7 +137,7 @@
           },
         },
         proto: {
-          gotoPage(item, search) {
+          gotoPage(item) {
             const currentUrl = new URL(this.app.current.src);
             if (
               currentUrl.origin + currentUrl.pathname ===
@@ -148,20 +148,20 @@
               );
             } else {
               this.app.goto(
-                `${langRoot + item.path}?pid=${item.pId}&search=${
-                  search || item.search
-                }`
+                `${langRoot + item.path}?pid=${item.pId}&search=${item.search}`
               );
             }
             this.open = false;
           },
           clickItem(item) {
-            this.gotoPage(item, this.searchVal);
-            this.historys.unshift({
+            const reItem = {
               ...item,
               time: Date.now(),
               search: this.searchVal,
-            });
+            };
+            
+            this.gotoPage(reItem);
+            this.historys.unshift(reItem);
           },
           clickHisClose(e, index) {
             e.stopPropagation();
