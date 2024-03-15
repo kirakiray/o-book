@@ -48,6 +48,7 @@
         style="width: 100%"
         sync:value="searchVal"
         on:input="searchChange"
+        on:keyup="searchKeyUp"
       >
         <p-icon name="search" slot="prefix"></p-icon>
       </p-text-field>
@@ -137,6 +138,15 @@
           },
         },
         proto: {
+          searchKeyUp(e) {
+            if (e.key === "ArrowDown") {
+              const firstItem = this.shadow.$("p-list-item[button]");
+
+              if (firstItem) {
+                firstItem.focus();
+              }
+            }
+          },
           gotoPage(item) {
             const currentUrl = new URL(this.app.current.src);
             if (
@@ -159,7 +169,7 @@
               time: Date.now(),
               search: this.searchVal,
             };
-            
+
             this.gotoPage(reItem);
             this.historys.unshift(reItem);
           },
