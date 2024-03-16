@@ -37,7 +37,7 @@
   <script>
     export const parent = "./layout.html";
 
-    import { create } from "../src/init-server.js";
+    import { create } from "../src/mdserver.js";
 
     export default async ({ load }) => {
       const { open } = await load("@nos/core/fs/system/main.js");
