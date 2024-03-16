@@ -35,109 +35,32 @@
   </div>
 
   <script>
-    import yaml from "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.mjs";
-    import {
-      statics,
-      config as configTask,
-      articleTask,
-      respPage,
-    } from "../src/tasks.js";
-    import { getSummarys, getAllArticles } from "../src/util.js";
     export const parent = "./layout.html";
+
+    import { create } from "../src/init-server.js";
 
     export default async ({ load }) => {
       const { open } = await load("@nos/core/fs/system/main.js");
-      const { createApi } = await load("@nos/core/virtual.js");
 
       return {
         data: {
           entryLink: null,
-          _handle: null,
           mainLang: "cn",
-          _allDatas: [],
           articleTemp: "", // 正文模板内容
         },
         proto: {
           async selectDir() {
-            const handle = (this._handle = await open());
+            const handle = await open();
 
-            const allDatas = [];
-
-            for await (let [name, subHandle] of handle.entries()) {
-              if (subHandle.kind === "directory" && !/^_/.test(name)) {
-                const navData = await this.getNavData(subHandle);
-                allDatas.push({
-                  lang: name,
-                  data: navData,
-                  // 所有文章的文本数据，给搜索用的
-                  articles: await getAllArticles(subHandle),
-                });
-              }
-            }
-
-            this._allDatas = allDatas;
-
-            console.log("all: ", allDatas);
-
-            this.initServer();
-          },
-          async getNavData(handle) {
-            const summarys = await getSummarys(handle);
-
-            const configData = await handle
-              .get("config.yaml")
-              .then((e) => e.text());
-
-            return {
-              configData: yaml.load(configData),
-              summarys,
-            };
-          },
-          async initServer() {
-            const _this = this;
-            const server = createApi({
-              name: this._handle.name,
-              async callback({
-                request,
-                search,
-                pathname,
-                searchParams,
-                hash,
-              }) {
-                console.log(request, search, pathname, searchParams, hash);
-
-                const path = pathname.replace(/^\//, "");
-
-                for (let task of [statics, configTask, articleTask, respPage]) {
-                  const result = await task({
-                    path,
-                    all: _this._allDatas,
-                    handle: _this._handle,
-                    // temp: _this.articleTemp,
-                    temp: await fetch("/statics/index.html").then((e) =>
-                      e.text()
-                    ),
-                  });
-
-                  if (result) {
-                    return result;
-                  }
-                }
-
-                return null;
-                // return {
-                //   body: "ok la -- " + path,
-                // };
-              },
-              created: () => {
-                this.entryLink = `${server.path}/`;
-              },
+            this._server = await create({
+              handle,
+              temp: this.articleTemp,
             });
+
+            this.entryLink = this._server.path + "/";
           },
         },
         ready() {
-          // this.initServer();
-
           fetch("/statics/index.html")
             .then((e) => e.text())
             .then((text) => {

@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Static Article</title>
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.9/dist/ofa.min.js" debug></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.9/dist/ofa.min.js"
+      debug
+    ></script>
     <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.9/libs/scsr/dist/scsr.min.js"></script>
     <!-- <script
       src="http://127.0.0.1:3348/packages/ofa/main.mjs"
@@ -119,6 +122,9 @@
     </o-app>
 
     <script type="module">
+      if (configUrl === null) {
+        $("[cover-loading]").remove();
+      }
       $("body").one("page-loadend", () => {
         $("[cover-loading]").classList.add("fadeout");
         setTimeout(() => {
