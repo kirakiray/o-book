@@ -41,7 +41,7 @@
       background-color: #f3f3f3;
     }
     .article-list p-list {
-      margin-left: 8px;
+      margin-left: 12px;
     }
 
     .article-list iconify-icon[slot="prefix"] {
@@ -63,7 +63,7 @@
           <option attr:value="$data.lang">{{$data.name}}</option>
         </x-fill>
       </p-select>
-      <p-button size="small" icon>
+      <p-button size="small" icon on:click="emit('reload')">
         <iconify-icon icon="mdi:reload"></iconify-icon>
       </p-button>
     </div>
@@ -92,10 +92,21 @@
         </p-list>
       </x-if>
       <x-else>
-        <iconify-icon
-          icon="material-symbols:article-outline"
-          slot="prefix"
-        ></iconify-icon>
+        <x-if :value="$data.ftype === 'md'">
+          <iconify-icon
+            icon="ant-design:file-markdown-outlined"
+            slot="prefix"
+          ></iconify-icon>
+        </x-if>
+        <x-else-if :value="$data.ftype === 'html'">
+          <iconify-icon icon="ph:file-html" slot="prefix"></iconify-icon>
+        </x-else-if>
+        <x-else>
+          <iconify-icon
+            icon="material-symbols:article-outline"
+            slot="prefix"
+          ></iconify-icon>
+        </x-else>
         {{$data.name}}
         <p-button slot="suffix" size="small" icon style="z-index: 3">
           <a attr:href="$data.url" target="_blank">
@@ -113,6 +124,11 @@
           lang: "", // 展示中的语言
           langOptions: [],
           summarys: [],
+        },
+        watch: {
+          summarys(summarys) {
+            console.log("summarys: ", summarys);
+          },
         },
       };
     };

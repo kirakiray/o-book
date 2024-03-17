@@ -59,6 +59,7 @@ export const getSummarys = async (handle) => {
             return;
           }
 
+          item.ftype = item.path.replace(/.+\.(.+)/, "$1");
           item.path = item.path.replace(/\.md/, ".html");
         };
         fixSuffix(summary);

@@ -28,8 +28,9 @@
         :lang="lang"
         :lang-options="langOptions"
         :summarys="summarys"
+        on:reload="reload"
       >
-        <!-- <p>
+        <p>
           <a attr:href="entryLink + 'cn/index.html'" target="_blank">Entry</a>
           <br />
           <a attr:href="entryLink + '_statics/'" target="_blank">Static</a>
@@ -41,7 +42,7 @@
           <a attr:href="entryLink + 'cn/_articles.json'" target="_blank">
             articles.json
           </a>
-        </p> -->
+        </p>
       </article-viewer>
     </x-if>
   </div>
