@@ -90,6 +90,15 @@
         on:click="clickSave"
         attr:disabled="oldFileText === filetext ? '' : null "
       >
+        <x-if :value="saving">
+          <iconify-icon icon="eos-icons:loading" slot="prefix"></iconify-icon>
+        </x-if>
+        <x-else>
+          <iconify-icon
+            icon="material-symbols:save-outline"
+            slot="prefix"
+          ></iconify-icon>
+        </x-else>
         保存
       </p-button>
     </div>
@@ -151,22 +160,33 @@
   <script>
     export default async ({ load }) => {
       const { confirm } = await load("@pui/dialog/command.js");
+      const { default: enqueue } = await load(`@pui/snackbar/enqueue.js`);
 
       return {
         tag: "article-viewer",
         data: {
           lang: "", // 展示中的语言
-          langOptions: [],
-          summarys: [],
+          langOptions: [], // 可用语言的选项
+          summarys: [], // 左侧的大纲
           activeUrl: "", // 激活中的url
-          oldFileText: "",
+          oldFileText: "", // 选中文件未保存前的文本
           filetext: "", // 选中中的文本内容
-          _targetHandle: null,
+          _targetHandle: null, // 选中文件的控制器
+          saving: false, // 是否保存中
         },
         proto: {
           async clickSave() {
+            if (this.saving || this.oldFileText === this.filetext) {
+              return;
+            }
+
+            this.saving = true;
             await this._targetHandle.write(this.filetext);
             this.oldFileText = this.filetext;
+            this.saving = false;
+            enqueue({
+              content: "保存成功",
+            });
           },
           async clickFile(data) {
             if (data.list) {
@@ -211,6 +231,14 @@
               }
             }, 100);
           },
+        },
+        attached() {
+          window.addEventListener("keydown", (e) => {
+            if (e.metaKey && e.key === "s") {
+              e.preventDefault();
+              this.clickSave();
+            }
+          });
         },
       };
     };
