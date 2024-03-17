@@ -63,10 +63,11 @@
           langOptions: [],
           // configData: {},
           summarys: [],
+          _handle: null,
         },
         proto: {
           async selectDir() {
-            const handle = await open();
+            const handle = (this._handle = await open());
 
             this._server = await create({
               handle,

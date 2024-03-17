@@ -33,7 +33,6 @@ const fixSummarys = (list) => {
       return {
         ...item,
         ftype: undefined,
-        originPath: undefined,
       };
     }
   });

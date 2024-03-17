@@ -16,10 +16,13 @@
     }
 
     .top {
+      position: relative;
+      z-index: 2;
       display: flex;
       align-items: center;
       padding: 8px 8px;
-      background-color: #fdfdfd;
+      background-color: var(--md-sys-color-on-primary);
+      box-shadow: rgba(128, 128, 128, 0.3) 0 0 5px;
     }
 
     .top > * {
@@ -38,7 +41,7 @@
     .article-list {
       width: 250px;
       height: 100%;
-      background-color: #f3f3f3;
+      background-color: var(--md-sys-color-on-primary);
     }
     .article-list p-list {
       margin-left: 12px;
@@ -53,7 +56,22 @@
     } */
 
     .article {
+      position: relative;
       flex: 1;
+    }
+
+    .article textarea {
+      position: absolute;
+      box-sizing: border-box;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding: 16px;
+      resize: none;
+      border: none;
+      background-color: var(--md-sys-color-surface);
+      outline: none;
     }
   </style>
   <div class="container">
@@ -74,13 +92,19 @@
         </p-list>
       </div>
       <div class="article">
-        <slot></slot>
+        <!-- <slot></slot> -->
+        <textarea sync:value="filetext"></textarea>
       </div>
     </div>
   </div>
 
   <template name="list-item">
-    <p-list-item attr:button="$data?.list?.length ? null : 1" radius>
+    <p-list-item
+      attr:button="$data?.list?.length ? null : 1"
+      radius
+      on:click="$host.clickFile($data)"
+      attr:active-item="$data.url === $host.activeUrl ? 1 : null"
+    >
       <x-if :value="$data.list && $data.list.length">
         <iconify-icon
           icon="gravity-ui:folder-open"
@@ -117,17 +141,60 @@
     </p-list-item>
   </template>
   <script>
-    export default async () => {
+    export default async ({ load }) => {
+      const { confirm } = await load("@pui/dialog/command.js");
+
       return {
         tag: "article-viewer",
         data: {
           lang: "", // 展示中的语言
           langOptions: [],
           summarys: [],
+          activeUrl: "", // 激活中的url
+          oldFileText: "",
+          filetext: "", // 选中中的文本内容
+        },
+        proto: {
+          async clickFile(data) {
+            if (data.list) {
+              return;
+            }
+            if (this.oldFileText !== this.filetext) {
+              const result = await confirm({
+                title: "未保存",
+                content: `修改的内容尚未保存，是否切换到另一个页面？`,
+              });
+
+              if (result === false) {
+                return;
+              }
+            }
+
+            const { host } = this;
+            let realPath = data.url.replace(host._server.path + "/", "");
+            realPath = realPath.replace(
+              new RegExp(`(.+)\\..+$`),
+              "$1." + data.ftype
+            );
+
+            const targetHandle = await host._handle.get(realPath);
+            const filetext = await targetHandle.text();
+
+            this.activeUrl = data.url;
+
+            this.oldFileText = this.filetext = filetext;
+          },
         },
         watch: {
           summarys(summarys) {
-            console.log("summarys: ", summarys);
+            console.log("summarys: ", summarys.toJSON());
+
+            setTimeout(() => {
+              const target = this.shadow.$("p-list-item[button]");
+              if (target) {
+                target.ele.click();
+              }
+            }, 100);
           },
         },
       };
