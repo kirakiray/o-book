@@ -42,8 +42,15 @@
     }
     .article-list p-list {
       margin-left: 8px;
-      font-size: 13px;
     }
+
+    .article-list iconify-icon[slot="prefix"] {
+      font-size: 18px;
+    }
+
+    /* .article-list p-list-item {
+      font-size: 13px;
+    } */
 
     .article {
       flex: 1;
@@ -56,7 +63,9 @@
           <option attr:value="$data.lang">{{$data.name}}</option>
         </x-fill>
       </p-select>
-      <p-button size="small">刷新</p-button>
+      <p-button size="small" icon>
+        <iconify-icon icon="mdi:reload"></iconify-icon>
+      </p-button>
     </div>
     <div class="main">
       <div class="left">
@@ -72,13 +81,22 @@
 
   <template name="list-item">
     <p-list-item attr:button="$data?.list?.length ? null : 1" radius>
-      {{$data.name}}
       <x-if :value="$data.list && $data.list.length">
+        <iconify-icon
+          icon="gravity-ui:folder-open"
+          slot="prefix"
+        ></iconify-icon>
+        <b> {{$data.name}}</b>
         <p-list slot="childs">
           <x-fill :value="$data.list" name="list-item"></x-fill>
         </p-list>
       </x-if>
       <x-else>
+        <iconify-icon
+          icon="material-symbols:article-outline"
+          slot="prefix"
+        ></iconify-icon>
+        {{$data.name}}
         <p-button slot="suffix" size="small" icon style="z-index: 3">
           <a attr:href="$data.url" target="_blank">
             <iconify-icon icon="fluent:open-16-filled"> </iconify-icon>
