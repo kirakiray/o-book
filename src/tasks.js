@@ -22,12 +22,30 @@ export const statics = async ({ path }) => {
   }
 };
 
+const fixSummarys = (list) => {
+  return list.map((item) => {
+    if (item.list) {
+      return {
+        ...item,
+        list: fixSummarys(item.list),
+      };
+    } else {
+      return {
+        ...item,
+        ftype: undefined,
+        originPath: undefined,
+      };
+    }
+  });
+};
 export const config = async ({ path, all }) => {
   if (/^[a-z]+\/config.json/.test(path)) {
     const lang = path.split("/")[0];
     const target = all.find((e) => e.lang === lang);
+    const data = { ...target.data };
+    data.summarys = fixSummarys(data.summarys);
     return {
-      body: JSON.stringify(target.data),
+      body: JSON.stringify(data),
     };
   }
 };
