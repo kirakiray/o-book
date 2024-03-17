@@ -30,6 +30,11 @@ export class MdServer {
   }
 
   async init() {
+    await this.reload();
+    await this._initServer();
+  }
+
+  async reload() {
     const handle = this._handle;
 
     const allDatas = [];
@@ -46,11 +51,9 @@ export class MdServer {
       }
     }
 
-    this._allDatas = allDatas;
+    this.allDatas = allDatas;
 
     console.log("all: ", allDatas);
-
-    await this._initServer();
   }
 
   async _getNavData(handle) {
@@ -78,10 +81,10 @@ export class MdServer {
         for (let task of [statics, configTask, articleTask, respPage]) {
           const result = await task({
             path,
-            all: _this._allDatas,
+            all: _this.allDatas,
             handle: _this._handle,
-            // temp: _this.articleTemp,
-            temp: await fetch("/statics/index.html").then((e) => e.text()),
+            temp: _this.articleTemp,
+            // temp: await fetch("/statics/index.html").then((e) => e.text()),
           });
 
           if (result) {

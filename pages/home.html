@@ -1,36 +1,48 @@
 <template page>
   <l-m src="@pui/button/button.html"></l-m>
+  <l-m src="@pui/select/select.html"></l-m>
+  <l-m src="@pui/list/list.html"></l-m>
+  <l-m src="../comps/viewer.html"></l-m>
   <style>
     :host {
       display: contents;
     }
     .container {
-      padding: 20px;
       height: 100%;
       /* background-color: red; */
     }
   </style>
   <div class="container">
-    <p>
-      这个webapp的所有操作只会在浏览器本地执行，不会上传到服务端。借助这个webapp，你不需要学习和使用什么命令行代码，不需要安装软件到你的系统上，就能生成好看好用的文档静态站。
-    </p>
-    <p-button on:click="selectDir" attr:disabled="entryLink ? '' : null">
-      选择文件夹
-    </p-button>
-    <x-if :value="entryLink">
-      <p>
-        <a attr:href="entryLink + 'cn/index.html'" target="_blank">Entry</a>
-        <br />
-        <a attr:href="entryLink + '_statics/'" target="_blank">Static</a>
-        <br />
-        <a attr:href="entryLink + 'cn/config.json'" target="_blank">
-          Config.json
-        </a>
-        <br />
-        <a attr:href="entryLink + 'cn/_articles.json'" target="_blank">
-          articles.json
-        </a>
-      </p>
+    <x-if :value="!lang">
+      <div style="padding: 0 16px">
+        <p>
+          这个webapp的所有操作只会在浏览器本地执行，不会上传到服务端。借助这个webapp，你不需要学习和使用什么命令行代码，不需要安装软件到你的系统上，就能生成好看好用的文档静态站。
+        </p>
+        <p-button on:click="selectDir" attr:disabled="entryLink ? '' : null">
+          选择文件夹
+        </p-button>
+      </div>
+    </x-if>
+    <x-if :value="lang">
+      <article-viewer
+        :lang="lang"
+        :lang-options="langOptions"
+        :summarys="summarys"
+      >
+        <!-- <p>
+          <a attr:href="entryLink + 'cn/index.html'" target="_blank">Entry</a>
+          <br />
+          <a attr:href="entryLink + '_statics/'" target="_blank">Static</a>
+          <br />
+          <a attr:href="entryLink + 'cn/config.json'" target="_blank">
+            Config.json
+          </a>
+          <br />
+          <a attr:href="entryLink + 'cn/_articles.json'" target="_blank">
+            articles.json
+          </a>
+        </p> -->
+      </article-viewer>
     </x-if>
   </div>
 
@@ -45,8 +57,11 @@
       return {
         data: {
           entryLink: null,
-          mainLang: "cn",
           articleTemp: "", // 正文模板内容
+          lang: "", // 展示中的语言
+          langOptions: [],
+          // configData: {},
+          summarys: [],
         },
         proto: {
           async selectDir() {
@@ -58,6 +73,46 @@
             });
 
             this.entryLink = this._server.path + "/";
+
+            this.reload();
+          },
+          async reload() {
+            const { allDatas } = this._server;
+
+            this.langOptions = allDatas.map((e) => {
+              let name = "";
+              const { lang } = e;
+
+              switch (lang) {
+                case "cn":
+                  name = "简体中文";
+                  break;
+                case "t-cn":
+                  name = "繁体中文";
+                  break;
+                case "en":
+                  name = "English";
+                  break;
+              }
+
+              return {
+                lang,
+                name,
+              };
+            });
+
+            this._alls = allDatas;
+
+            const target = allDatas[0];
+
+            this.lang = target.lang;
+
+            this.summarys = fixSummary(target.data.summarys, {
+              entryLink: this.entryLink,
+              lang: this.lang,
+            });
+
+            console.log(target.data.summarys);
           },
         },
         ready() {
@@ -68,6 +123,25 @@
             });
         },
       };
+    };
+
+    const fixSummary = (list, opts) => {
+      return list.map((item) => {
+        if (item.list) {
+          return {
+            ...item,
+            list: fixSummary(item.list, {
+              rootDir: opts.rootDir || item.dirName,
+              ...opts,
+            }),
+          };
+        }
+
+        return {
+          ...item,
+          url: `${opts.entryLink}${opts.lang}/${opts.rootDir}/${item.path}`,
+        };
+      });
     };
   </script>
 </template>

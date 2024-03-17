@@ -1,0 +1,102 @@
+<template component>
+  <l-m
+    src="https://cdn.jsdelivr.net/npm/iconify-icon@2.0.0/dist/iconify-icon.min.js"
+  ></l-m>
+  <l-m src="@pui/button/button.html"></l-m>
+  <l-m src="@pui/list/list.html"></l-m>
+  <style>
+    :host {
+      display: block;
+      height: 100%;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      padding: 8px 8px;
+      background-color: #fdfdfd;
+    }
+
+    .top > * {
+      margin: 0 4px;
+    }
+
+    .main {
+      display: flex;
+      flex: 1;
+    }
+
+    .left {
+      width: 250px;
+    }
+
+    .article-list {
+      width: 250px;
+      height: 100%;
+      background-color: #f3f3f3;
+    }
+    .article-list p-list {
+      margin-left: 8px;
+      font-size: 13px;
+    }
+
+    .article {
+      flex: 1;
+    }
+  </style>
+  <div class="container">
+    <div class="top">
+      <p-select :value="lang" size="small">
+        <x-fill :value="langOptions">
+          <option attr:value="$data.lang">{{$data.name}}</option>
+        </x-fill>
+      </p-select>
+      <p-button size="small">刷新</p-button>
+    </div>
+    <div class="main">
+      <div class="left">
+        <p-list class="article-list">
+          <x-fill :value="summarys" name="list-item"> </x-fill>
+        </p-list>
+      </div>
+      <div class="article">
+        <slot></slot>
+      </div>
+    </div>
+  </div>
+
+  <template name="list-item">
+    <p-list-item attr:button="$data?.list?.length ? null : 1" radius>
+      {{$data.name}}
+      <x-if :value="$data.list && $data.list.length">
+        <p-list slot="childs">
+          <x-fill :value="$data.list" name="list-item"></x-fill>
+        </p-list>
+      </x-if>
+      <x-else>
+        <p-button slot="suffix" size="small" icon style="z-index: 3">
+          <a attr:href="$data.url" target="_blank">
+            <iconify-icon icon="fluent:open-16-filled"> </iconify-icon>
+          </a>
+        </p-button>
+      </x-else>
+    </p-list-item>
+  </template>
+  <script>
+    export default async () => {
+      return {
+        tag: "article-viewer",
+        data: {
+          lang: "", // 展示中的语言
+          langOptions: [],
+          summarys: [],
+        },
+      };
+    };
+  </script>
+</template>
