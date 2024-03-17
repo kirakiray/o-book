@@ -84,6 +84,14 @@
       <p-button size="small" icon on:click="emit('reload')">
         <iconify-icon icon="mdi:reload"></iconify-icon>
       </p-button>
+      <p-button
+        size="small"
+        style="margin-left: auto"
+        on:click="clickSave"
+        attr:disabled="oldFileText === filetext ? '' : null "
+      >
+        保存
+      </p-button>
     </div>
     <div class="main">
       <div class="left">
@@ -153,8 +161,13 @@
           activeUrl: "", // 激活中的url
           oldFileText: "",
           filetext: "", // 选中中的文本内容
+          _targetHandle: null,
         },
         proto: {
+          async clickSave() {
+            await this._targetHandle.write(this.filetext);
+            this.oldFileText = this.filetext;
+          },
           async clickFile(data) {
             if (data.list) {
               return;
@@ -177,7 +190,9 @@
               "$1." + data.ftype
             );
 
-            const targetHandle = await host._handle.get(realPath);
+            const targetHandle = (this._targetHandle = await host._handle.get(
+              realPath
+            ));
             const filetext = await targetHandle.text();
 
             this.activeUrl = data.url;
