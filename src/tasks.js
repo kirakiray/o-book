@@ -88,6 +88,7 @@ export const respPage = async ({ path, handle, temp }) => {
   // 替换link的链接
   // md 后缀改为html 后缀
   // 链接本机的页面，都带上 olink 属性
+  let titleText = null;
   {
     const articleTempEl = $(`<template>${content}</template>`);
     articleTempEl.all("a").forEach((el) => {
@@ -99,9 +100,18 @@ export const respPage = async ({ path, handle, temp }) => {
       el.attr("href", href);
     });
     content = articleTempEl.html;
+    titleText = articleTempEl.$("h1,h2,h3,h4,h5")?.text;
   }
 
   content = temp.replace("{[content]}", content);
+
+  if (titleText) {
+    content = content.replace(
+      `<title>Static Article</title>`,
+      `<title>${titleText}</title>`
+    );
+  }
+
   content = content.replace(
     '<link rel="stylesheet" href="./styles/index.css" />',
     `<link rel="stylesheet" href="${getRelativeURL(
