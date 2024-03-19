@@ -11,12 +11,23 @@
       height: 100%;
       /* background-color: red; */
     }
+    .start-con {
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 200px 16px 0;
+      font-size: 22px;
+      text-align: center;
+    }
   </style>
   <div class="container">
     <x-if :value="!lang">
-      <div style="padding: 0 16px">
+      <div class="start-con">
         <p>
-          这个webapp的所有操作只会在浏览器本地执行，不会上传到服务端。借助这个webapp，你不需要学习和使用什么命令行代码，不需要安装软件到你的系统上，就能生成好看好用的文档静态站。
+          这个webapp的所有操作只会在浏览器本地执行，不会上传到服务端。
+          <br />
+          借助这个webapp，你不需要学习和使用什么命令行代码，不需要安装软件到你的系统上，就能生成好看好用的文档静态站。
         </p>
         <p-button on:click="selectDir" attr:disabled="entryLink ? '' : null">
           选择文件夹

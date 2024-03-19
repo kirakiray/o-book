@@ -84,9 +84,16 @@
       <p-button size="small" icon on:click="emit('reload')">
         <iconify-icon icon="mdi:reload"></iconify-icon>
       </p-button>
+      <p-button size="small" style="margin-left: auto" on:click="exportProject">
+        <iconify-icon
+          icon="mdi:calendar-export-outline"
+          slot="prefix"
+        ></iconify-icon>
+        导出
+      </p-button>
       <p-button
         size="small"
-        style="margin-left: auto"
+        style="margin-left: 0"
         on:click="clickSave"
         attr:disabled="oldFileText === filetext ? '' : null "
       >
@@ -161,6 +168,7 @@
     export default async ({ load }) => {
       const { confirm } = await load("@pui/dialog/command.js");
       const { default: enqueue } = await load(`@pui/snackbar/enqueue.js`);
+      const { exportProject } = await load("../src/exportmd.js");
 
       return {
         tag: "article-viewer",
@@ -175,6 +183,11 @@
           saving: false, // 是否保存中
         },
         proto: {
+          async exportProject() {
+            await exportProject({
+              server: this.host._server,
+            });
+          },
           async clickSave() {
             if (this.saving || this.oldFileText === this.filetext) {
               return;
