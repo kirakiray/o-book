@@ -6,11 +6,13 @@
   "type": "module",
   "scripts": {
     "static": "node scripts/static-server.js",
+    "build": "node scripts/build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "YAO",
   "license": "MIT",
   "devDependencies": {
+    "archiver": "^7.0.1",
     "koa": "^2.14.1",
     "koa-static": "^5.0.0"
   }
