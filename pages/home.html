@@ -120,12 +120,23 @@
 
             this.lang = target.lang;
 
-            this.summarys = fixSummary(target.data.summarys, {
+            const summarys = fixSummary(target.data.summarys, {
               entryLink: this.entryLink,
               lang: this.lang,
             });
 
-            console.log(target.data.summarys);
+            const indexPage = target.articles.find(
+              (e) => e.path === "index.html"
+            );
+
+            summarys.push({
+              name: indexPage.title,
+              path: indexPage.path,
+              ftype: "html",
+              url: `${this.entryLink}${this.lang}/${indexPage.path}`,
+            });
+
+            this.summarys = summarys;
           },
         },
         ready() {
