@@ -62,6 +62,10 @@
           </div>
         </x-if>
 
+        <x-if :value="searchVal && !loading && !items.length">
+          <div class="center-con">搜索不到相关内容</div>
+        </x-if>
+
         <p-list>
           <x-fill :value="items">
             <x-if :value="$data.type === 'title'">
@@ -180,12 +184,14 @@
           searchChange(e) {
             clearTimeout(this._searchTimer);
             const content = $(e.target).value;
+
+            this.loading = true;
             if (!content) {
               this.items = [];
+              this.loading = false;
               return;
             }
             this._searchTimer = setTimeout(async () => {
-              this.loading = true;
               const results = await searchArticle({ content });
 
               const newItems = [];
