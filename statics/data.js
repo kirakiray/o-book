@@ -3,30 +3,30 @@ export const showLeft = $.stanz({
 });
 
 export const navs = $.stanz([
-  {
-    name: "nav1",
-  },
-  {
-    name: "nav2",
-  },
+  // {
+  //   name: "nav1",
+  // },
+  // {
+  //   name: "nav2",
+  // },
 ]);
 
 export const articlesList = $.stanz([
-  {
-    name: "test1",
-    link: "",
-  },
-  {
-    name: "test2",
-    childs: [
-      {
-        name: "test 2 sub 1",
-      },
-      {
-        name: "test 2 sub 2",
-      },
-    ],
-  },
+  // {
+  //   name: "test1",
+  //   link: "",
+  // },
+  // {
+  //   name: "test2",
+  //   childs: [
+  //     {
+  //       name: "test 2 sub 1",
+  //     },
+  //     {
+  //       name: "test 2 sub 2",
+  //     },
+  //   ],
+  // },
 ]);
 
 export const configs = $.stanz({
@@ -61,6 +61,8 @@ if (typeof configUrl === "string") {
     summarys.forEach((e) => {
       fixSummarysPath(e.list, e.dirName);
     });
+
+    summarys.sort((a, b) => a.order - b.order);
 
     summarysData = summarys;
 
