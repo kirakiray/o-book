@@ -32,7 +32,7 @@
           这款webapp的所有操作均会在浏览器本地完成，不会上传到服务端，为你确保了数据的安全与隐私。
           <br />
           使用这个webapp，你无需掌握复杂的命令行代码，也无需在系统上安装任何软件，便能轻松生成美观且实用的文档静态站。
-          <br>
+          <br />
           它为你提供了一个便捷、高效的文档生成解决方案，让你能够专注于内容创作，而无需分心于技术细节。
         </p>
 
@@ -85,7 +85,7 @@
           // configData: {},
           summarys: [],
           _handle: null,
-          stage: 1, // 当前的状态；0选择文件夹，1初始化文件，2进入文档调试模式
+          stage: 0, // 当前的状态；0选择文件夹，1初始化文件，2进入文档调试模式
         },
         proto: {
           async selectDir() {
@@ -99,8 +99,11 @@
               return;
             }
 
+            this.initServer();
+          },
+          async initServer() {
             this._server = await create({
-              handle,
+              handle: this._handle,
               temp: this.articleTemp,
             });
 

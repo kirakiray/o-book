@@ -32,6 +32,9 @@
     <p-button variant="outlined" on:click="clickBack">返回</p-button>
   </div>
   <script>
+    import yaml from "https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.mjs";
+    import "https://cdn.jsdelivr.net/npm/jszip";
+
     export default ({ load }) => {
       return {
         data: {
@@ -46,9 +49,70 @@
           clickBack() {
             this.host.stage = 0;
           },
-          clickOk() {},
+          async clickOk() {
+            const handle = this.host._handle;
+
+            await writeInitFile({ handle, mainLang: this.mainLang });
+
+            this.host.initServer();
+          },
         },
       };
+    };
+
+    // 写入最初始的文件
+    const writeInitFile = async ({ handle, mainLang }) => {
+      {
+        // 写入快速启动文件文件
+        // 已经支持的语言
+        const usables = ["cn", "t-cn", "en"];
+
+        const zip = new JSZip();
+
+        const startZip = await JSZip.loadAsync(
+          await fetch("/demos/quick-start.zip").then((e) => e.blob())
+        );
+
+        for (let item of Object.values(startZip.files)) {
+          if (item.dir) {
+            continue;
+          }
+
+          // 只写入主体语言的目录
+          const arr = item.name.split("/");
+
+          if (
+            arr.length > 1 &&
+            usables.includes(arr[0]) &&
+            arr[0] !== mainLang
+          ) {
+            continue;
+          }
+
+          const file = await item.async("blob");
+
+          const targetHandle = await handle.get(item.name, {
+            create: "file",
+          });
+
+          await targetHandle.write(file);
+        }
+      }
+
+      {
+        // 写入config.yaml
+        const configData = {
+          version: 1,
+          "mang-lang": mainLang,
+          "available-lang": [mainLang],
+        };
+
+        const configHandle = await handle.get("config.yaml", {
+          create: "file",
+        });
+
+        await configHandle.write(yaml.dump(configData));
+      }
     };
   </script>
 </template>

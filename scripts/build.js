@@ -17,3 +17,4 @@ async function zipDirectory(source, out) {
 }
 
 zipDirectory("./statics", "./_statics.zip");
+zipDirectory("./demos/quick-start", "./demos/quick-start.zip");
