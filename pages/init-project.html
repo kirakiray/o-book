@@ -1,0 +1,50 @@
+<template page>
+  <l-m src="@pui/select/select.html"></l-m>
+  <style>
+    :host {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      flex-direction: column;
+      height: 100%;
+      padding-bottom: 30vh;
+    }
+    p {
+      font-size: 22px;
+    }
+  </style>
+  <p>当前文件夹不存在项目文件，是否进行初始化?</p>
+  <div style="display: flex; align-items: center">
+    请确认文档的主要语言：
+    <p-select sync:value="mainLang">
+      <option value="cn">简体中文</option>
+      <option value="t-cn">繁体中文</option>
+    </p-select>
+  </div>
+  <br />
+  <div>
+    <p-button on:click="clickOk">确认初始化</p-button>
+    <p-button variant="outlined" on:click="clickBack">返回</p-button>
+  </div>
+  <script>
+    export default ({ load }) => {
+      return {
+        data: {
+          mainLang: "cn",
+        },
+        watch: {
+          // mainLang(mainLang) {
+          //   console.log("mainLang: ", mainLang);
+          // },
+        },
+        proto: {
+          clickBack() {
+            this.host.stage = 0;
+          },
+          clickOk() {},
+        },
+      };
+    };
+  </script>
+</template>

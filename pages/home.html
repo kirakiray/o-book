@@ -22,7 +22,7 @@
     }
   </style>
   <div class="container">
-    <x-if :value="!lang">
+    <x-if :value="stage == 0">
       <div class="start-con">
         <p>
           这个webapp的所有操作只会在浏览器本地执行，不会上传到服务端。
@@ -34,7 +34,10 @@
         </p-button>
       </div>
     </x-if>
-    <x-if :value="lang">
+    <x-else-if :value="stage == 1">
+      <o-page src="./init-project.html"></o-page>
+    </x-else-if>
+    <x-else-if :value="stage == 2">
       <article-viewer
         :lang="lang"
         :lang-options="langOptions"
@@ -55,7 +58,7 @@
           </a>
         </p>
       </article-viewer>
-    </x-if>
+    </x-else-if>
   </div>
 
   <script>
@@ -75,10 +78,19 @@
           // configData: {},
           summarys: [],
           _handle: null,
+          stage: 1, // 当前的状态；0选择文件夹，1初始化文件，2进入文档调试模式
         },
         proto: {
           async selectDir() {
             const handle = (this._handle = await open());
+
+            // 确认是否已经创建项目
+            let configyaml = await handle.get("config.yaml").catch(() => null);
+
+            if (!configyaml) {
+              this.stage = 1;
+              return;
+            }
 
             this._server = await create({
               handle,
@@ -88,6 +100,8 @@
             this.entryLink = this._server.path + "/";
 
             this.reload();
+
+            this.stage = 2;
           },
           async reload() {
             const { allDatas } = this._server;
