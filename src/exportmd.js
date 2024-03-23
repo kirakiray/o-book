@@ -6,9 +6,6 @@ export const exportProject = async ({ server }) => {
   const { flatFiles } = await load("@nos/core/util.js");
   const handle = server._handle;
 
-  //   const configText = await handle.get("config.yaml").then((e) => e.text());
-  //   const configData = yaml.load(configText);
-
   const zip = new JSZip();
 
   const vrootPath = server.path;
@@ -34,17 +31,19 @@ export const exportProject = async ({ server }) => {
   }
 
   // 添加_publics目录
-  const publicsHandle = await handle.get("_publics");
-  await Promise.all(
-    (
-      await flatFiles(publicsHandle)
-    ).map(async (e) => {
-      const path = e.handle.path.split("/").slice(1).join("/");
-      const file = await e.handle.file();
+  const publicsHandle = await handle.get("_publics").catch(() => null);
+  if (publicsHandle) {
+    await Promise.all(
+      (
+        await flatFiles(publicsHandle)
+      ).map(async (e) => {
+        const path = e.handle.path.split("/").slice(1).join("/");
+        const file = await e.handle.file();
 
-      await zip.file(path, file);
-    })
-  );
+        await zip.file(path, file);
+      })
+    );
+  }
 
   // 添加_statics目录
   const staticsZipFile = await fetch("/_statics.zip").then((e) => e.blob());
