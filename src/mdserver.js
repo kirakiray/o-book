@@ -6,6 +6,7 @@ import {
   config as configTask,
   articleTask,
   respPage,
+  publicsTask,
 } from "./tasks.js";
 
 import { getSummarys, getAllArticles } from "./util.js";
@@ -78,7 +79,13 @@ export class MdServer {
 
         const path = pathname.replace(/^\//, "");
 
-        for (let task of [statics, configTask, articleTask, respPage]) {
+        for (let task of [
+          statics,
+          configTask,
+          articleTask,
+          publicsTask,
+          respPage,
+        ]) {
           const result = await task({
             path,
             all: _this.allDatas,

@@ -66,7 +66,7 @@
         margin-right: 16px;
       "
     >
-      <img class="logo" attr:src="configData.logo.pic" />
+      <img class="logo" attr:src="logoPic" />
       <h2 class="logo-text">{{configData.logo.text}}</h2>
     </a>
     <div style="flex: 100 0 auto; display: inline-flex; align-items: center">
@@ -159,6 +159,20 @@
           },
         },
         proto: {
+          get logoPic() {
+            const pic = this?.configData?.logo?.pic;
+            if (!pic) {
+              return "";
+            }
+
+            if (/^http/.test(pic)) {
+              return pic;
+            }
+
+            console.log("haa", new URL(pic, langRoot).href);
+
+            return new URL(pic, langRoot).href;
+          },
           switchMode() {
             this.isDark.value = !this.isDark.value;
           },

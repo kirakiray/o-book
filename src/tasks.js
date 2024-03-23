@@ -37,6 +37,7 @@ const fixSummarys = (list) => {
     }
   });
 };
+
 export const config = async ({ path, all }) => {
   if (/^[a-z]+\/config.json/.test(path)) {
     const lang = path.split("/")[0];
@@ -60,8 +61,23 @@ export const articleTask = async ({ path, all }) => {
   }
 };
 
+export const publicsTask = async ({ path, handle }) => {
+  if (path.split("/")[0] === "_publics") {
+    const targetFile = await handle.get(path).catch(() => null);
+    const body = await targetFile.file();
+
+    return {
+      body,
+    };
+  }
+};
+
 // 修正并返回普通页面的内容
 export const respPage = async ({ path, handle, temp }) => {
+  if (!/\.html$/.test(path)) {
+    return;
+  }
+
   const paths = path.split("/");
   let path1, path2;
   if (paths.length) {
