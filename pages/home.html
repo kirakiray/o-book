@@ -20,15 +20,22 @@
       font-size: 22px;
       text-align: center;
     }
+    p {
+      font-size: 18px;
+      padding: 0 5vw;
+    }
   </style>
   <div class="container">
     <x-if :value="stage == 0">
       <div class="start-con">
         <p>
-          这个webapp的所有操作只会在浏览器本地执行，不会上传到服务端。
+          这款webapp的所有操作均会在浏览器本地完成，不会上传到服务端，为你确保了数据的安全与隐私。
           <br />
-          借助这个webapp，你不需要学习和使用什么命令行代码，不需要安装软件到你的系统上，就能生成好看好用的文档静态站。
+          使用这个webapp，你无需掌握复杂的命令行代码，也无需在系统上安装任何软件，便能轻松生成美观且实用的文档静态站。
+          <br>
+          它为你提供了一个便捷、高效的文档生成解决方案，让你能够专注于内容创作，而无需分心于技术细节。
         </p>
+
         <p-button on:click="selectDir" attr:disabled="entryLink ? '' : null">
           选择文件夹
         </p-button>

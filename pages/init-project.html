@@ -9,9 +9,11 @@
       flex-direction: column;
       height: 100%;
       padding-bottom: 30vh;
+      text-align: center;
     }
     p {
-      font-size: 22px;
+      font-size: 18px;
+      padding: 0 5vw;
     }
   </style>
   <p>当前文件夹不存在项目文件，是否进行初始化?</p>
@@ -22,7 +24,9 @@
       <option value="t-cn">繁体中文</option>
     </p-select>
   </div>
-  <br />
+  <p>
+    在撰写文档时，请您以这种语言为主要表达语言，确保内容的准确性和流畅性。待文档完成后，obook会利用本机的AI系统，自动进行翻译，生成其他语种的文档。
+  </p>
   <div>
     <p-button on:click="clickOk">确认初始化</p-button>
     <p-button variant="outlined" on:click="clickBack">返回</p-button>
