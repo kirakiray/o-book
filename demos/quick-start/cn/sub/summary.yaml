@@ -1,0 +1,5 @@
+name: 测试2
+order: 2
+list:
+  - name: 首页
+    path: index.html

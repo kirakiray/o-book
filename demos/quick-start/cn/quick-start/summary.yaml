@@ -1,0 +1,7 @@
+name: 测试1
+order: 1
+list:
+  - name: 首页
+    path: index.md
+  - name: 快速启动二
+    path: quick2.md
