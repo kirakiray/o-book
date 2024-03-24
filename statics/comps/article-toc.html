@@ -59,20 +59,10 @@
       /* min-height: calc(100vh - 60px); */
       min-height: calc(100vh - 120px);
     }
-
-    .article-bottom {
-      display: flex;
-      margin: 12px 0;
-      min-height: 36px;
-    }
   </style>
   <div class="container">
     <div style="flex: 1; flex-shrink: 0">
       <slot></slot>
-      <div class="article-bottom">
-        <p-button variant="text">上一页</p-button>
-        <p-button variant="text" style="margin-left: auto">下一页</p-button>
-      </div>
     </div>
     <x-if :value="heads.length">
       <div class="toc">
@@ -107,8 +97,6 @@
           heads: [],
           shows: [], // 在屏幕中显示的对应 head 的元素
           hoverStyle: "",
-          nextUrl: "",
-          prevUrl: "",
         },
         proto: {
           enterItem(data) {

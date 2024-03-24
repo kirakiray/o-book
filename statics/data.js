@@ -32,7 +32,7 @@ export const articlesList = $.stanz([
 export const configs = $.stanz({
   logo: {
     text: "obook",
-    pic: "https://obook.ofajs.com/publics/logo.svg",
+    pic: "",
   },
 });
 

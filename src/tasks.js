@@ -153,6 +153,7 @@ export const respPage = async ({ path, handle, temp }) => {
     '<o-app src="./app-config.js">',
     `<o-app src="${getRelativeURL(path, "_statics/app-config.js")}">`
   );
+  
   content = content.replace(
     '<l-m src="./comps/article-toc.html"></l-m>',
     `<l-m src="${getRelativeURL(
@@ -160,6 +161,15 @@ export const respPage = async ({ path, handle, temp }) => {
       "_statics/comps/article-toc.html"
     )}"></l-m>`
   );
+  
+  content = content.replace(
+    '<l-m src="./comps/article-bottom.html"></l-m>',
+    `<l-m src="${getRelativeURL(
+      path,
+      "_statics/comps/article-bottom.html"
+    )}"></l-m>`
+  );
+
   content = content.replace(
     "const selfPath = null;",
     `const selfPath = "${paths.slice(1).join("/")}";`

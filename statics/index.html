@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Static Article</title>
     <script
-      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.9/dist/ofa.min.js"
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.11/dist/ofa.min.js"
       debug
     ></script>
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.9/libs/scsr/dist/scsr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.11/libs/scsr/dist/scsr.min.js"></script>
     <!-- <script
       src="http://127.0.0.1:3348/packages/ofa/main.mjs"
       type="module"
@@ -16,7 +16,7 @@
     <script
       src="http://127.0.0.1:3348/libs/scsr/scsr.mjs"
       type="module"
-    ></script>-->
+    ></script> -->
     <!-- <script
       type="module"
       src="https://cdn.jsdelivr.net/gh/ofajs/Punch-UI@0.1.8/init.js"
@@ -34,6 +34,7 @@
     <o-app src="./app-config.js">
       <template page>
         <l-m src="./comps/article-toc.html"></l-m>
+        <l-m src="./comps/article-bottom.html"></l-m>
         <style>
           :host {
             display: block;
@@ -49,6 +50,7 @@
 
         <article-toc>
           <article class="markdown-body">{[content]}</article>
+          <article-bottom :path="selfPath"></article-bottom>
         </article-toc>
 
         <script>
@@ -63,7 +65,9 @@
             } catch (err) {}
 
             return {
-              data: {},
+              data: {
+                selfPath,
+              },
               proto: {
                 initSearch(oUrl) {
                   // 是否跳转到某个段落

@@ -1,0 +1,77 @@
+<template component>
+  <style>
+    .article-bottom {
+      display: flex;
+      margin: 12px 0;
+      min-height: 36px;
+    }
+  </style>
+  <div class="article-bottom">
+    <x-if :value="prevUrl">
+      <p-button variant="text">
+        <a attr:href="prevUrl" olink>上一页</a>
+      </p-button>
+    </x-if>
+    <x-if :value="nextUrl">
+      <p-button variant="text" style="margin-left: auto">
+        <a attr:href="nextUrl" olink>下一页 </a>
+      </p-button>
+    </x-if>
+  </div>
+  <script>
+    import { navs, articlesList } from "../data.js";
+
+    export default async ({ load }) => {
+      return {
+        tag: "article-bottom",
+        data: {
+          path: null,
+          nextUrl: "",
+          prevUrl: "",
+          articlesList: [],
+        },
+        proto: {
+          clickPrev() {},
+          refresh() {
+            console.log("path: ", this.path);
+
+            const flatFunc = (e) => {
+              return e.childs?.flatMap(flatFunc) || [e];
+            };
+
+            if (this.articlesList.length) {
+              let prev = "",
+                next = "";
+              const flatLists = articlesList.flatMap(flatFunc);
+
+              const targetIndex = flatLists.findIndex(
+                (e) => e.path === this.path
+              );
+
+              const nextItem = flatLists[targetIndex + 1];
+              const prevItem = flatLists[targetIndex - 1];
+
+              if (nextItem) {
+                this.nextUrl = nextItem.href;
+              }
+              if (prevItem) {
+                this.prevUrl = prevItem.href;
+              }
+            }
+          },
+        },
+        watch: {
+          articlesList() {
+            this.refresh();
+          },
+        },
+        attached() {
+          this.articlesList = articlesList;
+        },
+        detached() {
+          this.articlesList = [];
+        },
+      };
+    };
+  </script>
+</template>
