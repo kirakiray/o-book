@@ -76,13 +76,14 @@
   </style>
   <div class="container">
     <div class="top">
-      <p-select :value="lang" size="small">
+      <!-- <p-select :value="lang" size="small">
         <x-fill :value="langOptions">
           <option attr:value="$data.lang">{{$data.name}}</option>
         </x-fill>
-      </p-select>
-      <p-button size="small" icon on:click="emit('reload')">
-        <iconify-icon icon="mdi:reload"></iconify-icon>
+      </p-select> -->
+      <p-button size="small" on:click="emit('reload')">
+        <iconify-icon icon="mdi:reload" slot="prefix"></iconify-icon>
+        刷新
       </p-button>
       <p-button size="small" style="margin-left: auto" on:click="exportProject">
         <iconify-icon

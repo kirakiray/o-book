@@ -6,9 +6,19 @@
     <title>o-book 3</title>
     <script src="https://code.iconify.design/iconify-icon/1.0.8/iconify-icon.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.11/dist/ofa.min.js"
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.12/dist/ofa.min.js"
       debug
     ></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.12/libs/router/dist/router.min.js"></script>
+
+    <!-- <script
+      src="http://127.0.0.1:3348/packages/ofa/main.mjs"
+      type="module"
+    ></script>
+    <script
+      src="http://127.0.0.1:3348/libs/router/dist/router.min.js"
+      type="module"
+    ></script> -->
     <style>
       html,
       body {
@@ -32,7 +42,9 @@
     <script type="module" src="http://localhost:5559/os/init.js"></script>
   </head>
   <body>
-    <o-app src="./src/app-config.js"> </o-app>
+    <o-router>
+      <o-app src="./src/app-config.js"> </o-app>
+    </o-router>
     <script>
       navigator.serviceWorker
         .register("/sw.js", {
