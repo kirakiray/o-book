@@ -33,8 +33,6 @@
         proto: {
           clickPrev() {},
           refresh() {
-            console.log("path: ", this.path);
-
             const flatFunc = (e) => {
               return e.childs?.flatMap(flatFunc) || [e];
             };
