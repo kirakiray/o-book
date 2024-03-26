@@ -138,10 +138,10 @@
       <div class="article">
         <!-- <slot></slot> -->
         <!-- <textarea sync:value="filetext"></textarea> -->
-        <iframe
+        <!-- <iframe
           id="preview-frame"
           attr:src="activeUrl + '?onlyview=1'"
-        ></iframe>
+        ></iframe> -->
       </div>
     </div>
   </div>
@@ -258,10 +258,12 @@
           },
         },
         watch: {
-          // activeUrl(activeUrl) {
-
-          //   debugger;
-          // },
+          activeUrl(activeUrl) {
+            // debugger;
+            this.shadow.$(".article").html = `<iframe src="${
+              activeUrl + "?onlyview=1"
+            } "></iframe>`;
+          },
           summarys(summarys) {
             console.log("summarys: ", summarys.toJSON());
 
