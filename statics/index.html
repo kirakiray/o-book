@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Static Article</title>
-    <script
-      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.12/dist/ofa.min.js"
-      debug
-    ></script>
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.12/dist/ofa.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.4.12/libs/scsr/dist/scsr.min.js"></script>
     <!-- <script
       type="module"
@@ -46,7 +43,14 @@
         </article-toc>
 
         <script>
-          export const parent = "./pages/layout.html";
+          let parent = "./pages/layout.html";
+          
+          if (new URLSearchParams(location.search).get("onlyview")) {
+            parent = null;
+          }
+
+          export { parent };
+
           const selfPath = null;
 
           export default async ({ load, url }) => {
@@ -80,7 +84,7 @@
               },
               attached() {
                 const mainInner = this.parent.shadow.$(".main-inner .article");
-                if (mainInner.ele.scrollTop > 0) {
+                if (mainInner && mainInner.ele.scrollTop > 0) {
                   mainInner.ele.scrollTop = 0;
                 }
                 initPath && initPath(selfPath);

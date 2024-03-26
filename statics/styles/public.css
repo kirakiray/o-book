@@ -26,7 +26,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--md-sys-color-on-normal);
+  background-color: var(--md-sys-color-surface);
 }
 
 [cover-loading].fadeout {

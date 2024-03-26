@@ -185,8 +185,8 @@ export const respPage = async ({ path, handle, temp }) => {
   );
 
   content = content.replace(
-    'export const parent = "./pages/layout.html";',
-    `export const parent = "${getRelativeURL(
+    'parent = "./pages/layout.html";',
+    `parent = "${getRelativeURL(
       path,
       "_statics/pages/layout.html"
     )}";`

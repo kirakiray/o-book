@@ -148,7 +148,10 @@
               this._obs.disconnect();
             }
 
-            if (this.$(`input[name="hide-toc"]`)) {
+            if (
+              this.$(`input[name="hide-toc"]`) ||
+              new URLSearchParams(location.search).get("onlyview")
+            ) {
               this.heads.splice(0, 1000);
               return;
             }

@@ -61,6 +61,7 @@
     .article {
       position: relative;
       flex: 1;
+      background-color: var(--md-sys-color-surface);
     }
 
     .article textarea,
@@ -74,7 +75,7 @@
       padding: 16px;
       resize: none;
       border: none;
-      background-color: var(--md-sys-color-surface);
+      /* background-color: var(--md-sys-color-surface); */
       outline: none;
     }
 
@@ -137,7 +138,10 @@
       <div class="article">
         <!-- <slot></slot> -->
         <!-- <textarea sync:value="filetext"></textarea> -->
-        <iframe id="preview-frame" attr:src="activeUrl"></iframe>
+        <iframe
+          id="preview-frame"
+          attr:src="activeUrl + '?onlyview=1'"
+        ></iframe>
       </div>
     </div>
   </div>
