@@ -5,10 +5,10 @@ export const currentData = {
   server: null,
 };
 
-export const initServer = async ({ handle, temp }) => {
+export const initServer = async ({ handle }) => {
   currentData.handle = handle;
   currentData.server = await create({
     handle,
-    temp,
+    temp: await fetch("/statics/index.html").then((e) => e.text()),
   });
 };

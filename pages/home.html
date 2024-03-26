@@ -6,6 +6,7 @@
   <style>
     :host {
       display: block;
+      height: 100%;
     }
     .container {
       height: 100%;
@@ -82,17 +83,15 @@
       return {
         data: {
           entryLink: null,
-          articleTemp: "", // 正文模板内容
           lang: "", // 展示中的语言
           langOptions: [],
           // configData: {},
           summarys: [],
-          _handle: null,
           stage: 0, // 当前的状态；0选择文件夹，1初始化文件，2进入文档调试模式
         },
         proto: {
           async selectDir() {
-            const handle = (this._handle = await open());
+            const handle = await open();
 
             // 确认是否已经创建项目
             let configyaml = await handle.get("config.yaml").catch(() => null);
@@ -102,10 +101,8 @@
               return;
             }
 
-            // this.initServer();
             await initServer({
               handle,
-              temp: this.articleTemp,
             });
 
             this.entryLink = currentData.server.path + "/";
@@ -114,19 +111,9 @@
 
             this.stage = 2;
           },
-          // async initServer() {
-          // this._server = await create({
-          //   handle: this._handle,
-          //   temp: this.articleTemp,
-          // });
-
-          // this.entryLink = this._server.path + "/";
-
-          // this.reload();
-
-          // this.stage = 2;
-          // },
           async reload() {
+            await currentData.server.reload();
+
             const { allDatas } = currentData.server;
 
             this.langOptions = allDatas.map((e) => {
@@ -176,12 +163,14 @@
             this.summarys = summarys;
           },
         },
-        ready() {
-          fetch("/statics/index.html")
-            .then((e) => e.text())
-            .then((text) => {
-              this.articleTemp = text;
-            });
+        attached() {
+          if (currentData.handle) {
+            this.entryLink = currentData.server.path + "/";
+
+            this.reload();
+
+            this.stage = 2;
+          }
         },
       };
     };
