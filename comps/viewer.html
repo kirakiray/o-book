@@ -3,6 +3,7 @@
     src="https://cdn.jsdelivr.net/npm/iconify-icon@2.0.0/dist/iconify-icon.min.js"
   ></l-m>
   <l-m src="@pui/button/button.html"></l-m>
+  <l-m src="@pui/button/button-group.html"></l-m>
   <l-m src="@pui/list/list.html"></l-m>
   <style>
     :host {
@@ -39,7 +40,9 @@
     }
 
     .article-list {
+      box-sizing: border-box;
       width: 250px;
+      padding: 0 4px;
       height: 100%;
       background-color: var(--md-sys-color-on-primary);
     }
@@ -60,7 +63,8 @@
       flex: 1;
     }
 
-    .article textarea {
+    .article textarea,
+    .article iframe {
       position: absolute;
       box-sizing: border-box;
       left: 0;
@@ -73,26 +77,40 @@
       background-color: var(--md-sys-color-surface);
       outline: none;
     }
+
+    .reload-btn + p-button {
+      margin-left: auto;
+    }
   </style>
   <div class="container">
     <div class="top">
-      <!-- <p-select :value="lang" size="small">
+      <p-select :value="lang" size="small">
         <x-fill :value="langOptions">
           <option attr:value="$data.lang">{{$data.name}}</option>
         </x-fill>
-      </p-select> -->
-      <p-button size="small" on:click="emit('reload')">
+      </p-select>
+      <p-button size="small" on:click="emit('reload')" class="reload-btn">
         <iconify-icon icon="mdi:reload" slot="prefix"></iconify-icon>
         刷新
       </p-button>
-      <p-button size="small" style="margin-left: auto" on:click="exportProject">
+      <p-button size="small">
+        <iconify-icon icon="carbon:view-filled" slot="prefix"></iconify-icon>
+        <a attr:href="activeUrl" target="_blank">新标签打开预览</a>
+      </p-button>
+      <p-button size="small" on:click="exportProject">
         <iconify-icon
           icon="mdi:calendar-export-outline"
           slot="prefix"
         ></iconify-icon>
         导出
       </p-button>
-      <p-button
+
+      <!-- <p-button-group size="small">
+        <p-button variant="outlined">源代码</p-button>
+        <p-button>预览视图</p-button>
+      </p-button-group> -->
+
+      <!-- <p-button
         size="small"
         style="margin-left: 0"
         on:click="clickSave"
@@ -108,7 +126,7 @@
           ></iconify-icon>
         </x-else>
         保存
-      </p-button>
+      </p-button> -->
     </div>
     <div class="main">
       <div class="left">
@@ -118,7 +136,8 @@
       </div>
       <div class="article">
         <!-- <slot></slot> -->
-        <textarea sync:value="filetext"></textarea>
+        <!-- <textarea sync:value="filetext"></textarea> -->
+        <iframe id="preview-frame" attr:src="activeUrl"></iframe>
       </div>
     </div>
   </div>
@@ -157,11 +176,11 @@
           ></iconify-icon>
         </x-else>
         {{$data.name}}
-        <p-button slot="suffix" size="small" icon style="z-index: 3">
+        <!-- <p-button slot="suffix" size="small" icon style="z-index: 3">
           <a attr:href="$data.url" target="_blank">
             <iconify-icon icon="fluent:open-16-filled"> </iconify-icon>
           </a>
-        </p-button>
+        </p-button> -->
       </x-else>
     </p-list-item>
   </template>
@@ -235,6 +254,10 @@
           },
         },
         watch: {
+          // activeUrl(activeUrl) {
+
+          //   debugger;
+          // },
           summarys(summarys) {
             console.log("summarys: ", summarys.toJSON());
 
