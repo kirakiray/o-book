@@ -72,9 +72,12 @@
     export const parent = "./layout.html";
 
     import { create } from "../src/mdserver.js";
+    import { currentData, initServer } from "../src/data.js";
 
     export default async ({ load }) => {
       const { open } = await load("@nos/core/fs/system/main.js");
+
+      console.log(currentData);
 
       return {
         data: {
@@ -99,22 +102,32 @@
               return;
             }
 
-            this.initServer();
-          },
-          async initServer() {
-            this._server = await create({
-              handle: this._handle,
+            // this.initServer();
+            await initServer({
+              handle,
               temp: this.articleTemp,
             });
 
-            this.entryLink = this._server.path + "/";
+            this.entryLink = currentData.server.path + "/";
 
             this.reload();
 
             this.stage = 2;
           },
+          // async initServer() {
+          // this._server = await create({
+          //   handle: this._handle,
+          //   temp: this.articleTemp,
+          // });
+
+          // this.entryLink = this._server.path + "/";
+
+          // this.reload();
+
+          // this.stage = 2;
+          // },
           async reload() {
-            const { allDatas } = this._server;
+            const { allDatas } = currentData.server;
 
             this.langOptions = allDatas.map((e) => {
               let name = "";

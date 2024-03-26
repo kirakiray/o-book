@@ -170,6 +170,7 @@
       const { confirm } = await load("@pui/dialog/command.js");
       const { default: enqueue } = await load(`@pui/snackbar/enqueue.js`);
       const { exportProject } = await load("../src/exportmd.js");
+      const { currentData, initServer } = await load("../src/data.js");
 
       return {
         tag: "article-viewer",
@@ -186,7 +187,7 @@
         proto: {
           async exportProject() {
             await exportProject({
-              server: this.host._server,
+              server: currentData.server,
             });
           },
           async clickSave() {
@@ -218,15 +219,14 @@
             }
 
             const { host } = this;
-            let realPath = data.url.replace(host._server.path + "/", "");
+            let realPath = data.url.replace(currentData.server.path + "/", "");
             realPath = realPath.replace(
               new RegExp(`(.+)\\..+$`),
               "$1." + data.ftype
             );
 
-            const targetHandle = (this._targetHandle = await host._handle.get(
-              realPath
-            ));
+            const targetHandle = (this._targetHandle =
+              await currentData.handle.get(realPath));
             const filetext = await targetHandle.text();
 
             this.activeUrl = data.url;
