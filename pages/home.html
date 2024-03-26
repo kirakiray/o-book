@@ -73,7 +73,7 @@
     export const parent = "./layout.html";
 
     import { create } from "../src/mdserver.js";
-    import { currentData, initServer } from "../src/data.js";
+    import { currentData, initServer, getSummary } from "../src/data.js";
 
     export default async ({ load }) => {
       const { open } = await load("@nos/core/fs/system/main.js");
@@ -114,40 +114,14 @@
           async reload() {
             await currentData.server.reload();
 
-            const { allDatas } = currentData.server;
-
-            this.langOptions = allDatas.map((e) => {
-              let name = "";
-              const { lang } = e;
-
-              switch (lang) {
-                case "cn":
-                  name = "简体中文";
-                  break;
-                case "t-cn":
-                  name = "繁体中文";
-                  break;
-                case "en":
-                  name = "English";
-                  break;
-              }
-
-              return {
-                lang,
-                name,
-              };
+            const { langOptions, summarys, target } = await getSummary({
+              lang: "cn",
+              entryLink: this.entryLink,
             });
 
-            this._alls = allDatas;
-
-            const target = allDatas[0];
+            this.langOptions = langOptions;
 
             this.lang = target.lang;
-
-            const summarys = fixSummary(target.data.summarys, {
-              entryLink: this.entryLink,
-              lang: this.lang,
-            });
 
             const indexPage = target.articles.find(
               (e) => e.path === "index.html"
