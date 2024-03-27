@@ -29,7 +29,13 @@ export const getLangOptions = () => {
   });
 };
 
-export const getSummary = ({ lang, entryLink }) => {
+export const getSummary = ({ lang }) => {
+  if (!currentData.server) {
+    return null;
+  }
+
+  const entryLink = currentData.server.path + "/";
+
   const { allDatas } = currentData.server;
 
   const langOptions = getLangOptions();

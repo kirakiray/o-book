@@ -37,9 +37,7 @@
           它为你提供了一个便捷、高效的文档生成解决方案，让你能够专注于内容创作，而无需分心于技术细节。
         </p>
 
-        <p-button on:click="selectDir" attr:disabled="entryLink ? '' : null">
-          选择文件夹
-        </p-button>
+        <p-button on:click="selectDir"> 选择文件夹 </p-button>
       </div>
     </x-if>
     <x-else-if :value="stage == 1">
@@ -52,7 +50,7 @@
         :summarys="summarys"
         on:reload="reload"
       >
-        <p>
+        <!-- <p>
           <a attr:href="entryLink + 'cn/index.html'" target="_blank">Entry</a>
           <br />
           <a attr:href="entryLink + '_statics/'" target="_blank">Static</a>
@@ -64,7 +62,7 @@
           <a attr:href="entryLink + 'cn/_articles.json'" target="_blank">
             articles.json
           </a>
-        </p>
+        </p> -->
       </article-viewer>
     </x-else-if>
   </div>
@@ -82,7 +80,6 @@
 
       return {
         data: {
-          entryLink: null,
           lang: "", // 展示中的语言
           langOptions: [],
           // configData: {},
@@ -105,8 +102,6 @@
               handle,
             });
 
-            this.entryLink = currentData.server.path + "/";
-
             this.reload();
 
             this.stage = 2;
@@ -116,7 +111,6 @@
 
             const { langOptions, summarys, target } = await getSummary({
               lang: "cn",
-              entryLink: this.entryLink,
             });
 
             this.langOptions = langOptions;
@@ -127,11 +121,14 @@
               (e) => e.path === "index.html"
             );
 
+            // 添加首页
             summarys.push({
               name: indexPage.title,
               path: indexPage.path,
               ftype: "html",
-              url: `${this.entryLink}${this.lang}/${indexPage.path}`,
+              url: `${currentData.server.path + "/"}${this.lang}/${
+                indexPage.path
+              }`,
             });
 
             this.summarys = summarys;
@@ -139,33 +136,12 @@
         },
         attached() {
           if (currentData.handle) {
-            this.entryLink = currentData.server.path + "/";
-
             this.reload();
 
             this.stage = 2;
           }
         },
       };
-    };
-
-    const fixSummary = (list, opts) => {
-      return list.map((item) => {
-        if (item.list) {
-          return {
-            ...item,
-            list: fixSummary(item.list, {
-              rootDir: opts.rootDir || item.dirName,
-              ...opts,
-            }),
-          };
-        }
-
-        return {
-          ...item,
-          url: `${opts.entryLink}${opts.lang}/${opts.rootDir}/${item.path}`,
-        };
-      });
     };
   </script>
 </template>

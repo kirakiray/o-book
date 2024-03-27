@@ -1,18 +1,146 @@
 <template page>
+  <l-m src="@pui/select/select.html"></l-m>
+  <l-m src="@pui/button/button.html"></l-m>
+  <l-m src="@pui/text-field/text-field.html"></l-m>
   <style>
     :host {
       display: block;
       width: 100%;
       height: 100%;
+      overflow: auto;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .top {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      padding: 8px 8px;
+      background-color: var(--md-sys-color-on-primary);
+      box-shadow: rgba(128, 128, 128, 0.3) 0 0 5px;
+    }
+
+    .main {
+      flex: 1;
+    }
+
+    .line {
+      display: flex;
+    }
+    .origin,
+    .after {
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50%;
+      margin: 8px;
+      padding: 4px;
+    }
+
+    .origin {
+      border: var(--md-sys-color-normal) solid 1px;
+      border-radius: 5px;
+    }
+
+    .title .origin {
+      border: none;
+    }
+    .after p-text-field {
+      width: 100%;
+      resize: none;
+    }
+    .line h4 {
+      margin: 0;
+      padding: 0;
     }
   </style>
-  <div>翻译</div>
+  <div class="container">
+    <div class="top">a</div>
+    <div class="main">
+      <div class="line title">
+        <div class="origin">
+          <h4>主体语言：简体中文</h4>
+        </div>
+        <div class="after">
+          <p-select size="small" :value="'t-cn'">
+            <option value="t-cn">繁体中文</option>
+          </p-select>
+          <p-button size="small" style="margin-left: 8px">新增语种</p-button>
+        </div>
+      </div>
+      <div class="line">
+        <div class="origin">我是原版段落</div>
+        <div class="after">
+          <p-text-field multiline></p-text-field>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <template name="list-item">
+    <p-list-item
+      attr:button="$data?.list?.length ? null : 1"
+      radius
+      on:click="$host.clickSummaryItem($data)"
+      attr:active-item="$data.url === $host.activeUrl ? 1 : null"
+    >
+      <x-if :value="$data.list && $data.list.length">
+        <iconify-icon
+          icon="gravity-ui:folder-open"
+          slot="prefix"
+        ></iconify-icon>
+        <b> {{$data.name}}</b>
+        <p-list slot="childs">
+          <x-fill :value="$data.list" name="list-item"></x-fill>
+        </p-list>
+      </x-if>
+      <x-else>
+        <x-if :value="$data.ftype === 'md'">
+          <iconify-icon
+            icon="ant-design:file-markdown-outlined"
+            slot="prefix"
+          ></iconify-icon>
+        </x-if>
+        <x-else-if :value="$data.ftype === 'html'">
+          <iconify-icon icon="ph:file-html" slot="prefix"></iconify-icon>
+        </x-else-if>
+        <x-else>
+          <iconify-icon
+            icon="material-symbols:article-outline"
+            slot="prefix"
+          ></iconify-icon>
+        </x-else>
+        {{$data.name}}
+      </x-else>
+    </p-list-item>
+  </template>
   <script>
     export const parent = "./layout.html";
 
-    export default async () => {
+    import { getSummary } from "../src/data.js";
+
+    export default async ({ load }) => {
       return {
-        data: {},
+        data: {
+          activeUrl: "",
+        },
+        proto: {
+          clickSummaryItem() {
+            debugger;
+          },
+        },
+        async attached() {
+          const summary = await getSummary({ lang: "cn", entryLink: "" });
+
+          console.log("summary: ", summary);
+        },
       };
     };
   </script>

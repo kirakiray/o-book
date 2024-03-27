@@ -180,11 +180,6 @@
           ></iconify-icon>
         </x-else>
         {{$data.name}}
-        <!-- <p-button slot="suffix" size="small" icon style="z-index: 3">
-          <a attr:href="$data.url" target="_blank">
-            <iconify-icon icon="fluent:open-16-filled"> </iconify-icon>
-          </a>
-        </p-button> -->
       </x-else>
     </p-list-item>
   </template>
@@ -259,6 +254,11 @@
         },
         watch: {
           activeUrl(activeUrl) {
+            if (!activeUrl) {
+              this.shadow.$(".article").html = "";
+              return;
+            }
+
             this.shadow.$(".article").html = `<iframe src="${
               activeUrl + "?onlyview=1"
             } "></iframe>`;
@@ -269,7 +269,7 @@
             setTimeout(() => {
               // 重置数据后，重新点击第一个
               const target = this.shadow.$("p-list-item[button]");
-              if (target) {
+              if (target && !this.activeUrl) {
                 target.ele.click();
               }
             }, 100);
