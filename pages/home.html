@@ -47,7 +47,6 @@
       <article-viewer
         :lang="lang"
         :lang-options="langOptions"
-        :summarys="summarys"
         on:reload="reload"
       >
         <!-- <p>
@@ -83,7 +82,7 @@
           lang: "", // 展示中的语言
           langOptions: [],
           // configData: {},
-          summarys: [],
+          // summarys: [],
           stage: 0, // 当前的状态；0选择文件夹，1初始化文件，2进入文档调试模式
         },
         proto: {
@@ -122,16 +121,16 @@
             );
 
             // 添加首页
-            summarys.push({
-              name: indexPage.title,
-              path: indexPage.path,
-              ftype: "html",
-              url: `${currentData.server.path + "/"}${this.lang}/${
-                indexPage.path
-              }`,
-            });
+            // summarys.push({
+            //   name: indexPage.title,
+            //   path: indexPage.path,
+            //   ftype: "html",
+            //   url: `${currentData.server.path + "/"}${this.lang}/${
+            //     indexPage.path
+            //   }`,
+            // });
 
-            this.summarys = summarys;
+            // this.summarys = summarys;
           },
         },
         attached() {

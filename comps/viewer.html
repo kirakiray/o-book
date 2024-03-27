@@ -4,7 +4,7 @@
   ></l-m>
   <l-m src="@pui/button/button.html"></l-m>
   <l-m src="@pui/button/button-group.html"></l-m>
-  <l-m src="@pui/list/list.html"></l-m>
+  <l-m src="./article-list.html"></l-m>
   <style>
     :host {
       display: block;
@@ -38,25 +38,6 @@
     .left {
       width: 250px;
     }
-
-    .article-list {
-      box-sizing: border-box;
-      width: 250px;
-      padding: 0 4px;
-      height: 100%;
-      background-color: var(--md-sys-color-on-primary);
-    }
-    .article-list p-list {
-      margin-left: 12px;
-    }
-
-    .article-list iconify-icon[slot="prefix"] {
-      font-size: 18px;
-    }
-
-    /* .article-list p-list-item {
-      font-size: 13px;
-    } */
 
     .article {
       position: relative;
@@ -131,9 +112,7 @@
     </div>
     <div class="main">
       <div class="left">
-        <p-list class="article-list">
-          <x-fill :value="summarys" name="list-item"> </x-fill>
-        </p-list>
+        <article-list on:click-item="clickSummaryItem"></article-list>
       </div>
       <div class="article">
         <!-- <slot></slot> -->
@@ -146,43 +125,6 @@
     </div>
   </div>
 
-  <template name="list-item">
-    <p-list-item
-      attr:button="$data?.list?.length ? null : 1"
-      radius
-      on:click="$host.clickSummaryItem($data)"
-      attr:active-item="$data.url === $host.activeUrl ? 1 : null"
-    >
-      <x-if :value="$data.list && $data.list.length">
-        <iconify-icon
-          icon="gravity-ui:folder-open"
-          slot="prefix"
-        ></iconify-icon>
-        <b> {{$data.name}}</b>
-        <p-list slot="childs">
-          <x-fill :value="$data.list" name="list-item"></x-fill>
-        </p-list>
-      </x-if>
-      <x-else>
-        <x-if :value="$data.ftype === 'md'">
-          <iconify-icon
-            icon="ant-design:file-markdown-outlined"
-            slot="prefix"
-          ></iconify-icon>
-        </x-if>
-        <x-else-if :value="$data.ftype === 'html'">
-          <iconify-icon icon="ph:file-html" slot="prefix"></iconify-icon>
-        </x-else-if>
-        <x-else>
-          <iconify-icon
-            icon="material-symbols:article-outline"
-            slot="prefix"
-          ></iconify-icon>
-        </x-else>
-        {{$data.name}}
-      </x-else>
-    </p-list-item>
-  </template>
   <script>
     export default async ({ load }) => {
       const { confirm } = await load("@pui/dialog/command.js");
@@ -195,7 +137,6 @@
         data: {
           lang: "", // 展示中的语言
           langOptions: [], // 可用语言的选项
-          summarys: [], // 左侧的大纲
           activeUrl: "", // 激活中的url
           oldFileText: "", // 选中文件未保存前的文本
           filetext: "", // 选中中的文本内容
@@ -221,10 +162,11 @@
               content: "保存成功",
             });
           },
-          async clickSummaryItem(data) {
+          async clickSummaryItem({ data }) {
             if (data.list) {
               return;
             }
+
             if (this.oldFileText !== this.filetext) {
               const result = await confirm({
                 title: "未保存",
@@ -262,17 +204,6 @@
             this.shadow.$(".article").html = `<iframe src="${
               activeUrl + "?onlyview=1"
             } "></iframe>`;
-          },
-          summarys(summarys) {
-            console.log("summarys: ", summarys.toJSON());
-
-            setTimeout(() => {
-              // 重置数据后，重新点击第一个
-              const target = this.shadow.$("p-list-item[button]");
-              if (target && !this.activeUrl) {
-                target.ele.click();
-              }
-            }, 100);
           },
         },
         attached() {

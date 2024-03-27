@@ -1,0 +1,113 @@
+<template component>
+  <l-m
+    src="https://cdn.jsdelivr.net/npm/iconify-icon@2.0.0/dist/iconify-icon.min.js"
+  ></l-m>
+  <l-m src="@pui/list/list.html"></l-m>
+
+  <style>
+    :host {
+      display: block;
+      height: 100%;
+    }
+
+    .article-list {
+      box-sizing: border-box;
+      width: 250px;
+      padding: 0 4px;
+      height: 100%;
+      background-color: var(--md-sys-color-on-primary);
+    }
+    .article-list p-list {
+      margin-left: 12px;
+    }
+
+    .article-list iconify-icon[slot="prefix"] {
+      font-size: 18px;
+    }
+  </style>
+
+  <p-list class="article-list">
+    <x-fill :value="summarys" name="list-item"> </x-fill>
+  </p-list>
+
+  <template name="list-item">
+    <p-list-item
+      attr:button="$data?.list?.length ? null : 1"
+      radius
+      on:click="$host.clickSummaryItem($data)"
+      attr:active-item="$data.url === $host.activeUrl ? 1 : null"
+    >
+      <x-if :value="$data.list && $data.list.length">
+        <iconify-icon
+          icon="gravity-ui:folder-open"
+          slot="prefix"
+        ></iconify-icon>
+        <b> {{$data.name}}</b>
+        <p-list slot="childs">
+          <x-fill :value="$data.list" name="list-item"></x-fill>
+        </p-list>
+      </x-if>
+      <x-else>
+        <x-if :value="$data.ftype === 'md'">
+          <iconify-icon
+            icon="ant-design:file-markdown-outlined"
+            slot="prefix"
+          ></iconify-icon>
+        </x-if>
+        <x-else-if :value="$data.ftype === 'html'">
+          <iconify-icon icon="ph:file-html" slot="prefix"></iconify-icon>
+        </x-else-if>
+        <x-else>
+          <iconify-icon
+            icon="material-symbols:article-outline"
+            slot="prefix"
+          ></iconify-icon>
+        </x-else>
+        {{$data.name}}
+      </x-else>
+    </p-list-item>
+  </template>
+
+  <script>
+    import { getSummary } from "../src/data.js";
+
+    export default {
+      tag: "article-list",
+      data: {
+        summarys: [],
+        activeUrl: "",
+      },
+      proto: {
+        clickSummaryItem(data) {
+          this.emit("click-item", {
+            data,
+          });
+
+          this.activeUrl = data.url;
+        },
+      },
+      watch: {
+        summarys(summarys) {
+          if (!summarys.length) {
+            return;
+          }
+
+          setTimeout(() => {
+            if (!this.activeUrl) {
+              this.shadow.$("p-list-item[button]").ele.click();
+            }
+          }, 100);
+        },
+      },
+      async attached() {
+        const data = await getSummary({ lang: "cn" });
+
+        if (data) {
+          this.summarys = data.summarys;
+        } else {
+          this.summarys = [];
+        }
+      },
+    };
+  </script>
+</template>

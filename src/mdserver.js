@@ -53,8 +53,6 @@ export class MdServer {
     }
 
     this.allDatas = allDatas;
-
-    console.log("all: ", allDatas);
   }
 
   async _getNavData(handle) {
