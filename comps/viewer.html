@@ -162,7 +162,9 @@
               content: "保存成功",
             });
           },
-          async clickSummaryItem({ data }) {
+          async clickSummaryItem({
+            data: { item: data, handle: targetHandle },
+          }) {
             if (data.list) {
               return;
             }
@@ -178,15 +180,7 @@
               }
             }
 
-            const { host } = this;
-            let realPath = data.url.replace(currentData.server.path + "/", "");
-            realPath = realPath.replace(
-              new RegExp(`(.+)\\..+$`),
-              "$1." + data.ftype
-            );
-
-            const targetHandle = (this._targetHandle =
-              await currentData.handle.get(realPath));
+            this._targetHandle = targetHandle;
             const filetext = await targetHandle.text();
 
             this.activeUrl = data.url;

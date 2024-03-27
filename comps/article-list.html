@@ -69,7 +69,7 @@
   </template>
 
   <script>
-    import { getSummary } from "../src/data.js";
+    import { getSummary, currentData } from "../src/data.js";
 
     export default {
       tag: "article-list",
@@ -78,9 +78,21 @@
         activeUrl: "",
       },
       proto: {
-        clickSummaryItem(data) {
+        async clickSummaryItem(data) {
+          let realPath = data.url.replace(currentData.server.path + "/", "");
+          realPath = realPath.replace(
+            new RegExp(`(.+)\\..+$`),
+            "$1." + data.ftype
+          );
+
+          const targetHandle = (this._targetHandle =
+            await currentData.handle.get(realPath));
+
           this.emit("click-item", {
-            data,
+            data: {
+              item: data,
+              handle: targetHandle,
+            },
           });
 
           this.activeUrl = data.url;
