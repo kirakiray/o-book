@@ -75,7 +75,7 @@ export class MdServer {
     this.server = await createApi({
       name: this._handle.name,
       async callback({ request, search, pathname, searchParams, hash }) {
-        console.log(request, search, pathname, searchParams, hash);
+        // console.log(request, search, pathname, searchParams, hash);
 
         const path = pathname.replace(/^\//, "");
 

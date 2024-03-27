@@ -150,7 +150,7 @@
     <p-list-item
       attr:button="$data?.list?.length ? null : 1"
       radius
-      on:click="$host.clickFile($data)"
+      on:click="$host.clickSummaryItem($data)"
       attr:active-item="$data.url === $host.activeUrl ? 1 : null"
     >
       <x-if :value="$data.list && $data.list.length">
@@ -226,7 +226,7 @@
               content: "保存成功",
             });
           },
-          async clickFile(data) {
+          async clickSummaryItem(data) {
             if (data.list) {
               return;
             }
@@ -259,7 +259,6 @@
         },
         watch: {
           activeUrl(activeUrl) {
-            // debugger;
             this.shadow.$(".article").html = `<iframe src="${
               activeUrl + "?onlyview=1"
             } "></iframe>`;
@@ -268,6 +267,7 @@
             console.log("summarys: ", summarys.toJSON());
 
             setTimeout(() => {
+              // 重置数据后，重新点击第一个
               const target = this.shadow.$("p-list-item[button]");
               if (target) {
                 target.ele.click();
