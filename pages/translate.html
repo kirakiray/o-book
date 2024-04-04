@@ -58,14 +58,15 @@
       padding: 4px;
     }
 
-    .origin {
+    /* .origin {
       border: var(--md-sys-color-normal) solid 1px;
       border-radius: 5px;
     }
 
     .title .origin {
       border: none;
-    }
+    } */
+    .origin p-text-field,
     .after p-text-field {
       width: 100%;
       resize: none;
@@ -83,40 +84,83 @@
       </div>
       <div class="article">
         <div class="line title">
-          <div class="origin">
-            <h4>主体语言：简体中文</h4>
-          </div>
           <div class="after">
+            翻译为：
             <p-select size="small" :value="'t-cn'">
               <option value="t-cn">繁体中文</option>
             </p-select>
-            <p-button size="small" style="margin-left: 8px">新增语种</p-button>
+            <p-button size="small" style="margin-left: 8px">新增</p-button>
+          </div>
+          <div class="origin">
+            <h4>文档主体语言：简体中文</h4>
           </div>
         </div>
-        <div class="line">
-          <div class="origin">我是原版段落</div>
-          <div class="after">
-            <p-text-field multiline></p-text-field>
+        <x-fill :value="articleRaws">
+          <div>
+            <x-if :value="$data.item.type !== 'space'">
+              <div class="line">
+                <div class="after" style="flex-direction: column">
+                  <p-text-field multiline :value="$data.value"></p-text-field>
+                  <p-button
+                    size="small"
+                    on:click="$host.clickTrans($data)"
+                    style="margin: 8px auto 0 0"
+                  >
+                    重新翻译
+                  </p-button>
+                </div>
+                <!-- <div class="origin" :text="$data.raw"></div> -->
+                <div class="origin">
+                  <p-text-field
+                    multiline
+                    :value="$data.item.raw"
+                  ></p-text-field>
+                </div>
+              </div>
+            </x-if>
           </div>
-        </div>
+        </x-fill>
       </div>
     </div>
   </div>
 
   <script>
     export const parent = "./layout.html";
-
+    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
     import { getSummary } from "../src/data.js";
+    import { translate } from "../src/translate.js";
 
     export default async ({ load }) => {
       return {
         data: {
           activeUrl: "",
           summarys: [],
+          articleRaws: [],
         },
         proto: {
-          clickSummaryItem(data) {
-            console.log("click item", data);
+          // 点击了重新翻译按钮
+          async clickTrans(data) {
+            const result = await translate({ content: data.item.raw });
+            console.log("result: ", result);
+          },
+          async clickSummaryItem({ data: { item, handle } }) {
+            console.log("click item", item, handle);
+
+            const text = await handle.text();
+
+            let content = text;
+            if (/\.md$/.test(handle.name)) {
+              content = marked.lexer(content);
+            }
+
+            console.log("raws:", content);
+
+            this.articleRaws = content.map((item) => {
+              return {
+                value: "",
+                item,
+              };
+            });
           },
         },
       };
