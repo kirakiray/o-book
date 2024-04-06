@@ -41,11 +41,23 @@
     }
 
     .article {
+      position: relative;
       flex: 1;
+      height: 100%;
+    }
+
+    .article-inner {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
     }
 
     .line {
       display: flex;
+      align-items: flex-start;
     }
     .origin,
     .after {
@@ -83,48 +95,50 @@
         <article-list on:click-item="clickSummaryItem"></article-list>
       </div>
       <div class="article">
-        <div class="line title">
-          <div class="after">
-            翻译为：
-            <p-select size="small" :value="'t-cn'">
-              <option value="t-cn">繁体中文</option>
-            </p-select>
-            <p-button size="small" style="margin-left: 8px">新增</p-button>
+        <div class="article-inner">
+          <div class="line title">
+            <div class="after">
+              翻译为：
+              <p-select size="small" :value="'t-cn'">
+                <option value="t-cn">繁体中文</option>
+              </p-select>
+              <p-button size="small" style="margin-left: 8px">新增</p-button>
+            </div>
+            <div class="origin">
+              <h4>文档源语言：简体中文</h4>
+            </div>
           </div>
-          <div class="origin">
-            <h4>文档主体语言：简体中文</h4>
-          </div>
+          <x-fill :value="articleRaws">
+            <div>
+              <x-if :value="$data.item.type !== 'space'">
+                <div class="line">
+                  <div class="after" style="flex-direction: column">
+                    <p-text-field
+                      multiline
+                      :value="$data.value"
+                      attr:disabled="$data.loading ? '' : null"
+                    ></p-text-field>
+                    <p-button
+                      size="small"
+                      on:click="$host.clickTrans($data)"
+                      :disabled="$data.loading ? '' : null"
+                      style="margin: 8px auto 0 0"
+                    >
+                      重新翻译
+                    </p-button>
+                  </div>
+                  <!-- <div class="origin" :text="$data.raw"></div> -->
+                  <div class="origin">
+                    <p-text-field
+                      multiline
+                      :value="$data.item.raw.trim()"
+                    ></p-text-field>
+                  </div>
+                </div>
+              </x-if>
+            </div>
+          </x-fill>
         </div>
-        <x-fill :value="articleRaws">
-          <div>
-            <x-if :value="$data.item.type !== 'space'">
-              <div class="line">
-                <div class="after" style="flex-direction: column">
-                  <p-text-field
-                    multiline
-                    :value="$data.value"
-                    attr:disabled="$data.loading ? '' : null"
-                  ></p-text-field>
-                  <p-button
-                    size="small"
-                    on:click="$host.clickTrans($data)"
-                    :disabled="$data.loading ? '' : null"
-                    style="margin: 8px auto 0 0"
-                  >
-                    重新翻译
-                  </p-button>
-                </div>
-                <!-- <div class="origin" :text="$data.raw"></div> -->
-                <div class="origin">
-                  <p-text-field
-                    multiline
-                    :value="$data.item.raw"
-                  ></p-text-field>
-                </div>
-              </div>
-            </x-if>
-          </div>
-        </x-fill>
       </div>
     </div>
   </div>
@@ -148,7 +162,7 @@
             data.loading = true;
 
             const result = await translate({
-              content: data.item.raw,
+              content: data.item.raw.trim(),
               callback({ context }) {
                 data.value = context;
               },
