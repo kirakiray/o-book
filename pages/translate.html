@@ -100,10 +100,15 @@
             <x-if :value="$data.item.type !== 'space'">
               <div class="line">
                 <div class="after" style="flex-direction: column">
-                  <p-text-field multiline :value="$data.value"></p-text-field>
+                  <p-text-field
+                    multiline
+                    :value="$data.value"
+                    attr:disabled="$data.loading ? '' : null"
+                  ></p-text-field>
                   <p-button
                     size="small"
                     on:click="$host.clickTrans($data)"
+                    :disabled="$data.loading ? '' : null"
                     style="margin: 8px auto 0 0"
                   >
                     重新翻译
@@ -140,8 +145,17 @@
         proto: {
           // 点击了重新翻译按钮
           async clickTrans(data) {
-            const result = await translate({ content: data.item.raw });
-            console.log("result: ", result);
+            data.loading = true;
+
+            const result = await translate({
+              content: data.item.raw,
+              callback({ context }) {
+                data.value = context;
+              },
+            });
+
+            data.loading = false;
+            data.value = result.context;
           },
           async clickSummaryItem({ data: { item, handle } }) {
             console.log("click item", item, handle);

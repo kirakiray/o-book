@@ -20,25 +20,27 @@ export const translate = async ({ content, callback }) => {
   return new Promise((resolve) => {
     let context = "";
 
-    const push = () => {
-      reader.read().then(({ done, value }) => {
-        if (done) {
-          resolve({ context });
-          return;
-        }
+    const push = async () => {
+      const { done, value } = await reader.read();
 
-        const data = JSON.parse(new TextDecoder("utf-8").decode(value));
+      if (done) {
+        resolve({ context });
+        return;
+      }
 
-        context += data.response;
+      const data = JSON.parse(new TextDecoder("utf-8").decode(value));
 
-        callback &&
-          callback({
-            context,
-            response: data.response,
-          });
+      //   console.log("data: ", data);
 
-        push();
-      });
+      context += data.response;
+
+      callback &&
+        callback({
+          context,
+          response: data.response,
+        });
+
+      push();
     };
 
     push();
