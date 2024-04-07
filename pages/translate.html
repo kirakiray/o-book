@@ -6,6 +6,7 @@
   <l-m src="@pui/button/button.html"></l-m>
   <l-m src="@pui/text-field/text-field.html"></l-m>
   <l-m src="../comps/article-list.html"></l-m>
+  <l-m src="../comps/translate-top.html"></l-m>
   <style>
     :host {
       display: block;
@@ -87,9 +88,21 @@
       margin: 0;
       padding: 0;
     }
+
+    .line-tool-container {
+      width: 100%;
+      margin-top: 8px;
+      display: flex;
+      align-items: flex-start;
+    }
+    .line-tool-container p-button {
+      margin-right: 8px;
+    }
   </style>
   <div class="container">
-    <div class="top">a</div>
+    <div class="top">
+      <translate-top></translate-top>
+    </div>
     <div class="main">
       <div class="left">
         <article-list on:click-item="clickSummaryItem"></article-list>
@@ -118,14 +131,22 @@
                       :value="$data.value"
                       attr:disabled="$data.loading ? '' : null"
                     ></p-text-field>
-                    <p-button
-                      size="small"
-                      on:click="$host.clickTrans($data)"
-                      :disabled="$data.loading ? '' : null"
-                      style="margin: 8px auto 0 0"
-                    >
-                      重新翻译
-                    </p-button>
+                    <div class="line-tool-container">
+                      <p-button
+                        size="small"
+                        on:click="$host.clickTrans($data)"
+                        :disabled="$data.loading ? '' : null"
+                      >
+                        重新翻译
+                      </p-button>
+                      <p-button
+                        size="small"
+                        on:click="$host.clickSave($data)"
+                        :disabled="$data.loading ? '' : null"
+                      >
+                        保存
+                      </p-button>
+                    </div>
                   </div>
                   <!-- <div class="origin" :text="$data.raw"></div> -->
                   <div class="origin">
@@ -171,6 +192,9 @@
             data.loading = false;
             data.value = result.context;
           },
+          async clickSave(data) {
+            debugger;
+          },
           async clickSummaryItem({ data: { item, handle } }) {
             console.log("click item", item, handle);
 
@@ -179,6 +203,13 @@
             let content = text;
             if (/\.md$/.test(handle.name)) {
               content = marked.lexer(content);
+            } else if (/\.html$/.test(handle.name)) {
+              const temp = $(`<template>${text}</template>`);
+              content = Array.from(temp.ele.content.children).map((el) => {
+                return {
+                  raw: el.outerHTML,
+                };
+              });
             }
 
             console.log("raws:", content);

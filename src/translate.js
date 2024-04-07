@@ -3,18 +3,21 @@ const generateUrl = "http://localhost:11434/api/generate";
 export const translate = async ({ content, callback }) => {
   const data = {
     model: "gemma:7b",
-    // prompt: "你会翻译什么人类的语言?",
-    // prompt: `将下面的内容翻译成英文，不用返回多余的内容：
-    // ${content}`,
-    // prompt: `<start_of_turn>user
-    // You are a helpful 2nd-grade teacher. Help a 2nd grader to answer questions in a short and clear manner.
-    // Explain why the sky is blue<end_of_turn>
-    // <start_of_turn>model`,
+    temperature: 0,
     prompt: `<start_of_turn>user
-    Translate the content into Spanish: 
+    把下面的中文翻译成英语，保留原来的格式
     ${content}<end_of_turn>
     <start_of_turn>model`,
   };
+
+  // const data = {
+  //   model: "winkefinger/alma-13b:latest",
+  //   temperature: 0,
+  //   prompt: `Translate this from Chinese to English:
+  //   Chinese: {${content}}
+  //   English:
+  //   `,
+  // };
 
   const response = await fetch(generateUrl, {
     method: "POST",
@@ -44,12 +47,15 @@ export const translate = async ({ content, callback }) => {
       } catch (err) {
         console.log("error", text);
 
-        const newResponseData = {
+        let newResponseData = {
           response: "",
           done: false,
         };
 
         text.split(/\n/g).forEach((newText) => {
+          if (!newText.trim()) {
+            return;
+          }
           const newData = JSON.parse(newText);
           newResponseData = {
             ...newResponseData,
