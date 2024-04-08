@@ -92,3 +92,12 @@ export function getRelativeURL(base, target) {
   relativePathParts = relativePathParts.concat(targetRemains);
   return relativePathParts.join("/");
 }
+
+export async function getHashFingerprint(str) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hash = await window.crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hash))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
+}

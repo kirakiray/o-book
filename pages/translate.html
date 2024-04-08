@@ -167,8 +167,16 @@
   <script>
     export const parent = "./layout.html";
     import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+    import { EverCache } from "https://cdn.jsdelivr.net/gh/kirakiray/ever-cache@1.0.4/src/main.js";
     import { getSummary } from "../src/data.js";
     import { translate } from "../src/translate.js";
+    import { getHashFingerprint } from "../src/util.js";
+
+    const getStorage = (lang) => new EverCache(`translate-temps-${lang}`);
+
+    const storage = getStorage("en");
+
+    console.log("storage", storage);
 
     export default async ({ load }) => {
       return {
@@ -180,14 +188,20 @@
         proto: {
           // 点击了重新翻译按钮
           async clickTrans(data) {
+            const content = data.item.raw.trim();
+            const hash = await getHashFingerprint(content);
+
             data.loading = true;
 
             const result = await translate({
-              content: data.item.raw.trim(),
+              content,
               callback({ context }) {
                 data.value = context;
               },
             });
+
+            // 缓存翻译后的内容
+            storage[hash] = result.context;
 
             data.loading = false;
             data.value = result.context;
@@ -212,14 +226,19 @@
               });
             }
 
-            console.log("raws:", content);
+            this.articleRaws = await Promise.all(
+              content.map(async (item) => {
+                const content = item.raw.trim();
+                const hash = await getHashFingerprint(content);
 
-            this.articleRaws = content.map((item) => {
-              return {
-                value: "",
-                item,
-              };
-            });
+                const cacheData = await storage[hash];
+
+                return {
+                  value: cacheData ? cacheData : "",
+                  item,
+                };
+              })
+            );
           },
         },
       };
