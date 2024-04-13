@@ -1,0 +1,9 @@
+<ul>
+  <li><a href="./life-cycle/created.html">Created</a>: Triggered when the component is created but before content is rendered.</li>
+  <li><a href="./life-cycle/ready.html">Ready</a>: Triggered when the component is created and the content has been rendered.</li>
+  <li><a href="./life-cycle/watch.html">Watch</a>: Triggered after component initialization and whenever values change.</li>
+  <li><a href="./life-cycle/loaded.html">Loaded</a>: Triggered when all resources are loaded within the component.</li>
+  <li><a href="./life-cycle/attached.html">Attached</a>: Triggered when the component is appended to the document.</li>
+  <li><a href="./life-cycle/detached.html">Detached</a>: Triggered when the component is removed from the document.</li>
+  <li><a href="./life-cycle/router-change.html">routerChange</a>: Triggered when the parent page nested within the component changes the application route.</li>
+</ul>

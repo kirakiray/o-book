@@ -20,10 +20,10 @@
           <iconify-icon icon="material-symbols:home" slot="icon"></iconify-icon>
         </p-nav-item>
         <p-nav-item
-          attr:active-item="pathname === '/pages/translate.html' ? '' : null"
+          attr:active-item="pathname.includes('/pages/translate/') ? '' : null"
         >
           <iconify-icon icon="ph:translate-fill" slot="icon"></iconify-icon>
-          <a href="/pages/translate.html" olink>AI翻译</a>
+          <a href="/pages/translate/translate.html" olink>AI翻译</a>
         </p-nav-item>
         <!-- <p-nav-item disabled>
           <iconify-icon icon="mdi:magic" slot="icon"></iconify-icon>

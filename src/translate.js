@@ -6,7 +6,7 @@ export const translate = async ({ content, callback }) => {
     model: "gemma:7b",
     temperature: 0,
     prompt: `<start_of_turn>user
-    把下面的中文翻译成英语，保留原来的格式
+    把下面的中文翻译成英语：
     ${content}<end_of_turn>
     <start_of_turn>model`,
   };

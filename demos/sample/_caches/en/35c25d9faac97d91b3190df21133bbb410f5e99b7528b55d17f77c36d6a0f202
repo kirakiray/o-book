@@ -1,0 +1,17 @@
+<ul>
+  <li><a href="./instance/dollar.html">$</a>：Main method for getting instance</li>
+  <li><a href="./instance/all.html">all</a>：Get all related instances</li>
+  <li><a href="./instance/prev.html">prev</a>：Get the previous instance of the target element</li>
+  <li><a href="./instance/prevs.html">prevs</a>：Get all instances preceding the target element</li>
+  <li><a href="./instance/next.html">next</a>：Get the next instance of the target element</li>
+  <li><a href="./instance/nexts.html">nexts</a>：Get all instances following the target element</li>
+  <li><a href="./instance/siblings.html">siblings</a>：Get all adjacent element instances of the target element</li>
+  <li><a href="./instance/parent.html">parent</a>：Get the parent element instance</li>
+  <li><a href="./instance/parents.html">parents</a>：Get the collection of all parent elements</li>
+  <li><a href="./instance/clone.html">clone</a>：Clone instance method</li>
+  <li><a href="./instance/ele.html">ele</a>：Get the actual native element of the instance</li>
+  <li><a href="./instance/shadow.html">shadow</a>：Get the shadow root of a custom component</li>
+  <li><a href="./instance/root.html">root</a>：Get the root node of the target instance</li>
+  <li><a href="./instance/children.html">子元素</a>：Directly get children elements by index</li>
+  <li><a href="./instance/host.html">host</a>：Get the app element instance of the target</li>
+</ul>

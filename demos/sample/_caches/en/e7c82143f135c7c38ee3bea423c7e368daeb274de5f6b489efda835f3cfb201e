@@ -1,0 +1,12 @@
+<ul>
+  <li><a href="./others/box.html">Box Model</a>：Get all size-related data of the target element.</li>
+  <li><a href="./others/form-data.html">formData</a>：Conveniently bind and retrieve form data.</li>
+  <li><a href="./others/tag.html">tag</a>：Get the tag name of the target element.</li>
+  <li><a href="./others/index.html">index</a>：Get the index of the target element within its parent element.</li>
+  <li><a href="./others/is.html">is</a>：Judge whether the target element matches the CSS selector expression.</li>
+  <li><a href="./others/refresh.html">refresh</a>：Refresh the component interface proactively.</li>
+  <li><a href="./others/path.html">PATH</a>：Get the registered file address of the component or page.</li>
+  <li><a href="./others/extend.html">extend</a>：Extend instance data or methods; Extend ofa.js base data or methods.</li>
+  <li><a href="./others/version.html">version</a>：Get the version number of the ofa.js version currently loaded.</li>
+  <li><a href="./others/stanz.html">Instance Data Features</a>：Introduce the sub-object data characteristics of the instance data and how to listen to data changes.</li>
+</ul>
