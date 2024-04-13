@@ -1,5 +1,6 @@
 <template page>
   <l-m src="@pui/select/select.html"></l-m>
+  <l-m src="@pui/button/button.html"></l-m>
   <style>
     :host {
       display: block;
@@ -33,13 +34,34 @@
       <a target="_blank" href="https://ollama.com/">Ollama</a>
     </p>
 
-    <p>请选择要翻译到什么语言：<p-select></p-select></p>
+    <x-if :value="translateState === 0">
+      <div>
+        请选择要翻译到什么语言：
+        <p-select sync:value="targetlang">
+          <option value="en">英语</option>
+          <option value="sp">西班牙语</option>
+          <option value="jp">日语</option>
+          <option value="ko">韩语</option>
+        </p-select>
+        <p-button attr:disabled="targetlang ? null : ''" on:click="tongji">
+          确定
+        </p-button>
+      </div>
+    </x-if>
+    <x-else-if :value="translateState === 1">
+      <div>正在统计段落</div>
+    </x-else-if>
+    <x-else-if :value="translateState === 1">
+      <div>开始翻译</div>
+      <div>1 / 100</div>
+    </x-else-if>
   </div>
 
   <script>
     export const parent = "./layout.html";
 
     import { EverCache } from "https://cdn.jsdelivr.net/gh/kirakiray/ever-cache@1.0.4/src/main.js";
+    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
     const getStorage = (lang) => new EverCache(`translate-temps-${lang}`);
 
@@ -48,9 +70,64 @@
     console.log("storage", storage);
 
     export default async ({ load }) => {
+      const { currentData, getSummary } = await load("../src/data.js");
+
       return {
-        data: {},
-        proto: {},
+        data: {
+          targetlang: "", // 翻译到目标语言
+          translateState: 0,
+        },
+        proto: {
+          // 获取所有的文章，并统计段落的数量和获取hash
+          async tongji(e) {
+            this.translateState = 1;
+
+            const { handle } = currentData;
+
+            const lang = "cn";
+
+            // 获取源语言的数据
+            const summarys = await getSummary({ lang });
+
+            const paths = summarys.target.articles.map(
+              (e) => `${lang}/${e.path}`
+            );
+
+            // 获取所有正文
+            const articles = await Promise.all(
+              paths.map(async (path) => {
+                let isMd = false;
+                const tartgetHandle = await handle.get(path).catch((err) => {
+                  isMd = true;
+                  return handle.get(path.replace(/\.html$/, ".md"));
+                });
+
+                const content = await tartgetHandle.text();
+
+                let raws;
+
+                // 将内容进行转换
+                if (isMd) {
+                  const parts = marked.lexer(content);
+                  raws = parts.map((e) => e.raw);
+                } else {
+                  const temp = $(`<template>${content}</template>`);
+                  raws = Array.from(temp.ele.content.children).map(
+                    (el) => el.outerHTML
+                  );
+                }
+
+                return {
+                  path,
+                  content,
+                  isMd,
+                };
+              })
+            );
+
+            debugger;
+          },
+        },
       };
     };
   </script>

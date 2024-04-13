@@ -1,4 +1,5 @@
 const generateUrl = "http://localhost:11434/api/generate";
+// const generateUrl = "http://localhost:11001/api/generate";
 
 export const translate = async ({ content, callback }) => {
   const data = {
