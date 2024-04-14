@@ -66,11 +66,11 @@
   </style>
   <div class="container">
     <div class="top">
-      <p-select :value="lang" size="small">
+      <!-- <p-select :value="lang" size="small">
         <x-fill :value="langOptions">
           <option attr:value="$data.lang">{{$data.name}}</option>
         </x-fill>
-      </p-select>
+      </p-select> -->
       <p-button size="small" on:click="emit('reload')" class="reload-btn">
         <iconify-icon icon="mdi:reload" slot="prefix"></iconify-icon>
         刷新

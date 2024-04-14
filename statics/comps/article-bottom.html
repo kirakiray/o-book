@@ -64,6 +64,11 @@
           },
         },
         attached() {
+          const hideTocEl = this.host.shadow.$(`input[name="hide-toc"]`);
+          if (hideTocEl) {
+            this.css.display = "none";
+            return;
+          }
           this.articlesList = articlesList;
         },
         detached() {
