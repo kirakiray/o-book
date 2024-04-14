@@ -201,12 +201,18 @@
           },
         },
         attached() {
-          window.addEventListener("keydown", (e) => {
-            if (e.metaKey && e.key === "s") {
-              e.preventDefault();
-              this.clickSave();
-            }
-          });
+          window.addEventListener(
+            "keydown",
+            (this._saveFun = (e) => {
+              if (e.metaKey && e.key === "s") {
+                e.preventDefault();
+                this.clickSave();
+              }
+            })
+          );
+        },
+        detached() {
+          window.removeEventListener("keydown", this._saveFun);
         },
       };
     };

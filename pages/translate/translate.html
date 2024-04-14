@@ -69,10 +69,8 @@
     import { EverCache } from "https://cdn.jsdelivr.net/gh/kirakiray/ever-cache@1.0.4/src/main.js";
     import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
     import { getHashFingerprint } from "../../src/util.js";
-    import { translate } from "../../src/translate.js";
+    import { translate } from "./translate.js";
     import { savePart, getPart } from "./part-manager.js";
-
-    // const getStorage = (lang) => new EverCache(`translate-temps-${lang}`);
 
     export default async ({ load }) => {
       const { currentData, getSummary } = await load("../../src/data.js");
@@ -158,8 +156,6 @@
           // 开发翻译正文
           async translate(raws) {
             // 转换好后，存放到本地缓存
-            // const storage = getStorage(this.targetlang);
-
             for (let item of raws) {
               const content = item.trim();
               const hash = await getHashFingerprint(content);

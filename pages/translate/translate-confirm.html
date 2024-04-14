@@ -102,7 +102,12 @@
   <div class="container">
     <div class="top">
       <div style="flex: 1; text-align: center">请校对文章内容</div>
-      <p-button size="small" style="margin-right: 8px" on:click="clickSave">
+      <p-button
+        size="small"
+        :disabled="this.saving ? '' : null"
+        style="margin-right: 8px"
+        on:click="clickSave"
+      >
         保存
       </p-button>
     </div>
@@ -166,14 +171,9 @@
     import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
     import { EverCache } from "https://cdn.jsdelivr.net/gh/kirakiray/ever-cache@1.0.4/src/main.js";
     import { getSummary } from "../../src/data.js";
-    import { translate } from "../../src/translate.js";
+    import { translate } from "./translate.js";
     import { getHashFingerprint } from "../../src/util.js";
-
-    const getStorage = (lang) => new EverCache(`translate-temps-${lang}`);
-
-    const storage = getStorage("en");
-
-    console.log("storage", storage);
+    import { savePart, getPart } from "./part-manager.js";
 
     export default async ({ load, query }) => {
       return {
@@ -181,7 +181,8 @@
           activeUrl: "",
           summarys: [],
           articleRaws: [],
-          targetLang: query.lang || "en",
+          targetlang: query.lang || "en",
+          saving: false, // 保存中
         },
         proto: {
           get langText() {
@@ -197,7 +198,7 @@
           // 点击了重新翻译按钮
           async clickTrans(data) {
             const content = data.item.raw.trim();
-            const hash = await getHashFingerprint(content);
+            const hash = data.hash;
 
             data.loading = true;
 
@@ -209,17 +210,32 @@
             });
 
             // 缓存翻译后的内容
-            storage[hash] = result.context;
+            await savePart({
+              lang: this.targetlang,
+              hash,
+              content: result.context,
+            });
 
             data.loading = false;
             data.value = result.context;
           },
-          async clickSave(data) {
-            debugger;
+          async clickSave() {
+            this.saving = true;
+            // 遍历判断，哪一个段落已经修改，改动后的段落进行保存
+            await Promise.all(
+              this.articleRaws.map(async (e) => {
+                if (e.value !== e._oldVal) {
+                  await savePart({
+                    lang: this.targetlang,
+                    hash: e.hash,
+                    content: e.value,
+                  });
+                }
+              })
+            );
+            this.saving = false;
           },
           async clickSummaryItem({ data: { item, handle } }) {
-            console.log("click item", item, handle);
-
             const text = await handle.text();
 
             let content = text;
@@ -239,15 +255,37 @@
                 const content = item.raw.trim();
                 const hash = await getHashFingerprint(content);
 
-                const cacheData = await storage[hash];
+                const cacheData = await getPart({
+                  hash,
+                  lang: this.targetlang,
+                });
+
+                const value = cacheData ? cacheData : "";
 
                 return {
-                  value: cacheData ? cacheData : "",
+                  hash,
+                  value,
+                  _oldVal: value,
                   item,
                 };
               })
             );
           },
+        },
+
+        attached() {
+          window.addEventListener(
+            "keydown",
+            (this._saveFun = (e) => {
+              if (e.metaKey && e.key === "s") {
+                e.preventDefault();
+                this.clickSave();
+              }
+            })
+          );
+        },
+        detached() {
+          window.removeEventListener("keydown", this._saveFun);
         },
       };
     };
