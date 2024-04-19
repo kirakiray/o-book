@@ -69,7 +69,7 @@
   </template>
 
   <script>
-    import { getSummary, currentData } from "../src/data.js";
+    import { getSummary, currentData, getFileList } from "../src/data.js";
 
     export default {
       tag: "article-list",
@@ -79,6 +79,9 @@
       },
       proto: {
         async clickSummaryItem(data) {
+          if (!data.url) {
+            return;
+          }
           let realPath = data.url.replace(currentData.server.path + "/", "");
           realPath = realPath.replace(
             new RegExp(`(.+)\\..+$`),
@@ -112,7 +115,12 @@
         },
       },
       async attached() {
+        const data2 = await getFileList("cn");
+        console.log("test: ", data2);
+
         const data = await getSummary({ lang: "cn" });
+
+        debugger;
 
         if (data) {
           this.summarys = data.summarys;

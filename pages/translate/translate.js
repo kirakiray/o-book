@@ -4,7 +4,9 @@ const generateUrl = "http://localhost:11434/api/generate";
 export const translate = async ({ content, callback }) => {
   const data = {
     model: "gemma:7b",
+    // model: "llama3",
     temperature: 0,
+    // prompt: `把下面的中文翻译成英语，只告诉我翻译后的内容：\n ${content}`,
     prompt: `<start_of_turn>user
     把下面的中文翻译成英语：
     ${content}<end_of_turn>

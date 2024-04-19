@@ -92,11 +92,9 @@
             const lang = "cn";
 
             // 获取源语言的数据
-            const summarys = await getSummary({ lang });
+            const { target } = await getSummary({ lang });
 
-            const paths = summarys.target.articles.map(
-              (e) => `${lang}/${e.path}`
-            );
+            const paths = target.articles.map((e) => `${lang}/${e.path}`);
 
             // 所有段落数
             let count = 0;

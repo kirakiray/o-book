@@ -1,4 +1,5 @@
 import { create } from "./mdserver.js";
+import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
 export const currentData = {
   handle: null,
@@ -79,4 +80,83 @@ export const initServer = async ({ handle }) => {
     handle,
     temp: await fetch("/statics/index.html").then((e) => e.text()),
   });
+};
+
+// 获取文件列表，包含 yaml 文件
+export const getFileList = async (lang) => {
+  // const allData = await getAllFileData(currentData.handle);
+
+  const prefixUrl = currentData.server.path;
+  const rootName = currentData.handle.name;
+
+  const allData = await getAllFileData(
+    await currentData.handle.get(lang),
+    async (item) => {
+      const isMd = /\.md/.test(item._handle.name);
+      const isHtml = /\.html/.test(item._handle.name);
+      if (isMd || isHtml) {
+        // 添加访问链接
+        item.url = item._handle.path
+          .replace(rootName, prefixUrl)
+          .replace(/\.md$/, ".html");
+
+        let innerHTML = await item._handle.text();
+
+        if (isMd) {
+          // 转换markdown为html
+          innerHTML = marked.parse(innerHTML);
+        }
+
+        // 获取标题
+        const tempEl = $(`<template>${innerHTML}</template>`);
+
+        // 查找第一个标题元素并获取内容
+        const firstTitleEl = tempEl.$("h1,h2,h3,h4,h5");
+        if (firstTitleEl) {
+          item.title = firstTitleEl.text;
+        }
+      }
+    }
+  );
+
+  return allData;
+};
+
+// 获取文件夹内的所有文件数据，方便一口气处理数据
+const getAllFileData = async (dirHandle, callback) => {
+  const dir = {
+    name: dirHandle.name,
+    kind: "directory",
+    // path: dirHandle.path,
+    list: [],
+  };
+
+  for await (let item of dirHandle.values()) {
+    if (/^_/.test(item.name)) {
+      continue;
+    }
+
+    if (item.kind === "directory") {
+      const childDir = await getAllFileData(item, callback);
+      dir.list.push(childDir);
+    } else if (
+      /\.html$/.test(item.name) ||
+      /\.md$/.test(item.name) ||
+      /\.yaml$/.test(item.name)
+    ) {
+      const fileData = {
+        name: item.name,
+        // kind: item.kind,
+        // path: item.path,
+        // data: await item.text(),
+        _handle: item,
+      };
+      if (callback) {
+        await callback(fileData);
+      }
+      dir.list.push(fileData);
+    }
+  }
+
+  return dir;
 };
