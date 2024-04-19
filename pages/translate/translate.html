@@ -73,7 +73,7 @@
     import { savePart, getPart } from "./part-manager.js";
 
     export default async ({ load }) => {
-      const { currentData, getSummary } = await load("../../src/data.js");
+      const { currentData, configDataByLang } = await load("../../src/data.js");
 
       return {
         data: {
@@ -92,7 +92,7 @@
             const lang = "cn";
 
             // 获取源语言的数据
-            const { target } = await getSummary({ lang });
+            const target = await configDataByLang(lang);
 
             const paths = target.articles.map((e) => `${lang}/${e.path}`);
 

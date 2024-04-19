@@ -118,15 +118,7 @@
         const data2 = await getFileList("cn");
         console.log("test: ", data2);
 
-        const data = await getSummary({ lang: "cn" });
-
-        debugger;
-
-        if (data) {
-          this.summarys = data.summarys;
-        } else {
-          this.summarys = [];
-        }
+        this.summarys = await getSummary({ lang: "cn" });
       },
     };
   </script>

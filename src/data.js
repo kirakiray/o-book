@@ -30,29 +30,25 @@ export const getLangOptions = () => {
   });
 };
 
-export const getSummary = ({ lang }) => {
+export const configDataByLang = async (lang) => {
+  return currentData.server.allDatas.find((e) => e.lang === lang);
+};
+
+export const getSummary = async ({ lang }) => {
   if (!currentData.server) {
     return null;
   }
 
   const entryLink = currentData.server.path + "/";
 
-  const { allDatas } = currentData.server;
-
-  const langOptions = getLangOptions();
-
-  const target = allDatas.find((e) => e.lang === lang);
+  const target = await configDataByLang(lang);
 
   const summarys = fixSummary(target.data.summarys, {
     entryLink: entryLink,
     lang,
   });
 
-  return {
-    langOptions,
-    target,
-    summarys,
-  };
+  return summarys;
 };
 
 const fixSummary = (list, opts) => {

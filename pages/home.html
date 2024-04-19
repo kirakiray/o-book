@@ -70,7 +70,13 @@
     export const parent = "./layout.html";
 
     import { create } from "../src/mdserver.js";
-    import { currentData, initServer, getSummary } from "../src/data.js";
+    import {
+      currentData,
+      initServer,
+      getSummary,
+      configDataByLang,
+      getLangOptions,
+    } from "../src/data.js";
 
     export default async ({ load }) => {
       const { open } = await load("@nos/core/fs/system/main.js");
@@ -108,17 +114,21 @@
           async reload() {
             await currentData.server.reload();
 
-            const { langOptions, summarys, target } = await getSummary({
-              lang: "cn",
+            // const target = await configDataByLang();
+
+            const summarys = await getSummary({
+              lang: "cn", // 从主体语言文档中获取纵览列表
             });
 
-            this.langOptions = langOptions;
+            // 更新可选语言项
+            this.langOptions = getLangOptions();
 
-            this.lang = target.lang;
+            // 选择中文
+            this.lang = "cn";
 
-            const indexPage = target.articles.find(
-              (e) => e.path === "index.html"
-            );
+            // const indexPage = target.articles.find(
+            //   (e) => e.path === "index.html"
+            // );
 
             // 添加首页
             // summarys.push({
