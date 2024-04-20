@@ -193,7 +193,9 @@
               ko: "韩语",
             };
 
-            return langs[query.lang];
+            debugger
+
+            return langs[this.targetlang];
           },
           // 点击了重新翻译按钮
           async clickTrans(data) {
@@ -248,6 +250,8 @@
                   raw: el.outerHTML,
                 };
               });
+            } else {
+              content = [{ raw: content }];
             }
 
             this.articleRaws = await Promise.all(

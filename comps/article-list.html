@@ -26,9 +26,9 @@
     }
   </style>
 
-  <div style="height: 12px"></div>
-
   <p-list class="article-list">
+    <div style="height: 12px"></div>
+    <div>{{error_text}}</div>
     <x-fill :value="summarys" name="list-item"> </x-fill>
   </p-list>
 
@@ -79,6 +79,7 @@
       data: {
         summarys: [],
         activePath: "",
+        error_text: "",
       },
       proto: {
         async clickSummaryItem(data) {
@@ -110,12 +111,16 @@
         },
       },
       async attached() {
-        const data = await getFileList("cn");
-        // const summarys = await getSummary({ lang: "cn" });
-        console.log("test: ", data);
+        try {
+          const data = await getFileList("cn");
+          // const summarys = await getSummary({ lang: "cn" });
+          console.log("test: ", data);
 
-        // this.summarys = summarys;
-        this.summarys = data.list;
+          // this.summarys = summarys;
+          this.summarys = data.list;
+        } catch (err) {
+          this.error_text = err.toString();
+        }
       },
     };
   </script>
