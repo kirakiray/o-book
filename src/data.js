@@ -143,7 +143,7 @@ const getAllFileData = async (dirHandle, callback) => {
       const fileData = {
         name: item.name,
         // kind: item.kind,
-        // path: item.path,
+        path: item.path,
         // data: await item.text(),
         _handle: item,
       };

@@ -8,6 +8,7 @@
     :host {
       display: block;
       height: 100%;
+      background-color: var(--md-sys-color-on-primary);
     }
 
     .article-list {
@@ -15,7 +16,6 @@
       width: 250px;
       padding: 0 4px;
       height: 100%;
-      background-color: var(--md-sys-color-on-primary);
     }
     .article-list p-list {
       margin-left: 12px;
@@ -26,6 +26,8 @@
     }
   </style>
 
+  <div style="height: 12px"></div>
+
   <p-list class="article-list">
     <x-fill :value="summarys" name="list-item"> </x-fill>
   </p-list>
@@ -35,7 +37,7 @@
       attr:button="$data?.list?.length ? null : 1"
       radius
       on:click="$host.clickSummaryItem($data)"
-      attr:active-item="$data.url === $host.activeUrl ? 1 : null"
+      attr:active-item="$data.path === $host.activePath ? 1 : null"
     >
       <x-if :value="$data.list && $data.list.length">
         <iconify-icon
@@ -48,13 +50,13 @@
         </p-list>
       </x-if>
       <x-else>
-        <x-if :value="$data.ftype === 'md'">
+        <x-if :value="/.md$/.test($data._handle.name)">
           <iconify-icon
             icon="ant-design:file-markdown-outlined"
             slot="prefix"
           ></iconify-icon>
         </x-if>
-        <x-else-if :value="$data.ftype === 'html'">
+        <x-else-if :value="/.html$/.test($data._handle.name)">
           <iconify-icon icon="ph:file-html" slot="prefix"></iconify-icon>
         </x-else-if>
         <x-else>
@@ -63,6 +65,7 @@
             slot="prefix"
           ></iconify-icon>
         </x-else>
+        <!-- {{$data.title || $data.name}} -->
         {{$data.name}}
       </x-else>
     </p-list-item>
@@ -75,30 +78,22 @@
       tag: "article-list",
       data: {
         summarys: [],
-        activeUrl: "",
+        activePath: "",
       },
       proto: {
         async clickSummaryItem(data) {
-          if (!data.url) {
+          if (!data.path) {
             return;
           }
-          let realPath = data.url.replace(currentData.server.path + "/", "");
-          realPath = realPath.replace(
-            new RegExp(`(.+)\\..+$`),
-            "$1." + data.ftype
-          );
-
-          const targetHandle = (this._targetHandle =
-            await currentData.handle.get(realPath));
 
           this.emit("click-item", {
             data: {
               item: data,
-              handle: targetHandle,
+              handle: data._handle,
             },
           });
 
-          this.activeUrl = data.url;
+          this.activePath = data.path;
         },
       },
       watch: {
@@ -108,17 +103,19 @@
           }
 
           setTimeout(() => {
-            if (!this.activeUrl) {
+            if (!this.activePath) {
               this.shadow.$("p-list-item[button]").ele.click();
             }
           }, 100);
         },
       },
       async attached() {
-        const data2 = await getFileList("cn");
-        console.log("test: ", data2);
+        const data = await getFileList("cn");
+        // const summarys = await getSummary({ lang: "cn" });
+        console.log("test: ", data);
 
-        this.summarys = await getSummary({ lang: "cn" });
+        // this.summarys = summarys;
+        this.summarys = data.list;
       },
     };
   </script>

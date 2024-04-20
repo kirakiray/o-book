@@ -116,31 +116,11 @@
 
             // const target = await configDataByLang();
 
-            const summarys = await getSummary({
-              lang: "cn", // 从主体语言文档中获取纵览列表
-            });
-
             // 更新可选语言项
             this.langOptions = getLangOptions();
 
             // 选择中文
             this.lang = "cn";
-
-            // const indexPage = target.articles.find(
-            //   (e) => e.path === "index.html"
-            // );
-
-            // 添加首页
-            // summarys.push({
-            //   name: indexPage.title,
-            //   path: indexPage.path,
-            //   ftype: "html",
-            //   url: `${currentData.server.path + "/"}${this.lang}/${
-            //     indexPage.path
-            //   }`,
-            // });
-
-            // this.summarys = summarys;
           },
         },
         attached() {
