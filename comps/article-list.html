@@ -96,6 +96,39 @@
 
           this.activePath = data.path;
         },
+        async reload() {
+          try {
+            const data = await getFileList("cn");
+            // const summarys = await getSummary({ lang: "cn" });
+            console.log("test: ", data);
+
+            this.summarys = data.list;
+          } catch (err) {
+            this.error_text = err.toString();
+          }
+
+          this.reloadItemMark();
+        },
+        async reloadItemMark() {
+          const { _fixItem } = this.host;
+          if (_fixItem) {
+            setTimeout(() => {
+              const items = this.shadow.all("p-list-item");
+
+              if (items.length) {
+                items.forEach(async (e) => {
+                  const reData = await _fixItem(e.__item.$data);
+
+                  if (reData) {
+                    // debugger;
+                  }
+                });
+
+                // debugger;
+              }
+            }, 100);
+          }
+        },
       },
       watch: {
         summarys(summarys) {
@@ -111,16 +144,7 @@
         },
       },
       async attached() {
-        try {
-          const data = await getFileList("cn");
-          // const summarys = await getSummary({ lang: "cn" });
-          console.log("test: ", data);
-
-          // this.summarys = summarys;
-          this.summarys = data.list;
-        } catch (err) {
-          this.error_text = err.toString();
-        }
+        this.reload();
       },
     };
   </script>

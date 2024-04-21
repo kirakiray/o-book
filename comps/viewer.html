@@ -71,7 +71,7 @@
           <option attr:value="$data.lang">{{$data.name}}</option>
         </x-fill>
       </p-select> -->
-      <p-button size="small" on:click="emit('reload')" class="reload-btn">
+      <p-button size="small" on:click="reload" class="reload-btn">
         <iconify-icon icon="mdi:reload" slot="prefix"></iconify-icon>
         刷新
       </p-button>
@@ -144,6 +144,10 @@
           saving: false, // 是否保存中
         },
         proto: {
+          reload() {
+            this.emit("reload");
+            this.shadow.$("article-list").reload();
+          },
           async exportProject() {
             await exportProject({
               server: currentData.server,

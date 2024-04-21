@@ -98,9 +98,17 @@
     .line-tool-container p-button {
       margin-right: 8px;
     }
+
+    .errors-list {
+      margin: 0;
+      padding-left: 1em;
+      font-size: 12px;
+      color: #fb4747;
+    }
   </style>
   <div class="container">
     <div class="top">
+      <p-button size="small">翻译全文</p-button>
       <div style="flex: 1; text-align: center">请校对文章内容</div>
       <p-button
         size="small"
@@ -149,6 +157,15 @@
                       >
                         重新翻译
                       </p-button>
+                      <x-if :value="$data.errors.length">
+                        <ul class="errors-list">
+                          <x-fill :value="$data.errors" name="error-item">
+                            <template name="error-item">
+                              <li>{{$data}}</li>
+                            </template>
+                          </x-fill>
+                        </ul>
+                      </x-if>
                     </div>
                   </div>
                   <!-- <div class="origin" :text="$data.raw"></div> -->
@@ -187,6 +204,11 @@
           saving: false, // 保存中
         },
         proto: {
+          // article-list组件专用
+          // 左侧每个item进行判断，有问题的内容进行提示
+          async _fixItem(item) {
+            // debugger;
+          },
           // 点击了重新翻译按钮
           async clickTrans(data) {
             const content = data.item.raw.trim();
@@ -264,11 +286,14 @@
 
                 const value = cacheData ? cacheData : "";
 
+                const errors = getTranslatedErrors(value, content);
+
                 return {
                   hash,
                   value,
                   _oldVal: value,
                   item,
+                  errors,
                 };
               })
             );
@@ -290,6 +315,62 @@
           window.removeEventListener("keydown", this._saveFun);
         },
       };
+    };
+
+    // 检测翻译后的段落是否有误
+    const getTranslatedErrors = (text, origin) => {
+      const errors = [];
+
+      // 判断标签个数是否对齐
+      const originAllTags = origin.match(/<[\/\w]+?>/g) || [];
+      const translatedTags = text.match(/<[\/\w]+?>/g) || [];
+
+      if (originAllTags.length !== translatedTags.length) {
+        errors.push("标签数对不上");
+      }
+
+      // 查找不在原文中的标签
+      const unIncludes = [];
+      originAllTags.forEach((tag) => {
+        if (!translatedTags.includes(tag)) {
+          unIncludes.push(tag);
+        }
+      });
+
+      // 当unIncludes存在时，说明有标签没有对应
+      if (unIncludes.length) {
+        errors.push(`缺少 ${unIncludes.join(",")} 标签`);
+      }
+
+      const marks = [
+        "#",
+        "(",
+        ")",
+        "[",
+        "]",
+        "`",
+        "-",
+        "<",
+        ">",
+        "/",
+        ":",
+        ".",
+        "*",
+      ];
+
+      // 判断特殊符号个数是否对齐
+      marks.forEach((mark) => {
+        const origins = origin.match(new RegExp("\\" + mark, "g")) || [];
+        const translateds = text.match(new RegExp("\\" + mark, "g")) || [];
+
+        if (origins.length !== translateds.length) {
+          errors.push(
+            `${mark} 数量不对；翻译后数量:${translateds.length}，原文数量:${origins.length}`
+          );
+        }
+      });
+
+      return errors;
     };
   </script>
 </template>
