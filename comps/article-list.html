@@ -26,6 +26,14 @@
     }
   </style>
 
+  <x-if :value="showyaml === null">
+    <style>
+      p-list-item[item-name$=".yaml"] {
+        display: none;
+      }
+    </style>
+  </x-if>
+
   <p-list class="article-list">
     <div style="height: 12px"></div>
     <div>{{error_text}}</div>
@@ -38,6 +46,7 @@
       radius
       on:click="$host.clickSummaryItem($data)"
       attr:active-item="$data.path === $host.activePath ? 1 : null"
+      attr:item-name="$data.name"
     >
       <x-if :value="$data.list && $data.list.length">
         <iconify-icon
@@ -66,7 +75,10 @@
           ></iconify-icon>
         </x-else>
         <!-- {{$data.title || $data.name}} -->
-        {{$data.name}}
+        <div style="display: flex; align-items: center">
+          {{$data.name}}
+          <span class="item-mark" style="margin-left: 8px"></span>
+        </div>
       </x-else>
     </p-list-item>
   </template>
@@ -76,6 +88,9 @@
 
     export default {
       tag: "article-list",
+      attrs: {
+        showyaml: null,
+      },
       data: {
         summarys: [],
         activePath: "",
@@ -110,21 +125,20 @@
           this.reloadItemMark();
         },
         async reloadItemMark() {
-          const { _fixItem } = this.host;
-          if (_fixItem) {
+          if (this.host._fixItem) {
             setTimeout(() => {
               const items = this.shadow.all("p-list-item");
 
               if (items.length) {
                 items.forEach(async (e) => {
-                  const reData = await _fixItem(e.__item.$data);
+                  const reData = await this.host._fixItem(e.__item.$data);
 
                   if (reData) {
-                    // debugger;
+                    e.$(".item-mark").html = reData;
+                  } else {
+                    e.$(".item-mark").html = "";
                   }
                 });
-
-                // debugger;
               }
             }, 100);
           }

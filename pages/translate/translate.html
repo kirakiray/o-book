@@ -121,14 +121,21 @@
     </div>
     <div class="main">
       <div class="left">
-        <article-list on:click-item="clickSummaryItem"></article-list>
+        <article-list
+          on:click-item="clickSummaryItem"
+          showyaml="1"
+        ></article-list>
       </div>
       <div class="article">
         <div class="article-inner">
           <div class="line title">
             <div class="after">
               翻译为：
-              <p-select size="small" sync:value="targetlang" on:change="reload">
+              <p-select
+                size="small"
+                sync:value="targetlang"
+                on:change="reloadArticle"
+              >
                 <option value="en">英语</option>
                 <option value="sp">西班牙语</option>
                 <option value="jp">日语</option>
@@ -136,7 +143,7 @@
               </p-select>
             </div>
             <div class="origin">
-              <h4>文档源语言：简体中文</h4>
+              <h4>源文档语言：简体中文</h4>
             </div>
           </div>
           <x-fill :value="articleRaws">
@@ -208,7 +215,16 @@
           // article-list组件专用
           // 左侧每个item进行判断，有问题的内容进行提示
           async _fixItem(item) {
-            // debugger;
+            if (!item._handle) {
+              return;
+            }
+
+            const articles = await this.getArticleRaws(item._handle);
+
+            // 有错误的文件添加提示
+            if (articles.some((e) => e.errors.length)) {
+              return '<span style="font-weight:bold;color:red;">!</span>';
+            }
           },
           // 点击了重新翻译按钮
           async clickTrans(data) {
@@ -250,15 +266,14 @@
             );
             this.saving = false;
           },
-          reload(e) {
+          reloadArticle(e) {
             // 刷新页面，重新加载状态
             if (this.__oldArg0) {
               this.clickSummaryItem(this.__oldArg0);
             }
           },
-          async clickSummaryItem({ data: { item, handle } }) {
-            this.__oldArg0 = arguments[0]; // 用于刷新状态用
-
+          // 获取翻译后的文本渲染数据
+          async getArticleRaws(handle) {
             const text = await handle.text();
 
             let content = text;
@@ -275,7 +290,7 @@
               content = [{ raw: content }];
             }
 
-            this.articleRaws = await Promise.all(
+            return await Promise.all(
               content.map(async (item) => {
                 const content = item.raw.trim();
                 const hash = await getHashFingerprint(content);
@@ -298,6 +313,10 @@
                 };
               })
             );
+          },
+          async clickSummaryItem({ data: { handle } }) {
+            this.__oldArg0 = arguments[0]; // 用于刷新状态用
+            this.articleRaws = await this.getArticleRaws(handle);
           },
           // 翻译后文本改动后，修正错误提示
           changeText(data, event) {

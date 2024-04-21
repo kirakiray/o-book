@@ -134,12 +134,12 @@ export const getTranslatedErrors = (text, origin) => {
     "[",
     "]",
     "`",
-    "-",
+    // "-",
     "<",
     ">",
     "/",
     ":",
-    ".",
+    // ".",
     "*",
   ];
 
