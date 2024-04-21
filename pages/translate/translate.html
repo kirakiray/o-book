@@ -205,7 +205,6 @@
     export default async ({ load }) => {
       return {
         data: {
-          activeUrl: "",
           summarys: [],
           articleRaws: [],
           targetlang: "en",
@@ -261,16 +260,22 @@
                     hash: e.hash,
                     content: e.value,
                   });
+
+                  e._oldVal = e.value;
                 }
               })
             );
             this.saving = false;
+
+            this.shadow.$("article-list").reloadItemMark(this._handle.name);
           },
           reloadArticle(e) {
             // 刷新页面，重新加载状态
-            if (this.__oldArg0) {
-              this.clickSummaryItem(this.__oldArg0);
-            }
+            this.clickSummaryItem({
+              data: {
+                handle: this._handle,
+              },
+            });
           },
           // 获取翻译后的文本渲染数据
           async getArticleRaws(handle) {
@@ -315,7 +320,7 @@
             );
           },
           async clickSummaryItem({ data: { handle } }) {
-            this.__oldArg0 = arguments[0]; // 用于刷新状态用
+            this._handle = handle;
             this.articleRaws = await this.getArticleRaws(handle);
           },
           // 翻译后文本改动后，修正错误提示

@@ -124,23 +124,38 @@
 
           this.reloadItemMark();
         },
-        async reloadItemMark() {
+        // 刷新左侧列表项的外观
+        reloadItemMark(fileName) {
           if (this.host._fixItem) {
-            setTimeout(() => {
-              const items = this.shadow.all("p-list-item");
+            setTimeout(
+              async () => {
+                const items = this.shadow.all("p-list-item");
 
-              if (items.length) {
-                items.forEach(async (e) => {
-                  const reData = await this.host._fixItem(e.__item.$data);
+                if (items.length) {
+                  await Promise.all(
+                    items.map(async (e) => {
+                      if (fileName && e.attr("item-name") !== fileName) {
+                        return;
+                      }
 
-                  if (reData) {
-                    e.$(".item-mark").html = reData;
-                  } else {
-                    e.$(".item-mark").html = "";
-                  }
-                });
-              }
-            }, 100);
+                      const markEl = e.$(".item-mark");
+
+                      if (markEl) {
+                        // 向宿主运行数据，返回填充的内容
+                        const reData = await this.host._fixItem(e.__item.$data);
+
+                        if (reData) {
+                          markEl.html = reData;
+                        } else {
+                          markEl.html = "";
+                        }
+                      }
+                    })
+                  );
+                }
+              },
+              fileName ? 100 : 500
+            );
           }
         },
       },
