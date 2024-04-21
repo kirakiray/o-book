@@ -1,0 +1,141 @@
+<template component>
+  <l-m src="@pui/button/button.html"></l-m>
+  <l-m src="@pui/dialog/dialog.html"></l-m>
+  <p-button
+    size="small"
+    :disabled="lang === null ? '' : null"
+    on:click="opened = true"
+  >
+    翻译所有空白段落 ({{translatedCount}} / {{needTranslateCount}})
+  </p-button>
+
+  <!-- <p-dialog :open="opened" on:click-mask="opened = false" fullscreen="540">
+    <span slot="title">翻译全文</span>
+  </p-dialog> -->
+  <script>
+    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+    import { currentData, configDataByLang } from "../../src/data.js";
+    import { getHashFingerprint } from "../../src/util.js";
+    import { translate } from "./translate.js";
+    import { savePart, getPart } from "./part-manager.js";
+
+    export default {
+      tag: "full-translate",
+      data: {
+        lang: null,
+        // opened: true,
+        translatedCount: 0, // 当前翻译段落的数量
+        needTranslateCount: 0, // 总共需要翻译的段落数
+      },
+      watch: {
+        lang(lang) {
+          console.log("lang", lang);
+        },
+      },
+      proto: {
+        // 获取所有的文章，并统计段落的数量和获取hash
+        async statistical(e) {
+          const { handle } = currentData;
+
+          // 源文档语言
+          const originLang = "cn";
+
+          // 获取源语言的数据
+          const target = await configDataByLang(originLang);
+
+          const paths = target.articles.map((e) => `${originLang}/${e.path}`);
+
+          // 所有段落数
+          let count = 0;
+          let raws = [];
+
+          // 获取所有正文
+          const articles = await Promise.all(
+            paths.map(async (path) => {
+              let isMd = false;
+              const tartgetHandle = await handle.get(path).catch((err) => {
+                isMd = true;
+                return handle.get(path.replace(/\.html$/, ".md"));
+              });
+
+              const content = await tartgetHandle.text();
+
+              let paragraph;
+
+              // 将内容进行转换
+              if (isMd) {
+                const parts = marked.lexer(content);
+                paragraph = parts.map((e) => e.raw);
+              } else {
+                const temp = $(`<template>${content}</template>`);
+                paragraph = Array.from(temp.ele.content.children).map(
+                  (el) => el.outerHTML
+                );
+              }
+
+              paragraph = paragraph.filter((text) => {
+                const content = text.trim();
+                if (content && content !== "<br>") {
+                  return true;
+                }
+
+                return false;
+              });
+
+              count += paragraph.length;
+
+              raws.push(...paragraph);
+
+              return {
+                path,
+                content,
+                paragraph,
+                isMd,
+              };
+            })
+          );
+
+          this.needTranslateCount = count;
+
+          this.statisticalTranslated(raws, false);
+        },
+        // 统计已翻译的个数
+        async statisticalTranslated(raws, runTranslate = true) {
+          this.translatedCount = 0;
+
+          // 转换好后，存放到本地缓存
+          for (let item of raws) {
+            const content = item.trim();
+            const hash = await getHashFingerprint(content);
+
+            const translatedText = await getPart({
+              lang: this.lang,
+              hash,
+            });
+
+            // 判断是否存在，不存在才翻译
+            if (!translatedText) {
+              if (!runTranslate) {
+                continue;
+              }
+              const result = await translate({
+                content,
+              });
+
+              await savePart({
+                lang: this.lang,
+                hash,
+                content: result.context,
+              });
+            }
+
+            this.translatedCount++;
+          }
+        },
+      },
+      attached() {
+        this.statistical();
+      },
+    };
+  </script>
+</template>

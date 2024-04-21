@@ -6,6 +6,7 @@
   <l-m src="@pui/button/button.html"></l-m>
   <l-m src="@pui/text-field/text-field.html"></l-m>
   <l-m src="../../comps/article-list.html"></l-m>
+  <l-m src="./full-translate.html"></l-m>
   <style>
     :host {
       display: block;
@@ -108,7 +109,7 @@
   </style>
   <div class="container">
     <div class="top">
-      <p-button size="small">翻译全文</p-button>
+      <full-translate :lang="targetlang"></full-translate>
       <div style="flex: 1; text-align: center">请校对文章内容</div>
       <p-button
         size="small"
@@ -276,6 +277,8 @@
                 handle: this._handle,
               },
             });
+
+            this.shadow.$("article-list").reloadItemMark();
           },
           // 获取翻译后的文本渲染数据
           async getArticleRaws(handle) {
