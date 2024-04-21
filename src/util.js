@@ -101,3 +101,59 @@ export async function getHashFingerprint(str) {
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 }
+
+// 检测翻译后的段落是否有误
+export const getTranslatedErrors = (text, origin) => {
+  const errors = [];
+
+  // 判断标签个数是否对齐
+  const originAllTags = origin.match(/<[\/\w]+?>/g) || [];
+  const translatedTags = text.match(/<[\/\w]+?>/g) || [];
+
+  // if (originAllTags.length !== translatedTags.length) {
+  //   errors.push("标签数对不上");
+  // }
+
+  // 查找不在原文中的标签
+  const unIncludes = [];
+  originAllTags.forEach((tag) => {
+    if (!translatedTags.includes(tag)) {
+      unIncludes.push(tag);
+    }
+  });
+
+  // 当unIncludes存在时，说明有标签没有对应
+  if (unIncludes.length) {
+    errors.push(`缺少 ${unIncludes.join(",")} 标签`);
+  }
+
+  const marks = [
+    "#",
+    "(",
+    ")",
+    "[",
+    "]",
+    "`",
+    "-",
+    "<",
+    ">",
+    "/",
+    ":",
+    ".",
+    "*",
+  ];
+
+  // 判断特殊符号个数是否对齐
+  marks.forEach((mark) => {
+    const origins = origin.match(new RegExp("\\" + mark, "g")) || [];
+    const translateds = text.match(new RegExp("\\" + mark, "g")) || [];
+
+    if (origins.length !== translateds.length) {
+      errors.push(
+        `${mark} 数量不对；翻译后数量:${translateds.length}，原文数量:${origins.length}`
+      );
+    }
+  });
+
+  return errors;
+};

@@ -148,6 +148,7 @@
                       multiline
                       sync:value="$data.value"
                       attr:disabled="$data.loading ? '' : null"
+                      on:input="$host.changeText($data,$event)"
                     ></p-text-field>
                     <div class="line-tool-container">
                       <p-button
@@ -191,7 +192,7 @@
     import { EverCache } from "https://cdn.jsdelivr.net/gh/kirakiray/ever-cache@1.0.4/src/main.js";
     import { getSummary } from "../../src/data.js";
     import { translate } from "./translate.js";
-    import { getHashFingerprint } from "../../src/util.js";
+    import { getHashFingerprint, getTranslatedErrors } from "../../src/util.js";
     import { savePart, getPart } from "./part-manager.js";
 
     export default async ({ load }) => {
@@ -298,6 +299,10 @@
               })
             );
           },
+          // 翻译后文本改动后，修正错误提示
+          changeText(data, event) {
+            data.errors = getTranslatedErrors(data.value, data.item.raw);
+          },
         },
 
         attached() {
@@ -315,62 +320,6 @@
           window.removeEventListener("keydown", this._saveFun);
         },
       };
-    };
-
-    // 检测翻译后的段落是否有误
-    const getTranslatedErrors = (text, origin) => {
-      const errors = [];
-
-      // 判断标签个数是否对齐
-      const originAllTags = origin.match(/<[\/\w]+?>/g) || [];
-      const translatedTags = text.match(/<[\/\w]+?>/g) || [];
-
-      if (originAllTags.length !== translatedTags.length) {
-        errors.push("标签数对不上");
-      }
-
-      // 查找不在原文中的标签
-      const unIncludes = [];
-      originAllTags.forEach((tag) => {
-        if (!translatedTags.includes(tag)) {
-          unIncludes.push(tag);
-        }
-      });
-
-      // 当unIncludes存在时，说明有标签没有对应
-      if (unIncludes.length) {
-        errors.push(`缺少 ${unIncludes.join(",")} 标签`);
-      }
-
-      const marks = [
-        "#",
-        "(",
-        ")",
-        "[",
-        "]",
-        "`",
-        "-",
-        "<",
-        ">",
-        "/",
-        ":",
-        ".",
-        "*",
-      ];
-
-      // 判断特殊符号个数是否对齐
-      marks.forEach((mark) => {
-        const origins = origin.match(new RegExp("\\" + mark, "g")) || [];
-        const translateds = text.match(new RegExp("\\" + mark, "g")) || [];
-
-        if (origins.length !== translateds.length) {
-          errors.push(
-            `${mark} 数量不对；翻译后数量:${translateds.length}，原文数量:${origins.length}`
-          );
-        }
-      });
-
-      return errors;
     };
   </script>
 </template>
