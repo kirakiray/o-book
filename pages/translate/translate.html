@@ -197,8 +197,6 @@
     export const parent = "../layout.html";
 
     import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
-    import { EverCache } from "https://cdn.jsdelivr.net/gh/kirakiray/ever-cache@1.0.4/src/main.js";
-    import { getSummary } from "../../src/data.js";
     import { translate } from "./translate.js";
     import { getHashFingerprint, getTranslatedErrors } from "../../src/util.js";
     import { savePart, getPart } from "./part-manager.js";
@@ -279,6 +277,8 @@
             });
 
             this.shadow.$("article-list").reloadItemMark();
+
+            this.shadow.$("full-translate").statistical();
           },
           // 获取翻译后的文本渲染数据
           async getArticleRaws(handle) {

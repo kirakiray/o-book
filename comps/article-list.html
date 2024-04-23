@@ -84,7 +84,7 @@
   </template>
 
   <script>
-    import { getSummary, currentData, getFileList } from "../src/data.js";
+    import { currentData, getFileList } from "../src/data.js";
 
     export default {
       tag: "article-list",
@@ -114,7 +114,6 @@
         async reload() {
           try {
             const data = await getFileList("cn");
-            // const summarys = await getSummary({ lang: "cn" });
             console.log("test: ", data);
 
             this.summarys = data.list;

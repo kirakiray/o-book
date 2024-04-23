@@ -3,18 +3,31 @@
   <l-m src="@pui/dialog/dialog.html"></l-m>
   <p-button
     size="small"
-    :disabled="lang === null ? '' : null"
-    on:click="opened = true"
+    :disabled="translatedCount >= needTranslateCount ? '' : null"
+    on:click="clickTranslate"
   >
-    翻译所有空白段落 ({{translatedCount}} / {{needTranslateCount}})
+    <x-if :value="opened">
+      翻译中...({{translatedCount}} / {{needTranslateCount}})
+    </x-if>
+    <x-else-if :value="translatedCount === needTranslateCount">
+      翻译完成 ({{translatedCount}} / {{needTranslateCount}})
+    </x-else-if>
+    <x-else>
+      翻译未翻译的段落 ({{translatedCount}} / {{needTranslateCount}})
+    </x-else>
   </p-button>
 
-  <!-- <p-dialog :open="opened" on:click-mask="opened = false" fullscreen="540">
+  <!-- <p-dialog :open="opened" fullscreen="540">
     <span slot="title">翻译全文</span>
   </p-dialog> -->
   <script>
     import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
-    import { currentData, configDataByLang } from "../../src/data.js";
+    import {
+      currentData,
+      configDataByLang,
+      getFileList,
+    } from "../../src/data.js";
+
     import { getHashFingerprint } from "../../src/util.js";
     import { translate } from "./translate.js";
     import { savePart, getPart } from "./part-manager.js";
@@ -23,7 +36,7 @@
       tag: "full-translate",
       data: {
         lang: null,
-        // opened: true,
+        opened: false,
         translatedCount: 0, // 当前翻译段落的数量
         needTranslateCount: 0, // 总共需要翻译的段落数
       },
@@ -33,74 +46,56 @@
         },
       },
       proto: {
+        clickTranslate() {
+          this.opened = true;
+          this.statistical(true);
+        },
         // 获取所有的文章，并统计段落的数量和获取hash
-        async statistical(e) {
+        async statistical(runTranslate = false) {
           const { handle } = currentData;
 
           // 源文档语言
           const originLang = "cn";
 
-          // 获取源语言的数据
-          const target = await configDataByLang(originLang);
+          // 所有段落的字符串集合
+          const raws = [];
 
-          const paths = target.articles.map((e) => `${originLang}/${e.path}`);
-
-          // 所有段落数
-          let count = 0;
-          let raws = [];
-
-          // 获取所有正文
-          const articles = await Promise.all(
-            paths.map(async (path) => {
-              let isMd = false;
-              const tartgetHandle = await handle.get(path).catch((err) => {
-                isMd = true;
-                return handle.get(path.replace(/\.html$/, ".md"));
-              });
-
-              const content = await tartgetHandle.text();
-
-              let paragraph;
-
-              // 将内容进行转换
-              if (isMd) {
-                const parts = marked.lexer(content);
-                paragraph = parts.map((e) => e.raw);
+          const getRaws = async (dir) => {
+            for (let item of dir.list) {
+              if (item.kind === "directory") {
+                await getRaws(item);
               } else {
-                const temp = $(`<template>${content}</template>`);
-                paragraph = Array.from(temp.ele.content.children).map(
-                  (el) => el.outerHTML
-                );
-              }
+                const handle = item._handle;
 
-              paragraph = paragraph.filter((text) => {
-                const content = text.trim();
-                if (content && content !== "<br>") {
-                  return true;
+                const text = await handle.text();
+                let content = text;
+                if (/\.md$/.test(handle.name)) {
+                  content = marked.lexer(content);
+                } else if (/\.html$/.test(handle.name)) {
+                  const temp = $(`<template>${text}</template>`);
+                  content = Array.from(temp.ele.content.children).map((el) => {
+                    return {
+                      raw: el.outerHTML,
+                    };
+                  });
+                } else {
+                  content = [{ raw: content }];
                 }
 
-                return false;
-              });
+                raws.push(...content.map((e) => e.raw));
+              }
+            }
+          };
 
-              count += paragraph.length;
+          await getRaws(await getFileList(originLang));
 
-              raws.push(...paragraph);
+          this.needTranslateCount = raws.length;
 
-              return {
-                path,
-                content,
-                paragraph,
-                isMd,
-              };
-            })
-          );
-
-          this.needTranslateCount = count;
-
-          this.statisticalTranslated(raws, false);
+          // 计算已经翻译的个数
+          this.statisticalTranslated(raws, runTranslate);
         },
         // 统计已翻译的个数
-        async statisticalTranslated(raws, runTranslate = true) {
+        async statisticalTranslated(raws, runTranslate) {
           this.translatedCount = 0;
 
           // 转换好后，存放到本地缓存
@@ -131,6 +126,8 @@
 
             this.translatedCount++;
           }
+
+          this.opened = false;
         },
       },
       attached() {
