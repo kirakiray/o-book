@@ -236,6 +236,7 @@
               callback({ context }) {
                 data.value = context;
               },
+              fileType: this._handle.name.split(".").slice(-1)[0],
             });
 
             // 缓存翻译后的内容

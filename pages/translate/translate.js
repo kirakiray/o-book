@@ -1,16 +1,20 @@
 const generateUrl = "http://localhost:11434/api/generate";
 // const generateUrl = "http://localhost:11001/api/generate";
 
-export const translate = async ({ content, callback }) => {
+export const translate = async ({ content, callback, fileType }) => {
   const data = {
     model: "gemma:7b",
     // model: "llama3",
     temperature: 0,
     // prompt: `把下面的中文翻译成英语，只告诉我翻译后的内容：\n ${content}`,
     prompt: `<start_of_turn>user
-    把下面的中文翻译成英语：
-    ${content}<end_of_turn>
-    <start_of_turn>model`,
+把下面的中文内容翻译成英语,并满足要求:
+- 保留${fileType}格式的符号
+- 只显示翻译后的内容
+要翻译的内容如下：
+${content}
+<end_of_turn>
+<start_of_turn>model`,
   };
 
   // const data = {
