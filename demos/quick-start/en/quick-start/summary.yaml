@@ -1,0 +1,7 @@
+name: Test1
+order: 1
+list:
+  - name: Home Page
+    path: index.md
+  - name: Quick Start 2
+    path: quick2.md

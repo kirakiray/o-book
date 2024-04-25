@@ -1,0 +1,5 @@
+name: Test2
+order: 2
+list:
+  - name: Home
+    path: index.html

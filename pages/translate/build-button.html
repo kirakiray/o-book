@@ -29,9 +29,12 @@
       data: {
         sourcelang: "cn", // 文档源的语言
         targetlang: null, // 翻译到目标语言
+        building: false,
       },
       proto: {
         async build() {
+          this.building = true;
+
           // 先获取对应的目录
           const { handle } = currentData;
 
@@ -64,6 +67,7 @@
           });
 
           // 最后将翻译后的语言，写入到跟目录的config.yaml中
+          this.building = false;
         },
       },
     };

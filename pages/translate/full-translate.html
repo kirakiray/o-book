@@ -3,7 +3,7 @@
   <l-m src="@pui/dialog/dialog.html"></l-m>
   <p-button
     size="small"
-    :disabled="translatedCount >= needTranslateCount ? '' : null"
+    :disabled="translatedCount >= needTranslateCount ? '' : translating ? '' : null"
     on:click="clickTranslate"
   >
     <x-if :value="opened">
@@ -36,6 +36,7 @@
       data: {
         lang: null,
         opened: false,
+        translating: false,
         translatedCount: 0, // 当前翻译段落的数量
         needTranslateCount: 0, // 总共需要翻译的段落数
       },

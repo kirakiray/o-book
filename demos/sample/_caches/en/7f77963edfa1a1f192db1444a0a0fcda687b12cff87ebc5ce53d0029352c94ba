@@ -1,1 +1,3 @@
+<p>
 In many small-scale projects, we may not need to introduce large frameworks like React or Vue, and instead prefer to use jQuery for simple frontend manipulation. Ofa.js enhances jQuery's API by replacing many methods with properties, making it more suitable for various scenarios.
+</p>
