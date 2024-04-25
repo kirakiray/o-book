@@ -21,14 +21,13 @@
     <span slot="title">翻译全文</span>
   </p-dialog> -->
   <script>
-    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
     import {
       currentData,
       configDataByLang,
       getFileList,
     } from "../../src/data.js";
 
-    import { getHashFingerprint } from "../../src/util.js";
+    import { getHashFingerprint, getArticleParts } from "../../src/util.js";
     import { translate } from "./translate.js";
     import { savePart, getPart } from "./part-manager.js";
 
@@ -67,20 +66,10 @@
               } else {
                 const handle = item._handle;
 
-                const text = await handle.text();
-                let content = text;
-                if (/\.md$/.test(handle.name)) {
-                  content = marked.lexer(content);
-                } else if (/\.html$/.test(handle.name)) {
-                  const temp = $(`<template>${text}</template>`);
-                  content = Array.from(temp.ele.content.children).map((el) => {
-                    return {
-                      raw: el.outerHTML,
-                    };
-                  });
-                } else {
-                  content = [{ raw: content }];
-                }
+                const content = await getArticleParts({
+                  content: await handle.text(),
+                  name: handle.name,
+                });
 
                 raws.push(...content.map((e) => e.raw));
               }

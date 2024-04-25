@@ -157,3 +157,21 @@ export const getTranslatedErrors = (text, origin) => {
 
   return errors;
 };
+
+// 根据文件名，将文件中的字符串分段返回数组
+export const getArticleParts = async ({ content, name }) => {
+  if (/\.md$/.test(name)) {
+    content = marked.lexer(content);
+  } else if (/\.html$/.test(name)) {
+    const temp = $(`<template>${content}</template>`);
+    content = Array.from(temp.ele.content.children).map((el) => {
+      return {
+        raw: el.outerHTML,
+      };
+    });
+  } else {
+    content = [{ raw: content }];
+  }
+
+  return content;
+};

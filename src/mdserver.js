@@ -42,13 +42,17 @@ export class MdServer {
 
     for await (let [name, subHandle] of handle.entries()) {
       if (subHandle.kind === "directory" && !/^_/.test(name)) {
-        const navData = await this._getNavData(subHandle);
-        allDatas.push({
-          lang: name,
-          data: navData,
-          // 所有文章的文本数据，给搜索用的
-          articles: await getAllArticles(subHandle),
-        });
+        try {
+          const navData = await this._getNavData(subHandle);
+          allDatas.push({
+            lang: name,
+            data: navData,
+            // 所有文章的文本数据，给搜索用的
+            articles: await getAllArticles(subHandle),
+          });
+        } catch (err) {
+          console.error(err);
+        }
       }
     }
 

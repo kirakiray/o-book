@@ -7,6 +7,7 @@
   <l-m src="@pui/text-field/text-field.html"></l-m>
   <l-m src="../../comps/article-list.html"></l-m>
   <l-m src="./full-translate.html"></l-m>
+  <l-m src="./build-button.html"></l-m>
   <style>
     :host {
       display: block;
@@ -111,6 +112,10 @@
     <div class="top">
       <full-translate :lang="targetlang"></full-translate>
       <div style="flex: 1; text-align: center">请校对文章内容</div>
+      <build-button
+        :targetlang="targetlang"
+        style="margin-right: 8px"
+      ></build-button>
       <p-button
         size="small"
         :disabled="this.saving ? '' : null"
@@ -156,7 +161,7 @@
                       multiline
                       sync:value="$data.value"
                       attr:disabled="$data.loading ? '' : null"
-                      on:input="$host.changeText($data,$event)"
+                      on:input="$host.changeText($data)"
                     ></p-text-field>
                     <div class="line-tool-container">
                       <p-button
@@ -196,9 +201,12 @@
   <script>
     export const parent = "../layout.html";
 
-    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
     import { translate } from "./translate.js";
-    import { getHashFingerprint, getTranslatedErrors } from "../../src/util.js";
+    import {
+      getHashFingerprint,
+      getTranslatedErrors,
+      getArticleParts,
+    } from "../../src/util.js";
     import { savePart, getPart } from "./part-manager.js";
 
     export default async ({ load }) => {
@@ -248,6 +256,8 @@
 
             data.loading = false;
             data.value = result.context;
+
+            this.changeText(data);
           },
           async clickSave() {
             this.saving = true;
@@ -285,19 +295,10 @@
           async getArticleRaws(handle) {
             const text = await handle.text();
 
-            let content = text;
-            if (/\.md$/.test(handle.name)) {
-              content = marked.lexer(content);
-            } else if (/\.html$/.test(handle.name)) {
-              const temp = $(`<template>${text}</template>`);
-              content = Array.from(temp.ele.content.children).map((el) => {
-                return {
-                  raw: el.outerHTML,
-                };
-              });
-            } else {
-              content = [{ raw: content }];
-            }
+            const content = await getArticleParts({
+              content: text,
+              name: handle.name,
+            });
 
             return await Promise.all(
               content.map(async (item) => {
@@ -328,7 +329,7 @@
             this.articleRaws = await this.getArticleRaws(handle);
           },
           // 翻译后文本改动后，修正错误提示
-          changeText(data, event) {
+          changeText(data) {
             data.errors = getTranslatedErrors(data.value, data.item.raw);
           },
         },

@@ -1,0 +1,93 @@
+<template component>
+  <style>
+    :host {
+      display: block;
+    }
+  </style>
+  <l-m src="@pui/button/button.html"></l-m>
+  <p-button
+    size="small"
+    on:click="build"
+    :disabled="targetlang === null ? '' : null"
+  >
+    翻译到{{targetlang}}文件夹
+  </p-button>
+  <script>
+    import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
+
+    import { getHashFingerprint, getArticleParts } from "../../src/util.js";
+    import { savePart, getPart } from "./part-manager.js";
+
+    import {
+      currentData,
+      configDataByLang,
+      getFileList,
+    } from "../../src/data.js";
+
+    export default {
+      tag: "build-button",
+      data: {
+        sourcelang: "cn", // 文档源的语言
+        targetlang: null, // 翻译到目标语言
+      },
+      proto: {
+        async build() {
+          // 先获取对应的目录
+          const { handle } = currentData;
+
+          const sourceDir = await handle.get(this.sourcelang);
+          const targetDir = await handle.get(this.targetlang, {
+            create: "directory",
+          });
+
+          // 从sourcelang复制到targetlang目录下
+          await copyFile(sourceDir, targetDir, async ({ name, content }) => {
+            // 将 html md yaml 获取内容，从缓存中获取翻译后的段落，从新组合
+            const parts = await getArticleParts({ content, name });
+
+            for (let item of parts) {
+              const { raw } = item;
+              const hash = await getHashFingerprint(raw.trim());
+              const cacheData = await getPart({
+                hash,
+                lang: this.targetlang,
+              });
+
+              item.raw = raw.replace(raw.trim(), cacheData);
+            }
+
+            if (/\.md$/.test(name)) {
+              return parts.map((e) => e.raw).join("");
+            }
+
+            return parts.map((e) => e.raw).join("\n");
+          });
+
+          // 最后将翻译后的语言，写入到跟目录的config.yaml中
+        },
+      },
+    };
+
+    // 将文件从左边目录复制到右边目录
+    const copyFile = async (sourceDir, targetDir, callback) => {
+      for await (let item of sourceDir.values()) {
+        if (item.kind === "file") {
+          const content = await item.text();
+          const afterContent = await callback({ content, name: item.name });
+
+          const subFile = await targetDir.get(item.name, {
+            create: "file",
+          });
+
+          await subFile.write(afterContent);
+        } else {
+          const subTargetDir = await targetDir.get(item.name, {
+            create: "directory",
+          });
+
+          await copyFile(item, subTargetDir, callback);
+        }
+      }
+    };
+  </script>
+</template>

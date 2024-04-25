@@ -72,9 +72,11 @@ const fixSummary = (list, opts) => {
 
 export const initServer = async ({ handle }) => {
   currentData.handle = handle;
+  const temp = await fetch("/statics/index.html").then((e) => e.text());
+
   currentData.server = await create({
     handle,
-    temp: await fetch("/statics/index.html").then((e) => e.text()),
+    temp,
   });
 };
 
