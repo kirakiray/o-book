@@ -12,7 +12,7 @@
       display: flex;
       flex-direction: column;
       padding-top: 10px;
-      width: 40vw;
+      min-width: 40vw;
       height: 70vh;
     }
     .list-main {
@@ -45,7 +45,6 @@
   <p-dialog :open="open" on:click-mask="open = false">
     <div class="search-dialog">
       <p-text-field
-        style="width: 100%"
         sync:value="searchVal"
         on:input="searchChange"
         on:keyup="searchKeyUp"

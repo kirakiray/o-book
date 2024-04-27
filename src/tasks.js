@@ -1,6 +1,7 @@
 import { getRelativeURL } from "./util.js";
 import { marked } from "https://cdn.jsdelivr.net/npm/marked/lib/marked.esm.js";
 
+// 转发statics目录下的文件
 export const statics = async ({ path }) => {
   if (/^_statics\//.test(path)) {
     const repath = path.replace(/^_statics\//, "statics/");
@@ -38,11 +39,16 @@ const fixSummarys = (list) => {
   });
 };
 
+// 请求配置数据
 export const config = async ({ path, all }) => {
   if (/^[a-z]+\/config.json/.test(path)) {
     const lang = path.split("/")[0];
     const target = all.find((e) => e.lang === lang);
-    const data = { ...target.data };
+    const data = {
+      ...target.data,
+      availableLangs: all.map((e) => e.lang),
+      lang,
+    };
     data.summarys = fixSummarys(data.summarys);
     return {
       body: JSON.stringify(data),
@@ -50,6 +56,7 @@ export const config = async ({ path, all }) => {
   }
 };
 
+// 请求文章数据
 export const articleTask = async ({ path, all }) => {
   if (/^[a-z]+\/_articles.json/.test(path)) {
     const lang = path.split("/")[0];
@@ -61,6 +68,7 @@ export const articleTask = async ({ path, all }) => {
   }
 };
 
+// 请求公共目录
 export const publicsTask = async ({ path, handle }) => {
   if (path.split("/")[0] === "_publics") {
     const targetFile = await handle.get(path).catch(() => null);
@@ -153,7 +161,7 @@ export const respPage = async ({ path, handle, temp }) => {
     '<o-app src="./app-config.js">',
     `<o-app src="${getRelativeURL(path, "_statics/app-config.js")}">`
   );
-  
+
   content = content.replace(
     '<l-m src="./comps/article-toc.html"></l-m>',
     `<l-m src="${getRelativeURL(
@@ -161,7 +169,7 @@ export const respPage = async ({ path, handle, temp }) => {
       "_statics/comps/article-toc.html"
     )}"></l-m>`
   );
-  
+
   content = content.replace(
     '<l-m src="./comps/article-bottom.html"></l-m>',
     `<l-m src="${getRelativeURL(
@@ -186,10 +194,7 @@ export const respPage = async ({ path, handle, temp }) => {
 
   content = content.replace(
     'parent = "./pages/layout.html";',
-    `parent = "${getRelativeURL(
-      path,
-      "_statics/pages/layout.html"
-    )}";`
+    `parent = "${getRelativeURL(path, "_statics/pages/layout.html")}";`
   );
 
   return {

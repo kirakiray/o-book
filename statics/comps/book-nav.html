@@ -36,10 +36,6 @@
       display: none;
     }
 
-    .active-item {
-      color: var(--md-ref-palette-primary50);
-      font-weight: bold;
-    }
     a {
       color: inherit;
       text-decoration: none;
@@ -125,11 +121,14 @@
           <p-icon name="language-outlined"></p-icon>
         </p-button>
         <p-menu>
-          <p-menu-item id="targetItem" class="active-item">
-            简体中文
-          </p-menu-item>
-          <p-menu-item id="targetItem"> 繁体中文 </p-menu-item>
-          <p-menu-item id="targetItem"> English </p-menu-item>
+          <x-fill :value="langs">
+            <p-menu-item
+              attr:active-item="$data.value === $host.configData.lang ? '' : null"
+              on:click="$host.changeLang($data.value)"
+            >
+              {{$data.name}}
+            </p-menu-item>
+          </x-fill>
         </p-menu>
       </p-menu-bind>
     </div>
@@ -138,11 +137,18 @@
   <search-dialog sync:open="searchDialog"></search-dialog>
 
   <script>
+    const langOpts = {
+      en: "English",
+      cn: "简体中文",
+      "t-cn": "繁体中文",
+      es: "española",
+      ja: "日本語",
+      ko: "한국어",
+    };
+
     export default async ({ load }) => {
       const { isDark } = await load("@pui/commons/data.js");
-      const { configs } = await load("../data.js");
-
-      console.log(configs);
+      const { configs, availableLangs } = await load("../data.js");
 
       return {
         tag: "book-nav",
@@ -150,15 +156,34 @@
           searchDialog: false,
           isDark: {},
           historys: [],
+          availableLangs: [],
           configData: {
             github: "",
             logo: {
               pic: "",
               text: "",
             },
+            lang: "",
           },
         },
         proto: {
+          changeLang(value) {
+            window.location.href = location.pathname.replace(
+              `/${this.configData.lang}/`,
+              `/${value}/`
+            );
+          },
+          get langs() {
+            const opts = [];
+
+            this.availableLangs.forEach((e) => {
+              opts.push({
+                name: langOpts[e] || e,
+                value: e,
+              });
+            });
+            return opts;
+          },
           get logoPic() {
             const pic = this?.configData?.logo?.pic;
             if (!pic) {
@@ -178,6 +203,7 @@
         attached() {
           this.isDark = isDark;
           this.configData = configs;
+          this.availableLangs = availableLangs;
         },
         detached() {
           this.isDark = {};

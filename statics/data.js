@@ -34,18 +34,29 @@ export const configs = $.stanz({
     text: "obook",
     pic: "",
   },
+  lang: "",
 });
+
+// 可用语言
+export const availableLangs = [];
 
 let summarysData = null;
 
 if (typeof configUrl === "string") {
   // 加载数据
   (async () => {
-    const { configData, summarys } = await fetch(configUrl).then((e) =>
-      e.json()
-    );
+    const {
+      configData,
+      summarys,
+      availableLangs: _avaLangs,
+      lang,
+    } = await fetch(configUrl).then((e) => e.json());
 
-    Object.assign(configs, configData);
+    availableLangs.splice(0, 1000, ..._avaLangs);
+
+    Object.assign(configs, configData, {
+      lang,
+    });
 
     // 给所有地址前添加dirName，转为相对地址
     const fixSummarysPath = (list, dirName) => {
