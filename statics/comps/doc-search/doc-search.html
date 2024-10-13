@@ -275,17 +275,18 @@
       "$1/libs.json"
     );
 
-    const selfWokerPath = PATH.replace(/(.+)\/.+/, "$1") + "/search-worker.js";
-    const workerText = `
+    export default async ({ load, url }) => {
+      const selfWokerPath = url.replace(/(.+)\/.+/, "$1") + "/search-worker.js";
+
+      const workerText = `
 const libUrl = "${libUrl}";
 importScripts('${selfWokerPath}');`;
 
-    const file = new File([workerText], "worker.js");
-    const wpath = URL.createObjectURL(file);
+      const file = new File([workerText], "worker.js");
+      const wpath = URL.createObjectURL(file);
 
-    const searchWorker = new Worker(wpath);
+      const searchWorker = new Worker(wpath);
 
-    export default async ({ load }) => {
       return {
         data: {
           showPannel: false,
