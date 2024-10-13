@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><%title%></title>
-    <meta name="description" content="<%desc%>">
-    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.37/dist/ofa.min.js"></script>
+    <meta name="description" content="<%desc%>" />
+    <script src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.5.21/dist/ofa.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.3.37/libs/scsr/scsr.mjs"
+      src="https://cdn.jsdelivr.net/gh/kirakiray/ofa.js@4.5.21/libs/scsr/scsr.mjs"
       type="module"
     ></script>
     <link rel="stylesheet" href="<%host%>/statics/css/public.css" />
@@ -28,6 +28,9 @@
     <o-app src="<%host%>/statics/app-config.mjs">
       <template page>
         <style>
+          :host {
+            display: block;
+          }
           .markdown-body::before,
           .markdown-body::after {
             display: block;
@@ -54,7 +57,7 @@
           import pageInit from "<%host%>/statics/page-init.mjs";
 
           export default async (...args) => {
-            return await pageInit(PATH, args);
+            return await pageInit(args[0].url, args);
           };
         </script>
       </template>
