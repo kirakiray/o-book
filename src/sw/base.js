@@ -3,12 +3,12 @@
 // if (hostUrlData.hostname.includes("127")) {
 //   host = hostUrlData.origin;
 // } else {
-//   host = "https://cdn.jsdelivr.net/npm/obook@2.1.43";
+//   host = "https://cdn.jsdelivr.net/npm/obook@2.1.44";
 // }
 
 // const host = "http://127.0.0.1:5512";
 
-const host = "https://cdn.jsdelivr.net/npm/obook@2.1.43";
+const host = "https://cdn.jsdelivr.net/npm/obook@2.1.44";
 
 importScripts(
   "https://cdn.jsdelivr.net/npm/marked/marked.min.js",
